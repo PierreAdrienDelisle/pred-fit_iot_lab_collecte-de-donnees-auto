@@ -161,11 +161,46 @@ Le chapitre~\ref{chap:Conception} est dédié aux différents choix technologiques,
 	Fit IoT Lab est une plateforme de service  d'infrastructure IoT. Il existe sur cette plateforme plus de 1500 capteurs de différents types (M3,A8,turtlebot,...) répartis sur 6 sites : Grenoble, Lille, Lyon, Paris, Saclay et Strasbourg. L'objectif est de fournir aux chercheurs une infrastructure riche qu'ils peuvent ensuite réserver et tester pour leur propres expériences en utilisant ces noeuds.
 \subsection{Frontend SSH}
 
-
-
 \section{Firmwares}
-\subsection{Présentation}
+
+Comme expliqué par avant, la plateforme contient un grand nombre de n\oe uds capteurs qui permettent d'effectuer plusieurs expérimentations. Ces n\oe uds ont logiquement besoin d'une base logicielle pour fonctionner, et c'est ici qu'interviennent les firmwares. Il est central dans notre projet de programmer un firmware qui soit efficace et réponde à nos besoins. Pour cela, plusieurs solutions d'OS sont présentées sur la plateforme FIT. Il faudra de fait effectuer un choix quant à la solution qui sera employée. Les différents systèmes étudiés peuvent être trouvés sur le site de FIT IoT \footnote{https://www.iot-lab.info/operating-systems/}
+
+\subsection{Contiki}
+Contiki-NG est un OS open-source, designé pour l'IoT, particulièrement pour la mise en place de protocoles réseaux (TCP/IP, IPv6, Low-Power protocols), basé sur le système de proto-threads.
+\subsubsection{Avantages}
+Si nous nous sommes dans un premier temps engoufrés dans la solution Contiki, c'est que pour une première prise en main, la programmation semblait relativement simple.
+En effet, la plateforme FIT fournit du code exemple pour chaque OS, et Contiki avait la base d'exemples la plus variée. De fait, l'aggragation de deux exemples nous a permis d'arriver à une première solution plutôt acceptable.
+\subsubsection{Inconvénients}
+En y regardant de plus près, nous avons malheureusement remarqué que dans le cadre des n\oe uds m3, la plateforme Contiki n'a pas de librairie pour la lecture des capteurs de température, qui est une donnée que nous aurions aimé étudier. De fait, et si nous ne trouvons pas de solution rapidement, nous basculerons sûrement sur une autre solution, malgré la simplicité de prise en main de la plateforme.
+\subsubsection{Ressources d'apprentissage}
+Le point de choix principal se trouve au niveau de la facilité d'apprentissage de la plateforme. De fait, la présence de nombreuses ressources est un point central dans le choix d'une technologie.
+
+En l?occurrence, Contiki vient avec des tutoriels de base pour apprendre à compiler du code C en firmware Contiki \footnote{https://www.iot-lab.info/tutorials/contiki-compilation/}. Ce qui le rend plus accessible, c'est surtout ses nombreux exemples qui permettent de rapidement comprendre comment sont programmés les Firmwares sur cet OS. 
+
+Deux exemples, particulièrement, sont importants dans notre cas:
+Le premier, appelé 01-serial-echo, est un firmware qui, lorsqu'il reçoit un message sur son lien série, renvoie le message sur le lien série, à la manière de la commande echo. Ceci est important pour nous car nous avons besoin de renvoyer les données sur le lien série, ainsi que recevoir par exemple une instruction de capture de données. Cette base de code contient aussi tout ce qui est nécessaire la base des mécanismes évènementiels.
+
+Le second, appelé 03-sensors-collecting, est un firmware qui, à chaque seconde, renvoie sur son lien série les valeurs captées par tous les capteurs définis au préalable. Ici, on obtient donc la base qui permet de capter des données sur les capteurs, ainsi que la manière de mettre un chronomètre en place, ce qui est important pour notre problème.
+
+\subsection{RIOT}
+RIOT est un OS qui vise les équipements ayant des ressources minimales, et à donc pour objectif l'efficacité en tous domaines: Énergie, mémoire, modularité...
+De même qu'avec Contiki, il est possible d'étudier de nombreux protocoles réseau grâce à ses librairies.
+
+L'étude de cette solution est encore en cours, car elle vient après l'étude et l'expérimentation de Contiki.
+
+\subsubsection{Avantages}
+RIOT vient tout comme Contiki avec une bonne base d'exemples et de tutoriels fournis par FIT IoT pour prendre facilement en main la plateforme. Par ailleurs, RIOT est régulièrement mis à jour et maintenu par sa communauté.
+\subsubsection{Inconvénients}
+De prime abord, le code permettant de programmer des firmwares grâce à RIOT semble plus compliqué que celui de Contiki.
+\subsubsection{Ressources d'apprentissage}
+Pour la plateforme RIOT, les mêmes tutoriels existent que pour Contiki \footnote{https://www.iot-lab.info/tutorials/riot-compilation/}
+
+Par ailleurs, des exemples permettent aussi de comprendre le fonctionnement global de la plateforme et d'en extraire les principes de base. Malgré cela, il n'existe pas d'exemple traitant directement avec les capteurs, et il nous faudra donc aller chercher plus en profondeur dans la documentation pour trouver des solutions à ce niveau.
+
 \subsection{Analyse}
+Étant encore en phase de tests, nous ne pouvons pas donner un avis définitif sur la question de l'OS à utiliser. Malgré tout, chacune des solutions nous permettra à terme d'arriver à une solution très satisfaisante. En effet, le problème de base, au niveau du firmware, est relativement élémentaire et ne demande pas de programmation très compliquée.
+
+Contiki, dans tous les cas, semble être une solution idéale pour avancer rapidement dans le problème et le résoudre efficacement.
 
 
 \section{Base de données temporelle}
