@@ -135,13 +135,7 @@ Pour satisfaire notre objectif principal, il nous faut implémenter plusieurs cho
    \item Une base de données temporelles, qui dès qu'elle sera remplie, sera sujette à exploitation. ~;
 \end{enumerate}
    
-   A ce jour, pour l'objectif principal, nous avons déjà un premier prototype fonctionnel assez basique, pour la captation de données et la récupération de ces données côté logiciel. Il nous reste donc à améliorer cette captation et à tester d'autres solutions, et à implémenter le côté base de données.
-	
-
-\section{Contribution}
-
-Il ne faut jamais laisser patienter le lecteur jusqu'à la fin du rapport pour connaître les résultats, positifs aussi bien que négatifs, de ce travail.
-Les contributions et conclusions sont donc clairement présentées dès ce chapitre d'introduction~!
+A ce jour, pour l'objectif principal, nous avons déjà un premier prototype fonctionnel assez basique, pour la captation de données et la récupération de ces données côté logiciel. Il nous reste donc à améliorer cette captation et à tester d'autres solutions, et à implémenter le côté base de données.
 
 \section{Plan de l'étude}
 
@@ -173,163 +167,78 @@ La conclusion permet de synthétiser les apports de ce travail et d'ouvrir des vo
 \chapter{\'Etat de l'art}
 \label{chap:EtatArt}
 
-Le but de cette partie est de faire le point sur l'état des connaissances qui permettent d'aider à la résolution du problème de ce travail sans devoir tout réinventer.
+\section{Base de donnï¿½es temporelle}
 
-Notons que ce chapitre se place toujours, de manière implicite ou explicite, sous la locution~: <<~à notre connaissance~>>.
-Des oublis ou omissions étant toujours possible, il faut néanmoins en préciser la gravité~:
-\begin{itemize}
-   \item L'oubli d'un apport \emph{très} récent, ou de portée confidentielle, est pardonnable.
-   \item L'oubli d'apports largement disponibles, du moins dans la communauté concernée, est un manque flagrant sinon de culture du moins de la capacité à retrouver de l'information pertinente.
-   \item Les connaissances de portée générale, celle de l'<<~honnête homme~>>, seront seulement mentionnées dans cette introduction sans les détailler dans les sections de ce chapitre.
-(Si un usage très technique d'un pré-requis devait être fait dans la proposition du rapport -- ex.~: quelques éléments d'analyse de données, de probabilités, etc. --, et afin d'éviter au lecteur d'aller chercher l'information dans les sources, cette description sera reportée dans une annexe -- cf.~annexe~\ref{ann:Rappels}.)
-\end{itemize}
 
-Normalement, les propositions antérieures ne permettent pas de résoudre le problème posé.
-Si, par extraordinaire ou par chance, cela était le cas, alors la conclusion de cette partie~:
-\begin{itemize}
-   \item mentionnera honnêtement qu'il se trouve que le problème a été -- récemment -- résolu de manière satisfaisante~;
-   \item contiendra la rédaction d'un nouveau problème, connexe à celui d'origine, l'introduction du rapport sera modifiée en conséquence et de nouveaux pré-requis seront présentés ici.
-\end{itemize}
-Remarquons que la conclusion peut être la poursuite d'une solution alternative au problème d'origine, par exemple parce que la solution trouvée dans la littérature est propriétaire ou brevetée, c'est-à-dire indisponible.
+\subsection{Prï¿½sentation}
 
-Cela dit, et en toute probabilité, vont être ici présentés plusieurs pré-requis servant de base à la résolution de la problématique du travail.
-Le problème étant encore imparfaitement résolu, on doit trouver ci-dessous un certain nombre de sections correspondant à des approches antérieures (notées ici \emph{<proposition i>} avec $1 \leq i \leq n$) qui fournissent des solutions \emph{partielles}.
+Une fois la collecte de donnï¿½es automatisï¿½e, nous aurons des donnï¿½es horodatï¿½es mais il reste nï¿½anmoins la question d'oï¿½ stocker ces donnï¿½es.
+Afin de mener le projet au bout, nous aurons besoin d'une base de donnï¿½es temporelle. En effet, celle-ci est indispensable pour stocker des donnï¿½es horodatï¿½es sur un grand volume.
 
-Sont donc ici introduites la liste des propositions étudiées en expliquant pourquoi le choix s'est porté \emph{a priori} sur certaines d'entre elles ou pourquoi il a émergé \emph{a posteriori} s'il s'agissait d'un apport important à notre étude.
-
-\section{Une proposition i}
-
-Pour chaque proposition étudiée\footnote{Substituez au marqueur <<~\emph{<Proposition i>}~>> un titre explicite~! Et ne conservez pas les crochets...}, sauf exception, le plan s'annonce de la même façon~:
-\begin{enumerate}
-   \item une présentation générale~:
-      \begin{itemize}
-         \item qui fait le lien avec le travail demandé~;
-         \item doublée d'une présentation objective de la proposition d'autrui~;
-      \end{itemize}
-   \item une analyse critique de cette proposition où sont soulignées ses forces et ses faiblesses~:
-      \begin{itemize}
-         \item tout d'abord générales~;
-         \item puis vis-à-vis de sa possible exploitation dans le travail de ce rapport.
-      \end{itemize}
-\end{enumerate}
-Soulignons un point extrêmement important et relevant de l'honnêteté intellectuelle.
-Toutes les affirmations et propositions qui ne sont pas issues de notre travail doivent être clairement référencées, autant de fois que le texte en fait mention.
-Référez-vous à l'annexe~\ref{ann:Citations} pour les pratiques de mise en page et \emph{en particulier à la section~\ref{ann:Plagiat} pour ce qui concerne le \fcolorbox{red}{yellow}{\textbf{plagiat}}}.
-
-La bibliographie est constituée (quasi exclusivement) de références pérennes, c'est-à-dire de référence à des ouvrages, articles de journaux ou de conférences.
-Ces références-là peuvent être accompagnées de références sur la Toile mais ne peuvent pas se limiter à cela.
-Dans le cas où une référence sur la Toile est fournie, il convient, dans la limite des droits, d'en faire une copie privée que l'on pourra transmettre en cas de demande (voire copier en annexe si elle n'est pas de taille trop importante et si l'auteur a donné sont \emph{autorisation explicite}).
-En effet, cette dernière peut évoluer à tout instant et même disparaître.
-Par ailleurs, les références à de simples sites \emph{web} n'ont pas vocation à faire partie de la bibliographie (\cite{Wolfe} est ici un contre-exemple mais pour lequel une copie a été mise en ligne sur Madoc)~; elles seront plus judicieusement portées en notes de bas de page, en ne se limitant pas à l'URL quand les informations habituelles d'une référence sont disponibles.\footnote{En reprenant la référence \cite{Wolfe}, nous aurions~: Joe  \textsc{Wolfe}, \emph{How to Write a PhD Thesis}, 1996, \url{http://www.phys.unsw.edu.au/~jw/thesis.html}} \footnote{\url{http://docinsa.insa-lyon.fr/sapristi/index.php?rub=1003}} \footnote{\url{http://www.tlfq.ulaval.ca/axl/monde/citations-references.htm}} \footnote{Guy \textsc{Spielmann}, \emph{Établissement d'une bibliographie -- Méthode pour citer les sources et format des citations}, 10 janvier 2009, \url{http://www9.georgetown.edu/faculty/spielmag/docs/biblio.htm}} \footnote{François-Pierre \textsc{Gingras}, \emph{Comment citer des sources sur Internet dans un travail scientifique}, 21 mars 2005, \url{http://aix1.uottawa.ca/~fgingras/metho/citation.html}}
-
-\subsection{Présentation}
-
-Chaque étude commence par présenter la nature de la proposition examinée, c'est-à-dire sa portée et son lien avec le problème à traiter.
-
-Une présentation claire et synthétique résume les points principaux de la proposition étudiée.
-
-Cette présentation doit être objective.
-En d'autre termes, il ne faut pas tirer de conclusion hâtive, la proposition n'aura été vraiment comprise qu'\emph{indépendamment} de l'intérêt immédiat et supposée vis-à-vis du travail demandé.
-Afin de préparer cette rédaction, des fiches de lecture seront établies et mises en annexe (cf.~annexe~\ref{ann:FichesLecture}).
-\begin{structuration}
-Cette sous-section peut, et même doit, être structurée en fonction de la proposition.
-Il faut toutefois garder à l'esprit que~:
-\begin{enumerate}[(i)]
-   \item une décomposition trop profonde devient incompréhensible (il faut réorganiser le plan et fournir une logique de progression, d'où davantage linéaire)~;
-   \item chaque partie doit contenir plusieurs paragraphes (on ne crée pas un niveau hiérarchique pour un unique paragraphe qui serait précédé d'un unique paragraphe d'introduction et d'un unique paragraphe de conclusion~!).
-\end{enumerate}
-
-Si les propositions devenaient très longues à décrire alors les niveaux décrits dans ce pseudo rapport sont insuffisants.
-Il faut remplacer le présent \emph{chapitre} <<~\'Etat de l'art~>> par une \emph{partie} d'ouvrage, les sections devenant des chapitres et ainsi de suite.
-
-En cas de déséquilibre patent entre propositions, il faut trouver des regroupements thématiques dans le but d'équilibrer les tailles.
- Cela s'applique d'ailleurs aussi dans le cas d'une décomposition en sections.
-
-Inversement, des sections ou chapitre trop courts amènent à fusionner des niveaux supérieurs.
-Ainsi deux ou trois chapitres d'une ou deux pages chacun doivent-ils être fusionnés, dans la limite où la logique s'y prête.
-(L'alternative extrême est de changer de catégorie de document.
-Ce n'est alors plus un rapport que l'on rédige mais seulement un article...)
-\end{structuration}
 
 \subsection{Analyse}
 
-La présentation objective est ensuite, et seulement ensuite, suivie d'une étude critique.
+Tout d'abord, quelles sont les caractï¿½ristiques propres ï¿½ une base de donnï¿½es temporelle? Les Time Series Databases (notï¿½ TSDB) ont besoin d'un horodatage sur les donnï¿½es avec une proximitï¿½ physique si l'horodatage est proche, les donnï¿½es sont ï¿½ proximitï¿½ afin de traiter celles-ci plus efficacement. Ensuite, elles se doivent d'exï¿½cuter des "range queries" rapidement, c'est ï¿½ dire des requï¿½tes rapportant toutes les donnï¿½es infï¿½rieures ou supï¿½rieures ï¿½ une condition (ici la condition la plus utilisï¿½e sera le temps). Les TSDB se doivent d'obtenir une rapiditï¿½ d'ï¿½criture ï¿½levï¿½e sur la base puisqu'elle sera remplie frï¿½quemment, elles doivent donc rester le plus possible disponible afin d'ï¿½viter de perdre des donnï¿½es. En plus de ces aspects techniques, la TSDB choisie devra avoir une communautï¿½ active pour considï¿½rer qu'elle est fiable et qu'il y a de la documentation autour ou de l'aide communautaire pour maintenir la solution dans le temps.
+Pour ï¿½valuer ces diffï¿½rents points, nous nous sommes rï¿½fï¿½rï¿½s ï¿½ deux benchmarking fait en 2017 [1] et en 2019 [2].
+\newline
+Dans le premier benchmarking [1], celui ci pointe plusieurs aspects ï¿½ savoir :
+\begin{itemize}
+   \item Distribution/Clusterability : disponibilitï¿½, extensibilitï¿½, et un ï¿½quilibreur de charge
+    \item Functions : fonctions disponibles dans le systï¿½me MIN/MAX/SUM
+    \item Tags : contient un LTS (long time storage), possibilitï¿½ d'avoir plusieurs horodatages sur une mï¿½me valeur.
+    \item Granularity : dï¿½crit le plus petit dï¿½lai possible entre deux horodatages
+    \item Interfaces and Extensibility : les APIs et plugins possibles
+    \item Support and License : la propriï¿½tï¿½ intellectuelle de la TSDB et son support commercial
+\end{itemize}
+Ce rapport montre qu'aucune base de donnï¿½es ne peux implï¿½menter toutes les fonctionnalitï¿½s existantes sur les TSDBs. Nï¿½anmoins, elle montre plusieurs avantages sur certaines TSDBs et leurs inconvï¿½nients.
+\newline
+Pour recentrer les recherches sur la solution ï¿½ choisir nous avons donc pris en compte le classement de popularitï¿½ des bases de donnï¿½es fait par db-engines [3]. Celui-ci permet d'avoir une vision sur les bases qui sont trï¿½s utilisï¿½es, mises ï¿½ jour et donc actives.
+\begin{figure}[hp]
+    \includegraphics[width=0.6\textwidth]{Images/rankingTDSB}
+\end{figure}
+\newline
+Celles qui ressortent sont InfluxDB, KDB+ et Prometheus. InfluxDB ï¿½tant loin devant les autres TSDBs.
+\newline
+Afin d'affiner notre choix, nous avons pris en compte le deuxiï¿½me benchmarking [2] qui se concentre sur des scï¿½narios IoT et donc prend en compte la performance sur des requï¿½tes SQL particuliï¿½res ainsi que le volume de donnï¿½es utilisï¿½ pour une entrï¿½e ou encore le nombre d'entrï¿½es possibles en mï¿½me temps.
 
-Doivent ici être pointées aussi bien ses avantages que ses limites, démonstration à l'appui.
+\begin{figure}[hp]
+    \includegraphics[width=0.6\textwidth]{Images/queryRankingTSDB2}
+\end{figure}
+Sur ces graphiques, on observe le coï¿½t en temps de la requï¿½te en fonction du nombre d'entrï¿½es sur cette derniï¿½re.
+Lors de ce benchmarking, on peut observer qu'InfluxDB est nettement en avance sur les autres TSDBs. C'est pourquoi notre premier choix technique se basera sur cette base de donnï¿½es. Nï¿½anmoins nous gardons ï¿½ l'esprit d'autres possibilitï¿½s de TSDBs, il sera donc important dans la partie conception de bien prendre en compte une certaine facilitï¿½ ï¿½ changer de TSDB si nï¿½cessaire. De plus, il n'est pas impossible par la suite de changer vers Prometheus ï¿½tant une TSDB dï¿½jï¿½ utilisï¿½e pour certains projets Fit IoT Lab.
 
-\subsubsection{Intérêts de la proposition \emph{i}}
 
-Vis-à-vis du travail demandé, il faut ici expliquer comment la proposition pourrait être utilisée.
-Il convient de ne pas s'autocensurer dans cette partie.
-Il faut émettre des idées non pas totalement sur le mode du remue-méninge mais en évitant de fermer trop précipitamment des directions de travail.
-La proposition permettra de faire le tri entre les bonnes idées et les idées qui se seront révélées inapplicables.
+\subsubsection{Intï¿½rï¿½ts}
 
-\subsubsection{Limites de la proposition \emph{i}}
 
-Les limites vont au delà des inconvénients objectifs de la proposition étudiée.
-Il faut aussi tenir compte de son <<~adaptabilité~>> au problème traité.
+\subsubsection{Limites}
 
-\section{Récapitulatif}
 
-À l'issue de ce travail bibliographique et critique, un résumé des éléments intéressants et des éléments manquants de chaque proposition est mis en évidence avec une présentation condensée des arguments ayant abouti à cette dichotomie.
-Les éléments seront présentés de manière synthétique dans un tableau comparatif (cf.~tableaux~\ref{tab:Comparatif} et~\ref{tab:ComparatifAlternatif} à titres d'exemples simplifiés).
+\section{Rï¿½capitulatif}
 
-\begin{table}
-    \begin{center}
-        \begin{tabular}{|c||c|c|}
-            \hline
-            Proposition & Avantages & Inconvénients \\
-            \hline
-            \hline
-            \ldots & \ldots & \ldots\\
-            \hline
-            Proposition $i$ & avantages $i$ & inconvénients $i$\\
-            \hline
-            \ldots & \ldots & \ldots\\
-            \hline
-        \end{tabular}
-    \end{center}
-    \caption{Tableau comparatif des propositions étudiées}
-    \label{tab:Comparatif}
-\end{table}
+ï¿½ l'issue de ce travail bibliographique et critique, un rï¿½sumï¿½ des ï¿½lï¿½ments intï¿½ressants et des ï¿½lï¿½ments manquants de chaque proposition est mis en ï¿½vidence avec une prï¿½sentation condensï¿½e des arguments ayant abouti ï¿½ cette dichotomie.
+Les ï¿½lï¿½ments seront prï¿½sentï¿½s de maniï¿½re synthï¿½tique dans un tableau comparatif (cf.~tableaux~\ref{tab:Comparatif} et~\ref{tab:ComparatifAlternatif} ï¿½ titres d'exemples simplifiï¿½s).
 
-\begin{table*} % Utiliser la version étoilée des flottants pour les faire tenir sur deux colonnes
-    \begin{center}
-        \begin{tabular}{|c||c|c|c|c|c|}
-            \hline
-            Avantages    & Proposition 1 & \ldots & Proposition $i$ & \ldots & Proposition $n$ \\
-            \hline
-            \hline
-            Avantage $1$ & $\surd$       &        &                 &        & $\surd$         \\
-            \hline
-            \ldots       & \ldots        & \ldots & \ldots          & \ldots & \ldots          \\
-            \hline
-            Avantage $j$ & $\approx$     &        &                 &        &                 \\
-            \hline
-            \ldots       & \ldots        & \ldots & \ldots          & \ldots & \ldots          \\
-            \hline
-            Avantage $m$ &               &        & $\surd$         &        &                 \\
-            \hline
-        \end{tabular}
-    \end{center}
-    \caption{Tableau comparatif des avantages des propositions étudiées}
-    \label{tab:ComparatifAlternatif}
-\end{table*}
 
 \begin{typographie}
-Au passage, notons que les tableaux, figures et autres illustrations doivent être systématiquement placés dans des éléments <<~flottants~>>, c'est-à-dire situés non pas exactement à l'endroit où il sont mentionnés.
-Ils sont donc numérotés, munis d'une légende et référencés depuis le texte principal.%
-\footnote{\LaTeX\ se tire plutôt bien de cette tâche de positionnement optimal des flottants, sachant qu'il s'agit d'un problème NP-difficile~!}
-Toute utilisation <<~en ligne~>> est à proscrire.
-Une figure, au sens large, ne remplace pas le texte, bien au contraire~; c'est ce dernier qui établit une présentation, un raisonnement, etc., et la figure ne fait que l'illustrer pour le rendre plus compréhensible soit d'emblée soit après avoir pris connaissance du texte.
+Au passage, notons que les tableaux, figures et autres illustrations doivent ï¿½tre systï¿½matiquement placï¿½s dans des ï¿½lï¿½ments <<~flottants~>>, c'est-ï¿½-dire situï¿½s non pas exactement ï¿½ l'endroit oï¿½ il sont mentionnï¿½s.
+Ils sont donc numï¿½rotï¿½s, munis d'une lï¿½gende et rï¿½fï¿½rencï¿½s depuis le texte principal.%
+\footnote{\LaTeX\ se tire plutï¿½t bien de cette tï¿½che de positionnement optimal des flottants, sachant qu'il s'agit d'un problï¿½me NP-difficile~!}
+Toute utilisation <<~en ligne~>> est ï¿½ proscrire.
+Une figure, au sens large, ne remplace pas le texte, bien au contraire~; c'est ce dernier qui ï¿½tablit une prï¿½sentation, un raisonnement, etc., et la figure ne fait que l'illustrer pour le rendre plus comprï¿½hensible soit d'emblï¿½e soit aprï¿½s avoir pris connaissance du texte.
 \end{typographie}
 
 \section{Conclusion}
 
-À l'issue de ce travail de recherche bibliographique, il apparaît que plusieurs propositions peuvent servir de base à la résolution de notre problème.
+ï¿½ l'issue de ce travail de recherche bibliographique, il apparaï¿½t que plusieurs propositions peuvent servir de base ï¿½ la rï¿½solution de notre problï¿½me.
 
-Il semble se détacher un certain nombre de directions privilégiées que nous allons exploiter en priorité dans nos propositions.
-Celles-ci font l'objet de l'étude du chapitre suivant.
+Il semble se dï¿½tacher un certain nombre de directions privilï¿½giï¿½es que nous allons exploiter en prioritï¿½ dans nos propositions.
+Celles-ci font l'objet de l'ï¿½tude du chapitre suivant.
+
+
+\chapter{Conception}
+\label{chap:Conception}
+
 
 %-------------------------------------------------------------------------------------------------------------
 
