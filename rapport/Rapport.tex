@@ -75,37 +75,20 @@
 
 \begin{abstract}
 %\small % À décommenter si le résumé est légèrement trop long pour tenir dans la page
-Comme son nom l'indique, le résumé condense en \emph{quelques lignes} la \emph{totalité} du rapport.
-Il faut donc décrire succinctement et successivement~:
-\begin{enumerate}
-   \item le sujet et la problématique~;
-   \item les objectifs fixés~;
-   \item les recherches effectuées~;
-   \item les décisions prises~;
-   \item les constructions conceptuelles~;
-   \item les développements accomplis~;
-   \item les expérimentations conduites, leurs résultats et leur interprétation~;
-   \item les limites de ce travail~;
-   \item les perspectives qu'il ouvre~;
-\end{enumerate}
-sans s'embarrasser de détails inutiles et en restant très vulgarisateur.
-(L'introduction et la conclusion du rapport permettent de s'étendre.)
-\end{abstract}
 
+La plateforme FIT IoT lab, créée pour tester différentes aspects importants pour les thématiques qui entourent l'Internet des objets, est constituée de 6 sites, répartis en France, qui contiennent de nombreux n\oe uds capteurs, et permettent de nombreuses expérimentations.
+
+La problème, très technique, est ici de collecter automatiquement, à intervalles réguliers dans la journée, différentes données sur des puces M3, qui constituent la majorité du parc de la plateforme FIT Lilloise, telles que la luminosité ou la température. Les objectifs pour arriver à une solution sont donc les suivantes:
+\begin{enumerate}
+   \item Développement et Implémentation d'un firmware pour les n\oe uds m3, permettant de récupérer les données et de les pousser sur lien série ~;
+   \item Développement d'un script python qui crée les expériences nécessaires, récupère les données poussées par les n\oe uds, et les pousse dans une base temporelle~;
+   \item Récupération, stockage et visualisation des données~;
+\end{enumerate}
+\end{abstract}
 \begin{classification}
 %\small % Idem
-   Des éléments d'indexation bibliographiques \emph{doivent} être fournis.
-   Ci-dessous est illustrée l'usage du thésaurus de l'ACM avec les catégories codifiées et des éléments d'indexation ouverts.
-   Suivre le modèle de l'ACM~: cf.~\url{http://www.acm.org/class/1998/}
-
-   \category{H.2.8}{Database Applications}{Image databases}
-   \category{H.3.3}{Information Search and Retrieval}{Clustering, Information filtering, Relevance feedback}
-   \category{H.3.7}{Digital Libraries}{User issues}
-   \category{I.5.3}{Clustering}{Algorithms, Similarity measures}
-   \category{I.4.10}{Image Representation}{Statistical, Multidimensional}
-   \terms{Des mots clés couramment employés et très généraux sont à ajouter aux catégories. ex.~: Algorithms, performance, experimentation, human factors, verification.}
-   \keywords{Des mots clés supplémentaires et très spécifiques peuvent être ajoutés. ex.~: Personnalisation, recherche d'images par le contenu, classification, rétro-action,
-   apprentissage.}
+   \terms{Internet des objets, FIT IoT, Données, Acquisition, Représentation, Stockage.}
+   \keywords{Captation automatique, N\oe uds m3, Lille,}
 \end{classification}
 
 \maketitle
@@ -113,9 +96,7 @@ sans s'embarrasser de détails inutiles et en restant très vulgarisateur.
 %-------------------------------------------------------------------------------------------------------------
 
 \begin{acknowledgements}
-Si le c\oe ur vous en dit... mais leur absence en dit beaucoup.
-
-En cas de remerciements à plusieurs personnes, n'hésitez pas à utiliser les commodités de l'ordre alphabétique pour ne froisser personne.
+	Nous remercions Bastien Confais pour sa rigueur et son investissement dans notre travail, Benoit Parrein pour le suivi et les retours très rapides sur le travail effectué, Julien Vandaele pour sa disponibilité, ses explications très claires et ses retours très rapides à nos questions
 \end{acknowledgements}
 
 %-------------------------------------------------------------------------------------------------------------
@@ -126,119 +107,36 @@ En cas de remerciements à plusieurs personnes, n'hésitez pas à utiliser les comm
 
 %-------------------------------------------------------------------------------------------------------------
 
-\chapter*{Préambule}
-\addcontentsline{toc}{chapter}{Préambule}
-
-Tous les paragraphes de ce document sont fournis~:
-\begin{itemize}
-   \item soit à titre d'illustration~;
-   \item soit à titre d'explication.
-\end{itemize}
-En conséquence, rien ne doit en demeurer, si ce n'est la structure logique.
-
-\bigskip
-
-Un préambule est optionnel.
-Il permet d'éclaircir le lecteur sur l'objet du rapport et du travail, son contexte et d'autres aspects périphériques au contenu lui-même (ex.~: les motivations de ce choix de sujet).
-
-Ici, il nous permet de préciser~:
-\begin{itemize}
-   \item quelques points très généraux sur l'écriture d'un rapport, sujet de ce modèle~;
-   \item de préciser, dans la mesure du possible, ce qui est attendu en différentes parties du rapport.
-\end{itemize}
-
-\bigskip
-
-Tout d'abord, un document \emph{structuré} présente, comme l'indique l'épithète, une structure issue d'un travail d'organisation \emph{réfléchi}.
-Cette organisation peut être propre à un travail particulier mais, le plus souvent, elle obéit à un modèle bien établi (ex.~: le format <<~thèse-antithèse-synthèse~>> d'une dissertation -- même si ce n'est pas le seul).
-
-Pour un informaticien, cette structure correspond au concept bien connu d'arbre que l'on retrouve clairement dans la table des matières qui précède.
-
-Il convient alors de distinguer les feuilles de l'arbre des n\oe uds internes ainsi que de la structure hiérarchique par elle-même.
-
-Les feuilles portent les informations factuelles ou techniques, les séquences d'une démonstration, etc.
-Bref, elles constituent le c\oe ur du rapport, le contenu à proprement parler.
-
-L'arbre lui-même décrit l'organisation logique du raisonnement.
-Dans le cas le plus simple, cela va des hypothèses à la conclusion, les imbrications correspondant à des niveaux de détails.
-Dans d'autres cas, la structure hiérarchique traduit tant bien que mal des présentations plus pertinentes mais qui ne s'accommodent pas de la linéarité du texte.
-Par exemple, certaines présentations nécessitent, pour être parfaitement claires, une organisation bidimensionnelle.
-Il faut alors choisir de présenter ce tableau ligne par ligne, colonne par colonne ou encore blocs par blocs.
-Lorsque ce genre de situation se présente, une explication préalable sur la logique <<~naturelle~>> et la logique de linéarisation adoptée est indispensable.
-La fin de l'introduction, où se trouve placé le plan de l'étude, est l'endroit où justifier la logique de linéarisation.
-
-Ainsi, les n\oe uds internes de cet arbre soulignent-ils seulement les étapes dans le développement des idées.
-Chaque n\oe ud interne doit alors donner lieu à~:
-\begin{itemize}
-   \item une introduction au contenu de son sous-arbre~;
-   \item une liaison entre les développements de chacune de ses branches~;
-   \item une conclusion locale.
-\end{itemize}
-Cette structure, récursive de surcroît, amène à de nombreuses redites, mais à des niveaux de détails différents.
-Elle est indispensable, car ce sont ces annonces, liaisons et récapitulatifs qui permettent au lecteur de savoir (i)~ce qui l'attend dans la suite et (ii)~à quel niveau il se situe à chaque instant.
-L'usage rigoureux et discipliné de cette écriture <<~hiérarchique~>> dans le cadre réducteur d'une écriture réelle <<~linéaire~>> permettrait même de se dispenser de toute marque claire dans le texte.
-(Certains ouvrages scientifiques ont effectivement été rédigés, à l'instar des romans, avec comme unique niveau de découpage le chapitre~!)
-
-Nous en déduisons donc que les titres de chapitres, sections, etc., ne sont \emph{pas} du texte.
-Il s'agit exclusivement de délimiteurs visuels qui soulignent à leur façon les niveaux hiérarchiques.
-Dans le cours d'une lecture normale, \emph{l'\oe il les saute}.
-
-Il est donc interdit d'utiliser un pronom qui fait référence au contenu d'un titre.
-Par exemple, après une section intitulée <<~Base de données~>> (on notera l'absence d'article), le paragraphe suivant ne commencera jamais par <<~Elle [...]~>> mais bien par <<~La base de données [...]~>>.
-
-\begin{typographie}
-Soulignons aussi que des règles typographiques de mise en page et de mise en forme existent.
-Certaines d'entre-elles concernent la numérotation, la taille, la graisse, etc., des titres.
-Il se trouve que le système de publication \LaTeX, utilisé pour ce même document, les respectent, sous une forme conventionnelle et sobre que vous constatez \emph{de visu}.
-En cas d'utilisation d'un autre outil de rédaction de texte électronique, il faut forcer ce dernier à respecter des règles analogues (\emph{via} des feuilles de style de préférence mais pas nécessairement celles fournies par défaut...
-car elles sont généralement aux normes américaines).
-
-Dans la suite, nous ajouterons encore aux recommandations sur la technique de construction du rapport lui-même des remarques sur les règles typographiques au sens large, même si elles nécessiterait une présentation dédiée.
-\end{typographie}
-
-\bigskip
-
-Dans la suite, certaines parties de ce pseudo rapport ont été rédigées d'une manière très proche de la forme finale.
-En revanche, d'autres parties ne donnent que des indications très grossières, voire seulement des exemples (mis en italique), car leur contenu est très dépendant de la nature du sujet et des résultats.
-
-\bigskip
-
-Faisons une dernière recommandation, qui va de soi mais sur laquelle il convient d'insister néanmoins~: il faut rédiger en français.
-Cela englobe la correction orthographique (les erreurs orthographiques sont \emph{totalement} inacceptables), grammaticale et... l'absence de franglais~!
-
-\bigskip
-
-Le lecteur pourra trouver nombre d'autres sources pour apprendre à rédiger des documents scientifiques \cite{Wolfe}.
-
-%-------------------------------------------------------------------------------------------------------------
-
 \chapter{Introduction}
 
-Chaque début de chapitre commence par une présentation de ses sections.
-En l'occurrence, l'introduction générale doit indiquer quelle problématique va être développée dans ce rapport, les objectifs plus précis que l'on s'est fixés, le travail qui a été réalisé et les apports de ce dernier.
-La dernière section de l'introduction détaillera l'organisation logique du rapport et présentera ses différents chapitres.
+\section{Sujet d'étude}
+
+Comme expliqué précédemment, ce projet s'inscrit dans l'environnement FIT IoT Lab, qui est une plateforme d'expérimentation pour l'internet des objets. Cette plateforme est composée de six sites, répartis dans toute la France. Chaque site contient un grand nombre de plusieurs types de n\oe uds, qui permettent différentes expériences à distance.
 
 \section{Présentation de la problématique}
 
-Le sujet d'étude est sans aucun doute un domaine trop vaste dans lequel il va falloir inscrire une problématique plus spécifique.
-
-Le sujet de l'étude est donc décrit en termes généraux, en relevant son intérêt et l'absence de solution satisfaisante, à votre connaissance, sur tel ou tel autre aspect du thème.
-
-À l'intérieur de ce vaste champ de connaissances, technologies ou techniques encore imparfaites, on souhaite s'attaquer sinon à la résolution du moins à l'amélioration d'un point particulier encore insatisfaisant.
-
-Il convient donc de décrire plus précisément des difficultés que l'on cherche à contourner, donc la problématique.
+En se basant sur cette plateforme, les chercheurs de l'Inria, à Lille voudraient avoir à disposition des données temporelles sur les données captées par les n\oe uds m3, pour effectuer différentes expérimentations. De fait, le but de ce projet est de mettre en place un système automatique de capture de données, à différents moments de la journée, et sur un maximum de n\oe uds disponibles. 
 
 \section{Objectifs poursuivis}
 
-La problématique décrite précédemment peut se révéler encore trop vaste ou bien les solutions potentielle envisagées trop nombreuses.
- Il convient donc de préciser quels objectifs sont fixés au tout début du travail.
-Nous verrons ultérieurement s'ils ont été atteints et feront une critique rétrospective de notre travail.
+Dans un premier temps, l'objectif principal est bien la mise en place de cette solution de captation automatique. Il faut donc que toutes les briques logicielles soient mises en place afin que l'on puisse remplir une base de données à destination des chercheurs
 
-\section{Travail réalisé}
+Par la suite, il nous faudra proposer une documentation extensive du travail fourni pour assurer une continuation du projet.
 
-Atteindre le but poursuivi ne peut se faire qu'en se fixant une ligne de travail, en émettant des hypothèses, éventuellement des probabilités de réussite ou d'échec -- auquel cas il faut prévoir des solutions de repli -- et des étapes dans la réalisation.
+Enfin, et si il nous reste du temps, nous aimerions expérimenter plus en avant sur des
+thématiques réseau / radio.	
 
-Cette partie sera mise à jour au fur et à mesure de l'avancement du travail, le titre de la section devant être à l'origine <<~Travail à réaliser~>> mais correspondant bien à <<~Travail réalisé~>> à la fin de la rédaction du rapport.
+\section{Travail à réaliser et travail réalisé}
+
+Pour satisfaire notre objectif principal, il nous faut implémenter plusieurs choses:
+\begin{enumerate}
+   \item Un firmware dédié aux n\oe uds m3, qui lorsqu'il est flashé, capte les données sur différents capteurs à déterminer, et les renvoie sur leur lien série.~;
+   \item Un script qui récupère les données à la sortie, et les pousse sur une base de données temporelle~;
+   \item Une base de données temporelles, qui dès qu'elle sera remplie, sera sujette à exploitation. ~;
+\end{enumerate}
+   
+   A ce jour, pour l'objectif principal, nous avons déjà un premier prototype fonctionnel assez basique, pour la captation de données et la récupération de ces données côté logiciel. Il nous reste donc à améliorer cette captation et à tester d'autres solutions, et à implémenter le côté base de données.
+	
 
 \section{Contribution}
 
