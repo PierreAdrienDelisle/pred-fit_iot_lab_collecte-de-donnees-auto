@@ -167,73 +167,73 @@ La conclusion permet de synthétiser les apports de ce travail et d'ouvrir des vo
 \chapter{\'Etat de l'art}
 \label{chap:EtatArt}
 
-\section{Base de donnï¿½es temporelle}
+\section{Base de données temporelle}
 
 
-\subsection{Prï¿½sentation}
+\subsection{Présentation}
 
-Une fois la collecte de donnï¿½es automatisï¿½e, nous aurons des donnï¿½es horodatï¿½es mais il reste nï¿½anmoins la question d'oï¿½ stocker ces donnï¿½es.
-Afin de mener le projet au bout, nous aurons besoin d'une base de donnï¿½es temporelle. En effet, celle-ci est indispensable pour stocker des donnï¿½es horodatï¿½es sur un grand volume.
+Une fois la collecte de données automatisée, nous aurons des données horodatées mais il reste néanmoins la question d'où stocker ces données.
+Afin de mener le projet au bout, nous aurons besoin d'une base de données temporelle. En effet, celle-ci est indispensable pour stocker des données horodatées sur un grand volume.
 
 
 \subsection{Analyse}
 
-Tout d'abord, quelles sont les caractï¿½ristiques propres ï¿½ une base de donnï¿½es temporelle? Les Time Series Databases (notï¿½ TSDB) ont besoin d'un horodatage sur les donnï¿½es avec une proximitï¿½ physique si l'horodatage est proche, les donnï¿½es sont ï¿½ proximitï¿½ afin de traiter celles-ci plus efficacement. Ensuite, elles se doivent d'exï¿½cuter des "range queries" rapidement, c'est ï¿½ dire des requï¿½tes rapportant toutes les donnï¿½es infï¿½rieures ou supï¿½rieures ï¿½ une condition (ici la condition la plus utilisï¿½e sera le temps). Les TSDB se doivent d'obtenir une rapiditï¿½ d'ï¿½criture ï¿½levï¿½e sur la base puisqu'elle sera remplie frï¿½quemment, elles doivent donc rester le plus possible disponible afin d'ï¿½viter de perdre des donnï¿½es. En plus de ces aspects techniques, la TSDB choisie devra avoir une communautï¿½ active pour considï¿½rer qu'elle est fiable et qu'il y a de la documentation autour ou de l'aide communautaire pour maintenir la solution dans le temps.
-Pour ï¿½valuer ces diffï¿½rents points, nous nous sommes rï¿½fï¿½rï¿½s ï¿½ deux benchmarking fait en 2017 [1] et en 2019 [2].
+Tout d'abord, quelles sont les caractéristiques propres à une base de données temporelle? Les Time Series Databases (notées TSDB) ont besoin d'un horodatage sur les données avec une proximité physique si l'horodatage est proche, les données sont à proximité afin de traiter celles-ci plus efficacement. Ensuite, elles se doivent d'exécuter des "range queries" rapidement, c'est à dire des requêtes rapportant toutes les données inférieures ou supérieures à une condition (ici la condition la plus utilisée sera le temps). Les TSDB se doivent d'obtenir une rapidité d'écriture élevée sur la base puisqu'elle sera remplie fréquemment, elles doivent donc rester le plus possible disponible afin d'éviter de perdre des données. En plus de ces aspects techniques, la TSDB choisie devra avoir une communauté active pour considérer qu'elle est fiable et qu'il y a de la documentation autour ou de l'aide communautaire pour maintenir la solution dans le temps.
+Pour évaluer ces différents points, nous nous sommes référés à deux benchmarking fait en 2017 [1] et en 2019 [2].
 \newline
 Dans le premier benchmarking [1], celui ci pointe plusieurs aspects ï¿½ savoir :
 \begin{itemize}
-   \item Distribution/Clusterability : disponibilitï¿½, extensibilitï¿½, et un ï¿½quilibreur de charge
-    \item Functions : fonctions disponibles dans le systï¿½me MIN/MAX/SUM
-    \item Tags : contient un LTS (long time storage), possibilitï¿½ d'avoir plusieurs horodatages sur une mï¿½me valeur.
-    \item Granularity : dï¿½crit le plus petit dï¿½lai possible entre deux horodatages
+   \item Distribution/Clusterability : disponibilité, extensibilité, et un équilibreur de charge
+    \item Functions : fonctions disponibles dans le système MIN/MAX/SUM
+    \item Tags : contient un LTS (long time storage), possibilité d'avoir plusieurs horodatages sur une même valeur.
+    \item Granularity : décrit le plus petit délai possible entre deux horodatages
     \item Interfaces and Extensibility : les APIs et plugins possibles
-    \item Support and License : la propriï¿½tï¿½ intellectuelle de la TSDB et son support commercial
+    \item Support and License : la propriété intellectuelle de la TSDB et son support commercial
 \end{itemize}
-Ce rapport montre qu'aucune base de donnï¿½es ne peux implï¿½menter toutes les fonctionnalitï¿½s existantes sur les TSDBs. Nï¿½anmoins, elle montre plusieurs avantages sur certaines TSDBs et leurs inconvï¿½nients.
+Ce rapport montre qu'aucune base de données ne peux implémenter toutes les fonctionnalités existantes sur les TSDBs. Néanmoins, elle montre plusieurs avantages sur certaines TSDBs et leurs inconvénients.
 \newline
-Pour recentrer les recherches sur la solution ï¿½ choisir nous avons donc pris en compte le classement de popularitï¿½ des bases de donnï¿½es fait par db-engines [3]. Celui-ci permet d'avoir une vision sur les bases qui sont trï¿½s utilisï¿½es, mises ï¿½ jour et donc actives.
+Pour recentrer les recherches sur la solution à choisir nous avons donc pris en compte le classement de popularité des bases de données fait par db-engines [3]. Celui-ci permet d'avoir une vision sur les bases qui sont très utilisées, mises é jour et donc actives.
 \begin{figure}[hp]
     \includegraphics[width=0.6\textwidth]{Images/rankingTDSB}
 \end{figure}
 \newline
-Celles qui ressortent sont InfluxDB, KDB+ et Prometheus. InfluxDB ï¿½tant loin devant les autres TSDBs.
+Celles qui ressortent sont InfluxDB, KDB+ et Prometheus. InfluxDB étant loin devant les autres TSDBs.
 \newline
-Afin d'affiner notre choix, nous avons pris en compte le deuxiï¿½me benchmarking [2] qui se concentre sur des scï¿½narios IoT et donc prend en compte la performance sur des requï¿½tes SQL particuliï¿½res ainsi que le volume de donnï¿½es utilisï¿½ pour une entrï¿½e ou encore le nombre d'entrï¿½es possibles en mï¿½me temps.
+Afin d'affiner notre choix, nous avons pris en compte le deuxième benchmarking [2] qui se concentre sur des scénarios IoT et donc prend en compte la performance sur des requêtes SQL particulières ainsi que le volume de données utilisé pour une entrée ou encore le nombre d'entrées possibles en même temps.
 
 \begin{figure}[hp]
     \includegraphics[width=0.6\textwidth]{Images/queryRankingTSDB2}
 \end{figure}
-Sur ces graphiques, on observe le coï¿½t en temps de la requï¿½te en fonction du nombre d'entrï¿½es sur cette derniï¿½re.
-Lors de ce benchmarking, on peut observer qu'InfluxDB est nettement en avance sur les autres TSDBs. C'est pourquoi notre premier choix technique se basera sur cette base de donnï¿½es. Nï¿½anmoins nous gardons ï¿½ l'esprit d'autres possibilitï¿½s de TSDBs, il sera donc important dans la partie conception de bien prendre en compte une certaine facilitï¿½ ï¿½ changer de TSDB si nï¿½cessaire. De plus, il n'est pas impossible par la suite de changer vers Prometheus ï¿½tant une TSDB dï¿½jï¿½ utilisï¿½e pour certains projets Fit IoT Lab.
+Sur ces graphiques, on observe le coût en temps de la requête en fonction du nombre d'entrées sur cette dernière.
+Lors de ce benchmarking, on peut observer qu'InfluxDB est nettement en avance sur les autres TSDBs. C'est pourquoi notre premier choix technique se basera sur cette base de données. Néanmoins nous gardons é l'esprit d'autres possibilités de TSDBs, il sera donc important dans la partie conception de bien prendre en compte une certaine facilité é changer de TSDB si nécessaire. De plus, il n'est pas impossible par la suite de changer vers Prometheus étant une TSDB déjà utilisée pour certains projets Fit IoT Lab.
 
 
-\subsubsection{Intï¿½rï¿½ts}
+\subsubsection{Intérêts}
 
 
 \subsubsection{Limites}
 
 
-\section{Rï¿½capitulatif}
+\section{Récapitulatif}
 
-ï¿½ l'issue de ce travail bibliographique et critique, un rï¿½sumï¿½ des ï¿½lï¿½ments intï¿½ressants et des ï¿½lï¿½ments manquants de chaque proposition est mis en ï¿½vidence avec une prï¿½sentation condensï¿½e des arguments ayant abouti ï¿½ cette dichotomie.
-Les ï¿½lï¿½ments seront prï¿½sentï¿½s de maniï¿½re synthï¿½tique dans un tableau comparatif (cf.~tableaux~\ref{tab:Comparatif} et~\ref{tab:ComparatifAlternatif} ï¿½ titres d'exemples simplifiï¿½s).
+à l'issue de ce travail bibliographique et critique, un résumé des éléments intéressants et des éléments manquants de chaque proposition est mis en évidence avec une présentation condensée des arguments ayant abouti é cette dichotomie.
+Les éléments seront présentés de manière synthétique dans un tableau comparatif (cf.~tableaux~\ref{tab:Comparatif} et~\ref{tab:ComparatifAlternatif} é titres d'exemples simplifiés).
 
 
 \begin{typographie}
-Au passage, notons que les tableaux, figures et autres illustrations doivent ï¿½tre systï¿½matiquement placï¿½s dans des ï¿½lï¿½ments <<~flottants~>>, c'est-ï¿½-dire situï¿½s non pas exactement ï¿½ l'endroit oï¿½ il sont mentionnï¿½s.
-Ils sont donc numï¿½rotï¿½s, munis d'une lï¿½gende et rï¿½fï¿½rencï¿½s depuis le texte principal.%
-\footnote{\LaTeX\ se tire plutï¿½t bien de cette tï¿½che de positionnement optimal des flottants, sachant qu'il s'agit d'un problï¿½me NP-difficile~!}
-Toute utilisation <<~en ligne~>> est ï¿½ proscrire.
-Une figure, au sens large, ne remplace pas le texte, bien au contraire~; c'est ce dernier qui ï¿½tablit une prï¿½sentation, un raisonnement, etc., et la figure ne fait que l'illustrer pour le rendre plus comprï¿½hensible soit d'emblï¿½e soit aprï¿½s avoir pris connaissance du texte.
+Au passage, notons que les tableaux, figures et autres illustrations doivent être systématiquement placés dans des éléments <<~flottants~>>, c'est-é-dire situés non pas exactement à l'endroit où il sont mentionnés.
+Ils sont donc numérotés, munis d'une légende et référencés depuis le texte principal.%
+\footnote{\LaTeX\ se tire plutôt bien de cette tâche de positionnement optimal des flottants, sachant qu'il s'agit d'un problème NP-difficile~!}
+Toute utilisation <<~en ligne~>> est é proscrire.
+Une figure, au sens large, ne remplace pas le texte, bien au contraire~; c'est ce dernier qui établit une présentation, un raisonnement, etc., et la figure ne fait que l'illustrer pour le rendre plus compréhensible soit d'emblée soit aprés avoir pris connaissance du texte.
 \end{typographie}
 
 \section{Conclusion}
 
-ï¿½ l'issue de ce travail de recherche bibliographique, il apparaï¿½t que plusieurs propositions peuvent servir de base ï¿½ la rï¿½solution de notre problï¿½me.
+é l'issue de ce travail de recherche bibliographique, il apparait que plusieurs propositions peuvent servir de base é la résolution de notre problème.
 
-Il semble se dï¿½tacher un certain nombre de directions privilï¿½giï¿½es que nous allons exploiter en prioritï¿½ dans nos propositions.
-Celles-ci font l'objet de l'ï¿½tude du chapitre suivant.
+Il semble se détacher un certain nombre de directions privilégiées que nous allons exploiter en priorité dans nos propositions.
+Celles-ci font l'objet de l'étude du chapitre suivant.
 
 
 \chapter{Conception}
