@@ -139,23 +139,11 @@ A ce jour, pour l'objectif principal, nous avons déjà un premier prototype fonct
 
 \section{Plan de l'étude}
 
-Une fois qu'un survol relativement précis de l'ensemble du travail a été réalisé, il convient d'entrer dans les détails pour le lecteur désireux de poursuivre la lecture du rapport.
+Ce rapport arrivant au milieu du projet, il ne peut être que peu étoffé pour le moment, de fait, le nombre de paragraphes reflète l'avancement de notre travail. De fait, notre étude se basera sur ces différentes parties:
 
-La logique d'ensemble de l'organisation du rapport est précisée si la simple lecture continue de chapitres ne s'impose pas d'elle-même.
-Chaque chapitre donne alors lieu à une description succincte.
-Le but de ces quelques paragraphes est de fournir une vue générale du rapport sans avoir à lire l'introduction de chaque chapitre séparément.
+Le chapitre~\ref{chap:EtatArt} se concentrera sur les études technologiques et la montée en compétence que nous avons effectuée sur ce début de projet, et que nous continuerons d'effectuer par la suite. En effet, le sujet étant plus technologique qu'orienté recherche, un état de l'art scientifique n'était pas pertinent. Nous avons donc effectué un état de l'art technologique que nous détaillerons dans cette partie.
 
-Très grossièrement, le découpage de base se répartit entre la recherche de solutions plus ou moins complètes à des problèmes similaires, voire au problème lui-même et le développement d'une (nouvelle) solution, éventuellement partielle elle-même.
-
-le chapitre~\ref{chap:EtatArt} étudie un ensemble de propositions de la littérature scientifique.
-L'analyse conjointe de ces dernières permet de dresser un bilan de l'état de l'art et de proposer des pistes de recherches.
-
-Le chapitre~\ref{chap:Propositions} étudie, d'un point de vue théorique, la ou les pistes les plus prometteuses.
-Les implications des hypothèses de travail sont développées jusqu'au point où seule l'expérimentation permettra de trancher.
-
-Le chapitre~\ref{chap:Experimentations} engage dans la voie du développement suivi des expérimentations et de l'analyse des résultats obtenus.
-
-La conclusion permet de synthétiser les apports de ce travail et d'ouvrir des voies d'investigations supplémentaires.
+Le chapitre~\ref{chap:Conception} est dédié aux différents choix technologiques, diagrammes et concepts qui forment notre système. Il est central car il constitue une base de travail solide sur laquelle se retourner à tout moment lors du travail pour notre groupe.
 
 %-------------------------------------------------------------------------------------------------------------
 
@@ -245,125 +233,7 @@ Celles-ci font l'objet de l'ï¿½tude du chapitre suivant.
 % \part{Réalisations} % À décommenter si l'état de l'art a nécessité plusieurs chapitres.
 % \label{part:Realisations}
 
-\chapter{Propositions}
-\label{chap:Propositions}
 
-Le titre de ce chapitre peut s'écrire au singulier ou au pluriel en fonction du nombre de propositions faites et de leur investigation.
-
-Si plusieurs propositions sont faites, elles doivent être annoncées ici et leurs points marquants décrits succinctement, comme donné en exemple dans le paragraphe et les sections suivants.
-
-\bigskip
-
-\emph{Dans les sections suivantes nous allons décrire notre proposition.
-Partis de l'hypothèse que [...], nous en avons déduit que [...].
-Par la suite, cette idée nous a permis d'aboutir à la proposition d'un algorithme d'extraction de paramètres et d'une fonction qui permet de résumer de manière pertinente et discriminante ces différents paramètres en une unique valeur réelle.
-La qualité de cette mesure est démontrée.
-Il nous faut toutefois admettre en toute franchise que cette réduction brutale, si elle offre l'avantage indéniable, entre autres, de permettre d'ordonner les valeurs d'origine, perd toute finesse dans l'analyse de données multidimensionnelles.}
-
-\section{Notre proposition i}
-
-L'organisation des cette section (voire chapitre) est la plus libre qui soit.
-Toutefois, on peut proposer une organisation qui distingue l'intuition de sa formalisation et de sa démonstration.
-
-\subsection{Idées préliminaires}
-
-La fin du chapitre~\ref{chap:EtatArt} a permis de mettre en avant les éléments présents dans des propositions antérieures qui sont exploitables pour résoudre notre problème.
-Nous développons ici les idées qui nous semblent les plus à même d'y parvenir.
-
-\subsection{Formalisation}
-
-Le développements des intuitions et idées de la section précédente vont aboutir à des propositions formalisées.
-Cela peut se traduire aussi bien par des formules que des algorithmes.
-
-\emph{Nous avons trouvé une formule particulièrement pertinente pour résumer les nombreuses caractéristiques d'une image~:}
-\begin{equation}
-   \label{eq:Proposition}
-   \Phi~:
-      \begin{array}{ccc}
-         T_1 \times \ldots \times T_n & \to & \mathbb{R}\\
-         (a, p, m_1, m_2, \kappa, \ldots, \alpha, \alpha', \ldots,z) & \mapsto & \ldots
-      \end{array}
-\end{equation}
-
-\emph{Les différents paramètres de la fonction sont eux-mêmes fournis par l'algorithme~\ref{alg:Proposition}.}
-
-\begin{algorithm*}
-   L'algorithme peut être décrit de différentes manières, avec les environnements~:
-   \begin{itemize}
-      \item \textsl{verbatim} (mode rudimentaire)~:
-         \begin{verbatim}
-fonction F (I~: image)~: (T1, T2, ..., Tn)
-...\end{verbatim}
-      \item \textsl{tabbing} (code plus lisible en mode \LaTeX, intéressant pour les algorithmes utilisant lourdement les mathématiques)~:
-         \begin{tabbing}
-            \textbf{fonction} $F$ ($I~: \mathcal{I}$)~: $T_1 \times T_2 \times \cdots \times T_n$\\
-            \textbf{return} $\sum\limits_{\forall p \in I} f^{(n)}(p)$
-         \end{tabbing}
-
-      \item \textsl{lstlisting} pour du code \emph{source} en ligne~:
-         \begin{lstlisting}
-fonction F (I~: image)~: (T1, T2, ..., Tn)
-...
-         \end{lstlisting}
-         ou inclusion d'un code \emph{externe} (facilite les mises à jour et le paramétrage fin)~:
-         \lstinputlisting[alsolanguage=Python,
-                          emph={pgcd},
-                          emphstyle={\color{red}},
-                          stringstyle={\color{olive}},
-                          identifierstyle={\color{blue}},
-                          morekeywords={assert},
-                          showstringspaces=false]{pgcd.py}
-      \item avec d'autres environnements standard (ex.~: \textsl{algorithmic}) pour les pseudo-programmes / algorithmes
-%          \begin{algorithmic}[1]
-%             \REQUIRE $n \geq 0$
-%             \ENSURE $y = x^n$
-%             \STATE $y \Leftarrow 1$
-%             \STATE $X \Leftarrow x$
-%             \STATE $N \Leftarrow n$
-%             \WHILE{$N \neq 0$}
-%                \IF{$N$ is even}
-%                   \STATE $X \Leftarrow X \times X$
-%                   \STATE $N \Leftarrow N / 2$
-%                \ELSE[$N$ is odd]
-%                   \STATE $y \Leftarrow y \times X$
-%                   \STATE $N \Leftarrow N - 1$
-%                \ENDIF
-%             \ENDWHILE
-%          \end{algorithmic}
-   \end{itemize}
-   \caption{Proposition}
-   \label{alg:Proposition}
-\end{algorithm*}
-
-\subsection{Démonstration}
-
-Tous les éléments de démonstration du bien fondé de la méthode proposée doivent être explicités si ce n'est sous la forme de théorèmes, du moins avec un enchaînement argumenté de causes à effets.
-
-\begin{theoreme}
-   Soit $(a, p, m_1, m_2, \kappa, \ldots, \alpha, \alpha', \ldots,z) \in T_1 \times \ldots \times T_n$ tel que [...] alors [...].
-\end{theoreme}
-
-\begin{preuve}
-   Procédons par contradiction.
-[...]~\hfill$\square$
-\end{preuve}
-
-\subsection{Analyse}
-
-Une analyse objective sur cette orientation est ici faite.
-Le problème est-il résolu dans sa totalité, sinon quelle partie~?
-La résolution est-elle efficace d'un point de vue informatique~?
-Etc.
-
-\section{Conclusion}
-
-Différentes idées nous ont conduit à faire différentes propositions.
-À ce stade, il convient de restreindre leur nombre afin d'avoir le temps de conduire des expérimentations suffisamment poussées, nous permettant d'établir des conclusions pertinentes.
-
-\emph{En comparant les apports démontrés ou à vérifier dans le tableau [...], nous en déduisons un classement <<~au mérite~>> qui est le suivant~: [...].
-Par manque de temps, nous allons nous limiter aux deux premiers dans le chapitre~\ref{chap:Experimentations}.}
-
-%-------------------------------------------------------------------------------------------------------------
 
 \chapter{Planification}
 
