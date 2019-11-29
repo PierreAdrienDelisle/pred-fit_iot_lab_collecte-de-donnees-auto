@@ -155,11 +155,55 @@ Le chapitre~\ref{chap:Conception} est dédié aux différents choix technologiques,
 \chapter{\'Etat de l'art}
 \label{chap:EtatArt}
 
-\section{Plateforme Fit IoT Lab}
+\section{Plateforme FIT IoT Lab}
 
 \subsection{Présentation}
-	Fit IoT Lab est une plateforme de service  d'infrastructure IoT. Il existe sur cette plateforme plus de 1500 capteurs de différents types (M3,A8,turtlebot,...) répartis sur 6 sites : Grenoble, Lille, Lyon, Paris, Saclay et Strasbourg. L'objectif est de fournir aux chercheurs une infrastructure riche qu'ils peuvent ensuite réserver et tester pour leur propres expériences en utilisant ces noeuds.
-\subsection{Frontend SSH}
+
+	FIT IoT Lab est une plateforme de service  d'infrastructure IoT. Il existe sur cette plateforme plus de 1500 noeuds capteurs de différents types (M3,A8,turtlebot,...) répartis sur 6 sites : Grenoble, Lille, Lyon, Paris, Saclay et Strasbourg. L'objectif est de fournir aux chercheurs une infrastructure riche qu'ils peuvent ensuite réserver et tester pour leur propres expériences en utilisant ces noeuds.
+	IoT Lab fait partie du consortium FIT (Future Internet Testing facility) qui réuni plusieurs institutions de recherche et universités sur ce projet de plateforme de tests à grande échelle : FIT IoT Lab, FIT Wireless et FIT Cloud.
+	
+\subsection{Architecture IoT Lab}
+La plateforme est décomposée en plusieurs parties :
+\begin{itemize}
+	\item Site web - FIT IoT Lab
+	
+	Il permet d'accéder au banc d'essai en ligne, réserver des noeuds capteurs pour une expérience avec un firmware dédié et une durée. Il contient aussi les tutoriels permettant de prendre en main la plateforme.
+	
+	\item L'API REST 
+	
+	Cette API REST contient une multitude d'appels pour différents besoins. On peut obtenir l'état du banc d'essai sur n'importe quel site ou alors se concentrer sur une expérience en cours ou passée pour obtenir des détails sur celle-ci.  Elle contient par ailleurs des possibilités de modifier un firmware en cours d'expériences ou d'obtenir plus d'informations sur des robots en mobilité.
+	
+	\item Frontend SSH
+	
+	La frontend SSH est un ordinateur distant auquel chaque utilisateur de FIT IoT Lab peut se connecter via son compte. Elle est utile pour lancer directement des expériences, les gérer et prendre des informations diverses et variées. Cette frontend SSH s'appuie sur l'API REST pour fonctionner mais elle permet d'utiliser des scripts en local sur cet ordinateur distant afin de réaliser des tâches plus complexes comme le "serial aggregator" qui va agréger toutes les entrées des liens séries de nos noeuds. Les scripts sont écrits généralement en Python.
+	
+	\item Noeuds capteurs
+	
+	Il existe plusieurs types de noeuds : A8, M3, Firefly, Lora, Arduino, WSN430 et les turtlebots qui sont des unités mobiles. Chaque noeud à une documentation qui lui est propre. Cela permet une grande diversité dans l'expérimentation. Sur ces noeuds il faut ajouter un firmware pour obtenir le comportement par défaut attendu de chacun d'eux, le développement firmware s'effectue en C.
+	 
+\end{itemize}
+	
+\begin{figure}[hp]
+    \includegraphics[width=0.5\textwidth]{Images/web-view_archi}
+    \caption{Graphique architecture FIT IoT Lab}
+\end{figure}
+
+\subsection{Tutoriels essentiels}
+
+Dans cette section, nous présenterons les tutoriels essentiels de la plateforme que nous avons dû suivre pour réaliser notre solution.
+	\begin{itemize}
+		\item Getting started ? the tutorial for beginners 
+		
+		Ce tutoriel vise à faire une première soumission d'expérience via la plateforme web : réserver des noeuds, ajouter un firmware et y accéder directement via SSH sur le banc d'essai.
+			
+		\item SSH access
+		
+		
+		\item Experiment CLI Client
+		\item Run a script in background
+		\item Nodes Serial Link Aggregation
+\end{itemize}	 
+
 
 \section{Firmwares}
 
@@ -197,6 +241,7 @@ Pour la plateforme RIOT, les mêmes tutoriels existent que pour Contiki \footnote
 
 Par ailleurs, des exemples permettent aussi de comprendre le fonctionnement global de la plateforme et d'en extraire les principes de base. Malgré cela, il n'existe pas d'exemple traitant directement avec les capteurs, et il nous faudra donc aller chercher plus en profondeur dans la documentation pour trouver des solutions à ce niveau.
 
+
 \subsection{Analyse}
 Étant encore en phase de tests, nous ne pouvons pas donner un avis définitif sur la question de l'OS à utiliser. Malgré tout, chacune des solutions nous permettra à terme d'arriver à une solution très satisfaisante. En effet, le problème de base, au niveau du firmware, est relativement élémentaire et ne demande pas de programmation très compliquée.
 
@@ -216,7 +261,7 @@ Afin de mener le projet au bout, nous aurons besoin d'une base de données tempor
 Tout d'abord, quelles sont les caractéristiques propres à une base de données temporelle? Les Time Series Databases (notées TSDB) ont besoin d'un horodatage sur les données avec une proximité physique si l'horodatage est proche, les données sont à proximité afin de traiter celles-ci plus efficacement. Ensuite, elles se doivent d'exécuter des "range queries" rapidement, c'est à dire des requêtes rapportant toutes les données inférieures ou supérieures à une condition (ici la condition la plus utilisée sera le temps). Les TSDB se doivent d'obtenir une rapidité d'écriture élevée sur la base puisqu'elle sera remplie fréquemment, elles doivent donc rester le plus possible disponible afin d'éviter de perdre des données. En plus de ces aspects techniques, la TSDB choisie devra avoir une communauté active pour considérer qu'elle est fiable et qu'il y a de la documentation autour ou de l'aide communautaire pour maintenir la solution dans le temps.
 Pour évaluer ces différents points, nous nous sommes référés à deux benchmarking fait en 2017 [1] et en 2019 [2].
 \newline
-Dans le premier benchmarking [1], celui ci pointe plusieurs aspects ï¿½ savoir :
+Dans le premier benchmarking [1], celui ci pointe plusieurs aspects à savoir :
 \begin{itemize}
    \item Distribution/Clusterability : disponibilité, extensibilité, et un équilibreur de charge
     \item Functions : fonctions disponibles dans le système MIN/MAX/SUM
@@ -227,9 +272,10 @@ Dans le premier benchmarking [1], celui ci pointe plusieurs aspects ï¿½ savoir :
 \end{itemize}
 Ce rapport montre qu'aucune base de données ne peux implémenter toutes les fonctionnalités existantes sur les TSDBs. Néanmoins, elle montre plusieurs avantages sur certaines TSDBs et leurs inconvénients.
 \newline
-Pour recentrer les recherches sur la solution à choisir nous avons donc pris en compte le classement de popularité des bases de données fait par db-engines [3]. Celui-ci permet d'avoir une vision sur les bases qui sont très utilisées, mises é jour et donc actives.
+Pour recentrer les recherches sur la solution à choisir nous avons donc pris en compte le classement de popularité des bases de données fait par db-engines [3]. Celui-ci permet d'avoir une vision sur les bases qui sont très utilisées, mises à jour et donc actives.
 \begin{figure}[hp]
-    \includegraphics[width=0.6\textwidth]{Images/rankingTDSB}
+    \includegraphics[width=0.5\textwidth]{Images/rankingTDSB}
+    \caption{Classement d'activité sur les bases de données temporelles}
 \end{figure}
 \newline
 Celles qui ressortent sont InfluxDB, KDB+ et Prometheus. InfluxDB étant loin devant les autres TSDBs.
@@ -238,6 +284,7 @@ Afin d'affiner notre choix, nous avons pris en compte le deuxième benchmarking [
 
 \begin{figure}[hp]
     \includegraphics[width=0.6\textwidth]{Images/queryRankingTSDB2}
+    \caption{Temps de réponse moyen en fonction de la charge}
 \end{figure}
 Sur ces graphiques, on observe le coût en temps de la requête en fonction du nombre d'entrées sur cette dernière.
 Lors de ce benchmarking, on peut observer qu'InfluxDB est nettement en avance sur les autres TSDBs. C'est pourquoi notre premier choix technique se basera sur cette base de données. Néanmoins nous gardons é l'esprit d'autres possibilités de TSDBs, il sera donc important dans la partie conception de bien prendre en compte une certaine facilité é changer de TSDB si nécessaire. De plus, il n'est pas impossible par la suite de changer vers Prometheus étant une TSDB déjà utilisée pour certains projets Fit IoT Lab.
