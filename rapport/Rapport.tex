@@ -198,10 +198,22 @@ Dans cette section, nous présenterons les tutoriels essentiels de la plateforme 
 			
 		\item SSH access
 		
+		Cette partie permet d'obtenir un accès  SSH sur la frontend en faisant un échange de clé RSA via le site web. 
 		
 		\item Experiment CLI Client
-		\item Run a script in background
+		
+		Ce tutoriel fait partie d'un ensemble de tutoriels à propos des "CLI tools" qui permettent de faire des appels à l'API REST en soumettant des expériences, en flashant les firmwares des noeuds etc... Celui-ci permet d'apprendre la partie "experiment" qui concerne la soumission d'expérience ains que de son suivi.
+		
 		\item Nodes Serial Link Aggregation
+		
+		Une présentation du script "serial aggregator" qui permet d'agréger tous les liens séries relatifs à une expérience. Il permet aussi d'envoyer des messages à tous les liens qu'il agrège.
+		
+		\item Run a script in background
+		
+		En prenant exemple sur le script "serial aggregator", ce tutoriel permet de mettre en place une exécution automatique d'un script directement à la soumission d'une expérience et d'ensuite récupérer ces logs.
+			
+		
+		
 \end{itemize}	 
 
 
@@ -290,29 +302,25 @@ Sur ces graphiques, on observe le coût en temps de la requête en fonction du nom
 Lors de ce benchmarking, on peut observer qu'InfluxDB est nettement en avance sur les autres TSDBs. C'est pourquoi notre premier choix technique se basera sur cette base de données. Néanmoins nous gardons é l'esprit d'autres possibilités de TSDBs, il sera donc important dans la partie conception de bien prendre en compte une certaine facilité é changer de TSDB si nécessaire. De plus, il n'est pas impossible par la suite de changer vers Prometheus étant une TSDB déjà utilisée pour certains projets Fit IoT Lab.
 
 
-\subsubsection{Intérêts}
-
-
-\subsubsection{Limites}
 
 
 \section{Récapitulatif}
 
-à l'issue de ce travail bibliographique et critique, un résumé des éléments intéressants et des éléments manquants de chaque proposition est mis en évidence avec une présentation condensée des arguments ayant abouti é cette dichotomie.
-Les éléments seront présentés de manière synthétique dans un tableau comparatif (cf.~tableaux~\ref{tab:Comparatif} et~\ref{tab:ComparatifAlternatif} é titres d'exemples simplifiés).
 
+Sur cet état de l'art, nous avons pu résumer les différents éléments nécessaires à l'implémentation de notre solution à savoir :
+	\begin{itemize}
+		\item La plateforme FIT IoT Lab
+		\item Les firmwares M3
+		\item La base de données temporelles
+	\end{itemize}
+	
+Nous avons pu aboutir à une première solution en prenant des choix qui nous semble correct. A savoir le choix de développer sur la plateforme FIT via la frontend SSH afin de ne pas à avoir héberger notre script et directement lancer l'automatisation en local, mettre en place un premier firmware via Contiki puisqu'il offre une simplicité de programmation et déjà une bonne base d'exemple de firmwares et mettre en place dans un premier temps une base de données InfluxDB mais garder à l'esprit de bien compartimenter cette partie afin de ne pas avoir de problèmes d'intégration s'il y a une nécessité de migrer vers un autre type de base de données.
 
-\begin{typographie}
-Au passage, notons que les tableaux, figures et autres illustrations doivent être systématiquement placés dans des éléments <<~flottants~>>, c'est-é-dire situés non pas exactement à l'endroit où il sont mentionnés.
-Ils sont donc numérotés, munis d'une légende et référencés depuis le texte principal.%
-\footnote{\LaTeX\ se tire plutôt bien de cette tâche de positionnement optimal des flottants, sachant qu'il s'agit d'un problème NP-difficile~!}
-Toute utilisation <<~en ligne~>> est é proscrire.
-Une figure, au sens large, ne remplace pas le texte, bien au contraire~; c'est ce dernier qui établit une présentation, un raisonnement, etc., et la figure ne fait que l'illustrer pour le rendre plus compréhensible soit d'emblée soit aprés avoir pris connaissance du texte.
-\end{typographie}
 
 \section{Conclusion}
 
-À l'issue de ce travail de recherche bibliographique, il apparaît que plusieurs propositions peuvent servir de base é la résolution de notre problème.
+
+À l'issue de ce travail de recherche bibliographique, il apparaît que plusieurs propositions peuvent servir de base à la résolution de notre problème.
 
 Il semble se détacher un certain nombre de directions privilégiées que nous allons exploiter en priorité dans nos propositions.
 Celles-ci font l'objet de l'étude du chapitre suivant.
@@ -327,14 +335,11 @@ Cette partie est dédiée au système dans son ensemble et à la manière dont il a é
 \section{Ensemble du système - Diagramme d'architecture}
 
 
-
+\newpage
 \begin{figure}[hp]
     \includegraphics[width=1\textwidth]{Images/diagrammeArchi}
     \caption{Diagramme d'architecture}
 \end{figure}
-
-\section{Scénario - Diagramme de séquence}
-
 
 \newpage
 \section{Scénario - Diagramme de séquence - Figure 3.1}
