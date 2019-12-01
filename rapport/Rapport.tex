@@ -192,23 +192,23 @@ La plateforme est décomposée en plusieurs parties :
 
 Dans cette section, nous présenterons les tutoriels essentiels de la plateforme que nous avons dû suivre pour réaliser notre solution.
 	\begin{itemize}
-		\item Getting started ? the tutorial for beginners 
+		\item Getting started ? the tutorial for beginners  [1]
 		
 		Ce tutoriel vise à faire une première soumission d'expérience via la plateforme web : réserver des noeuds, ajouter un firmware et y accéder directement via SSH sur le banc d'essai.
 			
-		\item SSH access
+		\item SSH access [2]
 		
 		Cette partie permet d'obtenir un accès  SSH sur la frontend en faisant un échange de clé RSA via le site web. 
 		
-		\item Experiment CLI Client
+		\item Experiment CLI Client [3]
 		
 		Ce tutoriel fait partie d'un ensemble de tutoriels à propos des "CLI tools" qui permettent de faire des appels à l'API REST en soumettant des expériences, en flashant les firmwares des noeuds etc... Celui-ci permet d'apprendre la partie "experiment" qui concerne la soumission d'expérience ains que de son suivi.
 		
-		\item Nodes Serial Link Aggregation
+		\item Nodes Serial Link Aggregation [4]
 		
 		Une présentation du script "serial aggregator" qui permet d'agréger tous les liens séries relatifs à une expérience. Il permet aussi d'envoyer des messages à tous les liens qu'il agrège.
 		
-		\item Run a script in background
+		\item Run a script in background [5]
 		
 		En prenant exemple sur le script "serial aggregator", ce tutoriel permet de mettre en place une exécution automatique d'un script directement à la soumission d'une expérience et d'ensuite récupérer ces logs.
 			
@@ -270,9 +270,9 @@ Afin de mener le projet au bout, nous aurons besoin d'une base de données tempor
 \subsection{Analyse}
 
 Tout d'abord, quelles sont les caractéristiques propres à une base de données temporelle? Les Time Series Databases (notées TSDB) ont besoin d'un horodatage sur les données avec une proximité physique si l'horodatage est proche, les données sont à proximité afin de traiter celles-ci plus efficacement. Ensuite, elles se doivent d'exécuter des "range queries" rapidement, c'est à dire des requêtes rapportant toutes les données inférieures ou supérieures à une condition (ici la condition la plus utilisée sera le temps). Les TSDB se doivent d'obtenir une rapidité d'écriture élevée sur la base puisqu'elle sera remplie fréquemment, elles doivent donc rester le plus possible disponible afin d'éviter de perdre des données. En plus de ces aspects techniques, la TSDB choisie devra avoir une communauté active pour considérer qu'elle est fiable et qu'il y a de la documentation autour ou de l'aide communautaire pour maintenir la solution dans le temps.
-Pour évaluer ces différents points, nous nous sommes référés à deux benchmarking fait en 2017 [1] et en 2019 [2].
+Pour évaluer ces différents points, nous nous sommes référés à deux benchmarking fait en 2017 [6] et en 2019 [7].
 \newline
-Dans le premier benchmarking [1], celui ci pointe plusieurs aspects à savoir :
+Dans le premier benchmarking [6], celui ci pointe plusieurs aspects à savoir :
 \begin{itemize}
    \item Distribution/Clusterability : disponibilité, extensibilité, et un équilibreur de charge
     \item Functions : fonctions disponibles dans le système MIN/MAX/SUM
@@ -283,7 +283,7 @@ Dans le premier benchmarking [1], celui ci pointe plusieurs aspects à savoir :
 \end{itemize}
 Ce rapport montre qu'aucune base de données ne peux implémenter toutes les fonctionnalités existantes sur les TSDBs. Néanmoins, elle montre plusieurs avantages sur certaines TSDBs et leurs inconvénients.
 \newline
-Pour recentrer les recherches sur la solution à choisir nous avons donc pris en compte le classement de popularité des bases de données fait par db-engines [3]. Celui-ci permet d'avoir une vision sur les bases qui sont très utilisées, mises à jour et donc actives.
+Pour recentrer les recherches sur la solution à choisir nous avons donc pris en compte le classement de popularité des bases de données fait par db-engines [8]. Celui-ci permet d'avoir une vision sur les bases qui sont très utilisées, mises à jour et donc actives.
 \begin{figure}[hp]
     \includegraphics[width=0.6\textwidth]{Images/rankingTDSB}
     \caption{Classement d'activité sur les bases de données temporelles}
@@ -292,14 +292,14 @@ Pour recentrer les recherches sur la solution à choisir nous avons donc pris en 
 \newline
 Celles qui ressortent sont InfluxDB, KDB+ et Prometheus. InfluxDB étant loin devant les autres TSDBs.
 \newline
-Afin d'affiner notre choix, nous avons pris en compte le deuxième benchmarking [2] qui se concentre sur des scénarios IoT et donc prend en compte la performance sur des requêtes SQL particulières ainsi que le volume de données utilisé pour une entrée ou encore le nombre d'entrées possibles en même temps.
+Afin d'affiner notre choix, nous avons pris en compte le deuxième benchmarking [7] qui se concentre sur des scénarios IoT et donc prend en compte la performance sur des requêtes SQL particulières ainsi que le volume de données utilisé pour une entrée ou encore le nombre d'entrées possibles en même temps.
 
 \begin{figure}[h]
     \includegraphics[width=0.5\textwidth]{Images/queryRankingTSDB2}
     \caption{Temps de réponse moyen en fonction de la charge}
 \end{figure}
 Sur ces graphiques, on observe le coût en temps de la requête en fonction du nombre d'entrées sur cette dernière.
-Lors de ce benchmarking, on peut observer qu'InfluxDB est nettement en avance sur les autres TSDBs. C'est pourquoi notre premier choix technique se basera sur cette base de données. Néanmoins nous gardons é l'esprit d'autres possibilités de TSDBs, il sera donc important dans la partie conception de bien prendre en compte une certaine facilité é changer de TSDB si nécessaire. De plus, il n'est pas impossible par la suite de changer vers Prometheus étant une TSDB déjà utilisée pour certains projets Fit IoT Lab.
+Lors de ce benchmarking, on peut observer qu'InfluxDB [9] est nettement en avance sur les autres TSDBs. C'est pourquoi notre premier choix technique se basera sur cette base de données. Néanmoins nous gardons à l'esprit d'autres possibilités de TSDBs, il sera donc important dans la partie conception de bien prendre en compte une certaine facilité à changer de TSDB si nécessaire. De plus, il n'est pas impossible par la suite de changer vers Prometheus [10] étant une TSDB déjà utilisée pour certains projets Fit IoT Lab.
 
 
 
@@ -326,6 +326,39 @@ Il semble se détacher un certain nombre de directions privilégiées que nous allo
 Celles-ci font l'objet de l'étude du chapitre suivant.
 
 
+\bibliography{biblio}
+[1] Getting started with IoT-LAB ? the tutorial for beginners -  https://www.iot-lab.info/tutorials/getting-started-tutorial/
+\newline
+\newline
+[2] Configure your SSH access - \newline https://www.iot-lab.info/tutorials/ssh-access/
+\newline
+\newline
+[3] Experiment CLI client -  https://www.iot-lab.info/tutorials/iotlab-experimenttools-client/
+\newline
+\newline
+[4] Nodes Serial Link Aggregation - \newline https://www.iot-lab.info/tutorials/serial-aggregator/
+\newline
+\newline
+[5]Running script on SSH frontend - \newline https://www.iot-lab.info/tutorials/iotlab-runscript-client/
+\newline
+\newline
+[6] Survey and Comparison of Open Source Time Series Databases - Andreas Bader,Oliver Kopp,Michael Falkenthal - 2017
+\newline
+\newline
+[7] Benchmarking Time Series Databases with IoTDB-Benchmark for IoT Scenarios - Rui Liu, Jun Yuan - 2019
+\newline
+\newline
+[8] DB-Engines Ranking, \newline
+https://db-engines.com/en/ranking/time+series+dbms
+\newline
+\newline
+[9] Time Series Database (TSDB) Explained | InfluxDB - 
+https://www.influxdata.com/time-series-database/
+\newline
+\newline
+[10] Prometheus - Monitoring system & time series database - https://prometheus.io/
+\newline
+\newline
 \chapter{Conception}
 \label{chap:Conception}
 
@@ -679,8 +712,8 @@ Cette annexe est \emph{obligatoire}.
 \end{fichesuivi}
 
 \begin{fichesuivi}{}{}
-   \tempstravailA{18}{40}
-   \tempstravailB{1}{25}
+   \tempstravailA{28}{0}
+   \tempstravailB{0}{0}
 
    \begin{travaileffectue}
    \end{travaileffectue}
@@ -696,8 +729,8 @@ Cette annexe est \emph{obligatoire}.
 \end{fichesuivi}
 
 \begin{fichesuivi}{}{}
-   \tempstravailA{21}{40}
-   \tempstravailB{17}{10}
+   \tempstravailA{0}{0}
+   \tempstravailB{0}{0}
 
    \begin{travaileffectue}
    \end{travaileffectue}
@@ -713,8 +746,8 @@ Cette annexe est \emph{obligatoire}.
 \end{fichesuivi}
 
 \begin{fichesuivi}{}{}
-   \tempstravailA{4}{30}
-   \tempstravailB{8}{15}
+   \tempstravailA{0}{0}
+   \tempstravailB{0}{0}
 
    \begin{travaileffectue}
    \end{travaileffectue}
@@ -730,8 +763,8 @@ Cette annexe est \emph{obligatoire}.
 \end{fichesuivi}
 
 \begin{fichesuivi}{}{}
-   \tempstravailA{10}{10}
-   \tempstravailB{11}{00}
+   \tempstravailA{0}{0}
+   \tempstravailB{0}{0}
 
    \begin{travaileffectue}
    \end{travaileffectue}
@@ -747,8 +780,8 @@ Cette annexe est \emph{obligatoire}.
 \end{fichesuivi}
 
 \begin{fichesuivi}{}{}
-   \tempstravailA{3}{30}
-   \tempstravailB{2}{10}
+   \tempstravailA{0}{0}
+   \tempstravailB{0}{0}
 
    \begin{travaileffectue}
    \end{travaileffectue}
@@ -764,8 +797,8 @@ Cette annexe est \emph{obligatoire}.
 \end{fichesuivi}
 
 \begin{fichesuivi}{}{}
-   \tempstravailA{10}{00}
-   \tempstravailB{10}{00}
+   \tempstravailA{0}{0}
+   \tempstravailB{0}{0}
 
    \begin{travaileffectue}
    \end{travaileffectue}
@@ -781,8 +814,8 @@ Cette annexe est \emph{obligatoire}.
 \end{fichesuivi}
 
 \begin{fichesuivi}{}{}
-   \tempstravailA{3}{45}
-   \tempstravailB{10}{20}
+   \tempstravailA{0}{0}
+   \tempstravailB{0}{0}
 
    \begin{travaileffectue}
    \end{travaileffectue}
@@ -798,8 +831,8 @@ Cette annexe est \emph{obligatoire}.
 \end{fichesuivi}
 
 \begin{fichesuivi}{}{}
-   \tempstravailA{16}{30}
-   \tempstravailB{18}{15}
+   \tempstravailA{0}{0}
+   \tempstravailB{0}{0}
 
    \begin{travaileffectue}
    \end{travaileffectue}
@@ -815,8 +848,8 @@ Cette annexe est \emph{obligatoire}.
 \end{fichesuivi}
 
 \begin{fichesuivi}{}{}
-   \tempstravailA{14}{30}
-   \tempstravailB{22}{30}
+   \tempstravailA{0}{0}
+   \tempstravailB{0}{0}
 
    \begin{travaileffectue}
    \end{travaileffectue}
@@ -832,8 +865,8 @@ Cette annexe est \emph{obligatoire}.
 \end{fichesuivi}
 
 \begin{fichesuivi}{}{}
-   \tempstravailA{17}{45}
-   \tempstravailB{12}{50}
+   \tempstravailA{0}{0}
+   \tempstravailB{0}{0}
 
    \begin{travaileffectue}
    \end{travaileffectue}
@@ -849,8 +882,8 @@ Cette annexe est \emph{obligatoire}.
 \end{fichesuivi}
 
 \begin{fichesuivi}{}{}
-   \tempstravailA{13}{10}
-   \tempstravailB{9}{30}
+   \tempstravailA{0}{0}
+   \tempstravailB{0}{0}
 
    \begin{travaileffectue}
    \end{travaileffectue}
