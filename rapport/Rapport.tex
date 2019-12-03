@@ -1,0 +1,1019 @@
+\documentclass[11pt, french, screen, research-development]{report-rd-info}
+   % - 11pt:  12pt peut être préférable pour faciliter la lecture sur les petits écrans, demander à l'encadrement
+   % - french:  à remplacer par english en cas de rédaction (exceptionnelle) en anglais
+   % - screen:  à enlever pour obtenir un rapport au format A4
+   % - research-development:  à remplacer par 'research' seul, ou 'development' seul, voire 'intelligence' en fonction de la demande du jury à l'issue du travail
+\usepackage[latin1]{inputenc}
+   % - latin9, utf8, etc.
+\usepackage[T1]{fontenc}
+\usepackage{babel}
+
+% définitions propres au contenu actuel
+\usepackage{enumerate}
+\usepackage{amsmath, amssymb}
+\usepackage{algorithm}
+   \floatname{algorithm}{Algorithme}
+   \ifenglish
+      \renewcommand{\listalgorithmname}{List of Algorithms}
+   \else
+      \renewcommand{\listalgorithmname}{Liste des algorithmes}
+   \fi
+\usepackage{listings}
+   \lstset{backgroundcolor={\color{yellow}},
+           columns=fullflexible,
+           commentstyle={\color{blue}},
+           numbers=left,
+           numbersep=5pt,
+           numberstyle={\tiny},
+           stepnumber=1}
+\usepackage{algorithmic}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{url}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+
+\newenvironment{typographie}{\begin{quote}\textbf{Typographie}. }{\end{quote}}
+\newenvironment{structuration}{\begin{quote}\textbf{Structuration}. }{\end{quote}}
+
+\newtheorem{theoreme}{Théorème}
+\newtheorem{preuve}{Preuve}
+
+\begin{document}
+
+\title{Rapport intermédiaire}
+\subtitle{Collecte automatique de données}
+\authorA{Pierre-Adrien}{Delisle}
+\authorB{Samuele}{Da Silva}
+\supervisor{Benoit}{Parrein}
+\cosupervisor{Julien}{Vandaele}
+   % Si plusieurs co-encadrants, alors utiliser la forme suivante~:
+   %    \cosupervisor{Alter}{Ego \& {\normalfont Jean} Cadre}
+\coordinator{Philippe}{Leray}
+\institution{LS2N}
+   % - LS2N (fusion de l'ex LINA et de l'ex IRCCyN) pour un encadrement par les membres des équipes du département (voire d'autres équipes du LS2N) ;
+   % - XXX pour un encadrement dans le cadre d'un autre organisme
+   %   (il faut alors fournir dans le répertoire "logos" les fichiers correspondant~: XXX.pdf -- à défaut XXX.jpeg ou XXX.png -- pour pdflatex *et* XXX.eps pour latex) ;
+   % - commenter pour un encadrement qui relève d'un travail de recherche non affecté à une équipe.
+\theme{\'Equipe RIO}
+   % - à fournir dans le cas d'un laboratoire (DUKE, IPI ou RIO pour les équipes du département)
+   % - commenter autrement
+   % - ne peut pas être fourni si l'institution n'a pas été renseignée
+\coinstitution{Inria}{inria}{3cm}
+   % - pour ajouter un partenaire
+   % - le logo doit correspondre au fichier déclaré, ici CNRS.pdf.
+   % - le troisième paramètre permet d'adapter la largeur du logo afin
+   %   de le rendre visuellement comparable à ceux mis par défaut (université de Nantes et
+   %   éventuellement laboratoire)
+\date{29 novembre 2019}
+   % - en français les mois ne prennent pas de majuscule (sauf si vous ne mettez pas le jour)
+   % - inutile de mettre un 0 devant les jours 1 à 9 du mois~!
+   % - le jour est peut-être même une précision inutile...
+
+%-------------------------------------------------------------------------------------------------------------
+
+\begin{abstract}
+%\small % À décommenter si le résumé est légèrement trop long pour tenir dans la page
+
+La plateforme FIT IoT lab, créée pour tester différentes aspects importants pour les thématiques qui entourent l'Internet des objets, est constituée de 6 sites, répartis en France, qui contiennent de nombreux n\oe uds capteurs, et permettent de nombreuses expérimentations.
+
+La problème, très technique, est ici de collecter automatiquement, à intervalles réguliers dans la journée, différentes données sur des puces M3, qui constituent la majorité du parc de la plateforme FIT Lilloise, telles que la luminosité ou la température. Les objectifs pour arriver à une solution sont donc les suivantes:
+\begin{enumerate}
+   \item Développement et Implémentation d'un firmware pour les n\oe uds m3, permettant de récupérer les données et de les pousser sur lien série ~;
+   \item Développement d'un script python qui crée les expériences nécessaires, récupère les données poussées par les n\oe uds, et les pousse dans une base temporelle~;
+   \item Récupération, stockage et visualisation des données~;
+\end{enumerate}
+\end{abstract}
+\begin{classification}
+%\small % Idem
+   \terms{Internet des objets, FIT IoT, Données, Acquisition, Représentation, Stockage.}
+   \keywords{Captation automatique, N\oe uds m3, Lille,}
+\end{classification}
+
+\maketitle
+
+%-------------------------------------------------------------------------------------------------------------
+
+\begin{acknowledgements}
+	Nous remercions Bastien Confais pour sa rigueur et son investissement dans notre travail, Benoit Parrein pour le suivi et les retours très rapides sur le travail effectué, Julien Vandaele pour sa disponibilité, ses explications très claires et ses retours très rapides à nos questions
+\end{acknowledgements}
+
+%-------------------------------------------------------------------------------------------------------------
+
+\newpage
+
+\tableofcontents
+
+%-------------------------------------------------------------------------------------------------------------
+
+\chapter{Introduction}
+
+\section{Sujet d'étude}
+
+Comme expliqué précédemment, ce projet s'inscrit dans l'environnement FIT IoT Lab, qui est une plateforme d'expérimentation pour l'internet des objets. Cette plateforme est composée de six sites, répartis dans toute la France. Chaque site contient un grand nombre de plusieurs types de n\oe uds, qui permettent différentes expériences à distance.
+
+\section{Présentation de la problématique}
+
+En se basant sur cette plateforme, les chercheurs de l'Inria, à Lille voudraient avoir à disposition des données temporelles sur les données captées par les n\oe uds m3, pour effectuer différentes expérimentations. De fait, le but de ce projet est de mettre en place un système automatique de capture de données, à différents moments de la journée, et sur un maximum de n\oe uds disponibles. 
+
+\section{Objectifs poursuivis}
+
+Dans un premier temps, l'objectif principal est bien la mise en place de cette solution de captation automatique. Il faut donc que toutes les briques logicielles soient mises en place afin que l'on puisse remplir une base de données à destination des chercheurs
+
+Par la suite, il nous faudra proposer une documentation extensive du travail fourni pour assurer une continuation du projet.
+
+Enfin, et si il nous reste du temps, nous aimerions expérimenter plus en avant sur des
+thématiques réseau / radio.	
+
+\section{Travail à réaliser et travail réalisé}
+
+Pour satisfaire notre objectif principal, il nous faut implémenter plusieurs choses:
+\begin{enumerate}
+   \item Un firmware dédié aux n\oe uds m3, qui lorsqu'il est flashé, capte les données sur différents capteurs à déterminer, et les renvoie sur leur lien série.~;
+   \item Un script qui récupère les données à la sortie, et les pousse sur une base de données temporelle~;
+   \item Une base de données temporelles, qui dès qu'elle sera remplie, sera sujette à exploitation. ~;
+\end{enumerate}
+   
+A ce jour, pour l'objectif principal, nous avons déjà un premier prototype fonctionnel assez basique, pour la captation de données et la récupération de ces données côté logiciel. Il nous reste donc à améliorer cette captation et à tester d'autres solutions, et à implémenter le côté base de données.
+
+\section{Plan de l'étude}
+
+Ce rapport arrivant au milieu du projet, il ne peut être que peu étoffé pour le moment, de fait, le nombre de paragraphes reflète l'avancement de notre travail. De fait, notre étude se basera sur ces différentes parties:
+
+Le chapitre~\ref{chap:EtatArt} se concentrera sur les études technologiques et la montée en compétence que nous avons effectuée sur ce début de projet, et que nous continuerons d'effectuer par la suite. En effet, le sujet étant plus technologique qu'orienté recherche, un état de l'art scientifique n'était pas pertinent. Nous avons donc effectué un état de l'art technologique que nous détaillerons dans cette partie.
+
+Le chapitre~\ref{chap:Conception} est dédié aux différents choix technologiques, diagrammes et concepts qui forment notre système. Il est central car il constitue une base de travail solide sur laquelle se retourner à tout moment lors du travail pour notre groupe.
+
+%-------------------------------------------------------------------------------------------------------------
+
+% \part{\'Etat de l'art} % À décommenter si l'état de l'art nécessite plusieurs chapitres.
+                         % Ce sera le cas si l'état de l'art est riche, où l'on distinguera un chapitre de présentation d'un chapitre critique.
+                         % Il faudra aussi décommenter la partie sur le travail réalisé
+% \label{part:EtatArt}
+
+\chapter{\'Etat de l'art}
+\label{chap:EtatArt}
+
+\section{Plateforme Fit IoT Lab}
+
+\subsection{Présentation}
+
+	FIT IoT Lab est une plateforme de service  d'infrastructure IoT. Il existe sur cette plateforme plus de 1500 noeuds capteurs de différents types (M3,A8,turtlebot,...) répartis sur 6 sites : Grenoble, Lille, Lyon, Paris, Saclay et Strasbourg. L'objectif est de fournir aux chercheurs une infrastructure riche qu'ils peuvent ensuite réserver et tester pour leur propres expériences en utilisant ces noeuds.
+	IoT Lab fait partie du consortium FIT (Future Internet Testing facility) qui réuni plusieurs institutions de recherche et universités sur ce projet de plateforme de tests à grande échelle : FIT IoT Lab, FIT Wireless et FIT Cloud.
+	
+\subsection{Architecture IoT Lab}
+La plateforme est décomposée en plusieurs parties :
+\begin{itemize}
+	\item Site web - FIT IoT Lab
+	
+	Il permet d'accéder au banc d'essai en ligne, réserver des noeuds capteurs pour une expérience avec un firmware dédié et une durée. Il contient aussi les tutoriels permettant de prendre en main la plateforme.
+	
+	\item L'API REST 
+	
+	Cette API REST contient une multitude d'appels pour différents besoins. On peut obtenir l'état du banc d'essai sur n'importe quel site ou alors se concentrer sur une expérience en cours ou passée pour obtenir des détails sur celle-ci.  Elle contient par ailleurs des possibilités de modifier un firmware en cours d'expériences ou d'obtenir plus d'informations sur des robots en mobilité.
+	
+	\item Frontend SSH
+	
+	La frontend SSH est un ordinateur distant auquel chaque utilisateur de FIT IoT Lab peut se connecter via son compte. Elle est utile pour lancer directement des expériences, les gérer et prendre des informations diverses et variées. Cette frontend SSH s'appuie sur l'API REST pour fonctionner mais elle permet d'utiliser des scripts en local sur cet ordinateur distant afin de réaliser des tâches plus complexes comme le "serial aggregator" qui va agréger toutes les entrées des liens séries de nos noeuds. Les scripts sont écrits généralement en Python.
+	
+	\item Noeuds capteurs
+	
+	Il existe plusieurs types de noeuds : A8, M3, Firefly, Lora, Arduino, WSN430 et les turtlebots qui sont des unités mobiles. Chaque noeud à une documentation qui lui est propre. Cela permet une grande diversité dans l'expérimentation. Sur ces noeuds il faut ajouter un firmware pour obtenir le comportement par défaut attendu de chacun d'eux, le développement firmware s'effectue en C.
+	 
+\end{itemize}
+	
+\begin{figure}[hp]
+    \includegraphics[width=0.5\textwidth]{Images/web-view_archi}
+    \caption{Graphique architecture web FIT IoT Lab [11]}
+\end{figure}
+
+\subsection{Tutoriels essentiels}
+
+Dans cette section, nous présenterons les tutoriels essentiels de la plateforme que nous avons dû suivre pour réaliser notre solution.
+	\begin{itemize}
+		\item Getting started ? the tutorial for beginners  [1]
+		
+		Ce tutoriel vise à faire une première soumission d'expérience via la plateforme web : réserver des noeuds, ajouter un firmware et y accéder directement via SSH sur le banc d'essai.
+			
+		\item SSH access [2]
+		
+		Cette partie permet d'obtenir un accès  SSH sur la frontend en faisant un échange de clé RSA via le site web. 
+		
+		\item Experiment CLI Client [3]
+		
+		Ce tutoriel fait partie d'un ensemble de tutoriels à propos des "CLI tools" qui permettent de faire des appels à l'API REST en soumettant des expériences, en flashant les firmwares des noeuds etc... Celui-ci permet d'apprendre la partie "experiment" qui concerne la soumission d'expérience ains que de son suivi.
+		
+		\item Nodes Serial Link Aggregation [4]
+		
+		Une présentation du script "serial aggregator" qui permet d'agréger tous les liens séries relatifs à une expérience. Il permet aussi d'envoyer des messages à tous les liens qu'il agrège.
+		
+		\item Run a script in background [5]
+		
+		En prenant exemple sur le script "serial aggregator", ce tutoriel permet de mettre en place une exécution automatique d'un script directement à la soumission d'une expérience et d'ensuite récupérer ces logs.
+			
+		
+		
+\end{itemize}	 
+
+
+\section{Firmwares}
+
+Comme expliqué par avant, la plateforme contient un grand nombre de n\oe uds capteurs qui permettent d'effectuer plusieurs expérimentations. Ces n\oe uds ont logiquement besoin d'une base logicielle pour fonctionner, et c'est ici qu'interviennent les firmwares. Il est central dans notre projet de programmer un firmware qui soit efficace et réponde à nos besoins. Pour cela, plusieurs solutions d'OS sont présentées sur la plateforme FIT. Il faudra de fait effectuer un choix quant à la solution qui sera employée. Les différents systèmes étudiés peuvent être trouvés sur le site de FIT IoT \footnote{https://www.iot-lab.info/operating-systems/}
+
+\subsection{Contiki}
+Contiki-NG est un OS open-source, designé pour l'IoT, particulièrement pour la mise en place de protocoles réseaux (TCP/IP, IPv6, Low-Power protocols), basé sur le système de proto-threads.
+\subsubsection{Avantages}
+Si nous nous sommes dans un premier temps engoufrés dans la solution Contiki, c'est que pour une première prise en main, la programmation semblait relativement simple.
+En effet, la plateforme FIT fournit du code exemple pour chaque OS, et Contiki avait la base d'exemples la plus variée. De fait, l'aggragation de deux exemples nous a permis d'arriver à une première solution plutôt acceptable.
+\subsubsection{Inconvénients}
+En y regardant de plus près, nous avons malheureusement remarqué que dans le cadre des n\oe uds m3, la plateforme Contiki n'a pas de librairie pour la lecture des capteurs de température, qui est une donnée que nous aurions aimé étudier. De fait, et si nous ne trouvons pas de solution rapidement, nous basculerons sûrement sur une autre solution, malgré la simplicité de prise en main de la plateforme.
+\subsubsection{Ressources d'apprentissage}
+Le point de choix principal se trouve au niveau de la facilité d'apprentissage de la plateforme. De fait, la présence de nombreuses ressources est un point central dans le choix d'une technologie.
+
+En l?occurrence, Contiki vient avec des tutoriels de base pour apprendre à compiler du code C en firmware Contiki \footnote{https://www.iot-lab.info/tutorials/contiki-compilation/}. Ce qui le rend plus accessible, c'est surtout ses nombreux exemples qui permettent de rapidement comprendre comment sont programmés les Firmwares sur cet OS. 
+
+Deux exemples, particulièrement, sont importants dans notre cas:
+Le premier, appelé 01-serial-echo, est un firmware qui, lorsqu'il reçoit un message sur son lien série, renvoie le message sur le lien série, à la manière de la commande echo. Ceci est important pour nous car nous avons besoin de renvoyer les données sur le lien série, ainsi que recevoir par exemple une instruction de capture de données. Cette base de code contient aussi tout ce qui est nécessaire la base des mécanismes évènementiels.
+
+Le second, appelé 03-sensors-collecting, est un firmware qui, à chaque seconde, renvoie sur son lien série les valeurs captées par tous les capteurs définis au préalable. Ici, on obtient donc la base qui permet de capter des données sur les capteurs, ainsi que la manière de mettre un chronomètre en place, ce qui est important pour notre problème.
+
+\subsection{RIOT}
+RIOT est un OS qui vise les équipements ayant des ressources minimales, et à donc pour objectif l'efficacité en tous domaines: Énergie, mémoire, modularité...
+De même qu'avec Contiki, il est possible d'étudier de nombreux protocoles réseau grâce à ses librairies.
+
+L'étude de cette solution est encore en cours, car elle vient après l'étude et l'expérimentation de Contiki.
+
+\subsubsection{Avantages}
+RIOT vient tout comme Contiki avec une bonne base d'exemples et de tutoriels fournis par FIT IoT pour prendre facilement en main la plateforme. Par ailleurs, RIOT est régulièrement mis à jour et maintenu par sa communauté.
+\subsubsection{Inconvénients}
+De prime abord, le code permettant de programmer des firmwares grâce à RIOT semble plus compliqué que celui de Contiki.
+\subsubsection{Ressources d'apprentissage}
+Pour la plateforme RIOT, les mêmes tutoriels existent que pour Contiki \footnote{https://www.iot-lab.info/tutorials/riot-compilation/}
+
+Par ailleurs, des exemples permettent aussi de comprendre le fonctionnement global de la plateforme et d'en extraire les principes de base. Malgré cela, il n'existe pas d'exemple traitant directement avec les capteurs, et il nous faudra donc aller chercher plus en profondeur dans la documentation pour trouver des solutions à ce niveau.
+
+\subsection{Analyse}
+Étant encore en phase de tests, nous ne pouvons pas donner un avis définitif sur la question de l'OS à utiliser. Malgré tout, chacune des solutions nous permettra à terme d'arriver à une solution très satisfaisante. En effet, le problème de base, au niveau du firmware, est relativement élémentaire et ne demande pas de programmation très compliquée.
+
+Contiki, dans tous les cas, semble être une solution idéale pour avancer rapidement dans le problème et le résoudre efficacement.
+
+
+\section{Base de données temporelle}
+
+\subsection{Présentation}
+
+Une fois la collecte de données automatisée, nous aurons des données horodatées mais il reste néanmoins la question d'où stocker ces données.
+Afin de mener le projet au bout, nous aurons besoin d'une base de données temporelle. En effet, celle-ci est indispensable pour stocker des données horodatées sur un grand volume.
+
+
+\subsection{Analyse}
+
+Tout d'abord, quelles sont les caractéristiques propres à une base de données temporelle? Les Time Series Databases (notées TSDB) ont besoin d'un horodatage sur les données avec une proximité physique si l'horodatage est proche, les données sont à proximité afin de traiter celles-ci plus efficacement. Ensuite, elles se doivent d'exécuter des "range queries" rapidement, c'est à dire des requêtes rapportant toutes les données inférieures ou supérieures à une condition (ici la condition la plus utilisée sera le temps). Les TSDB se doivent d'obtenir une rapidité d'écriture élevée sur la base puisqu'elle sera remplie fréquemment, elles doivent donc rester le plus possible disponible afin d'éviter de perdre des données. En plus de ces aspects techniques, la TSDB choisie devra avoir une communauté active pour considérer qu'elle est fiable et qu'il y a de la documentation autour ou de l'aide communautaire pour maintenir la solution dans le temps.
+Pour évaluer ces différents points, nous nous sommes référés à deux benchmarking fait en 2017 [6] et en 2019 [7].
+\newline
+Dans le premier benchmarking [6], celui ci pointe plusieurs aspects à savoir :
+\begin{itemize}
+   \item Distribution/Clusterability : disponibilité, extensibilité, et un équilibreur de charge
+    \item Functions : fonctions disponibles dans le système MIN/MAX/SUM
+    \item Tags : contient un LTS (long time storage), possibilité d'avoir plusieurs horodatages sur une même valeur.
+    \item Granularity : décrit le plus petit délai possible entre deux horodatages
+    \item Interfaces and Extensibility : les APIs et plugins possibles
+    \item Support and License : la propriété intellectuelle de la TSDB et son support commercial
+\end{itemize}
+Ce rapport montre qu'aucune base de données ne peux implémenter toutes les fonctionnalités existantes sur les TSDBs. Néanmoins, elle montre plusieurs avantages sur certaines TSDBs et leurs inconvénients.
+\newline
+Pour recentrer les recherches sur la solution à choisir nous avons donc pris en compte le classement de popularité des bases de données fait par db-engines [8]. Celui-ci permet d'avoir une vision sur les bases qui sont très utilisées, mises à jour et donc actives.
+\begin{figure}[hp]
+    \includegraphics[width=0.6\textwidth]{Images/rankingTDSB}
+    \caption{Classement d'activité sur les bases de données temporelles}
+    
+\end{figure}
+\newline
+Celles qui ressortent sont InfluxDB, KDB+ et Prometheus. InfluxDB étant loin devant les autres TSDBs.
+\newline
+Afin d'affiner notre choix, nous avons pris en compte le deuxième benchmarking [7] qui se concentre sur des scénarios IoT et donc prend en compte la performance sur des requêtes SQL particulières ainsi que le volume de données utilisé pour une entrée ou encore le nombre d'entrées possibles en même temps.
+
+\begin{figure}[h]
+    \includegraphics[width=0.5\textwidth]{Images/queryRankingTSDB2}
+    \caption{Temps de réponse moyen en fonction de la charge [7]}
+\end{figure}
+Sur ces graphiques, on observe le coût en temps de la requête en fonction du nombre d'entrées sur cette dernière.
+Lors de ce benchmarking, on peut observer qu'InfluxDB [9] est nettement en avance sur les autres TSDBs. C'est pourquoi notre premier choix technique se basera sur cette base de données. Néanmoins nous gardons à l'esprit d'autres possibilités de TSDBs, il sera donc important dans la partie conception de bien prendre en compte une certaine facilité à changer de TSDB si nécessaire. De plus, il n'est pas impossible par la suite de changer vers Prometheus [10] étant une TSDB déjà utilisée pour certains projets Fit IoT Lab.
+
+
+
+
+\section{Récapitulatif}
+
+
+Sur cet état de l'art, nous avons pu résumer les différents éléments nécessaires à l'implémentation de notre solution à savoir :
+	\begin{itemize}
+		\item La plateforme FIT IoT Lab
+		\item Les firmwares M3
+		\item La base de données temporelles
+	\end{itemize}
+	
+Nous avons pu aboutir à une première solution en prenant des choix qui nous semble correct. A savoir le choix de développer sur la plateforme FIT via la frontend SSH afin de ne pas à avoir héberger notre script et directement lancer l'automatisation en local, mettre en place un premier firmware via Contiki puisqu'il offre une simplicité de programmation et déjà une bonne base d'exemple de firmwares et mettre en place dans un premier temps une base de données InfluxDB mais garder à l'esprit de bien compartimenter cette partie afin de ne pas avoir de problèmes d'intégration s'il y a une nécessité de migrer vers un autre type de base de données.
+
+
+\section{Conclusion}
+
+
+À l'issue de ce travail de recherche bibliographique, il apparaît que plusieurs propositions peuvent servir de base à la résolution de notre problème.
+
+Il semble se détacher un certain nombre de directions privilégiées que nous allons exploiter en priorité dans nos propositions.
+Celles-ci font l'objet de l'étude du chapitre suivant.
+
+
+\bibliography{biblio}
+[1] Getting started with IoT-LAB ? the tutorial for beginners -  https://www.iot-lab.info/tutorials/getting-started-tutorial/
+\newline
+\newline
+[2] Configure your SSH access - \newline https://www.iot-lab.info/tutorials/ssh-access/
+\newline
+\newline
+[3] Experiment CLI client -  https://www.iot-lab.info/tutorials/iotlab-experimenttools-client/
+\newline
+\newline
+[4] Nodes Serial Link Aggregation - \newline https://www.iot-lab.info/tutorials/serial-aggregator/
+\newline
+\newline
+[5]Running script on SSH frontend - \newline https://www.iot-lab.info/tutorials/iotlab-runscript-client/
+\newline
+\newline
+[6] Survey and Comparison of Open Source Time Series Databases - Andreas Bader,Oliver Kopp,Michael Falkenthal - 2017
+\newline
+\newline
+[7] Benchmarking Time Series Databases with IoTDB-Benchmark for IoT Scenarios - Rui Liu, Jun Yuan - 2019
+\newline
+\newline
+[8] DB-Engines Ranking, \newline
+https://db-engines.com/en/ranking/time+series+dbms
+\newline
+\newline
+[9] Time Series Database (TSDB) Explained | InfluxDB - 
+https://www.influxdata.com/time-series-database/
+\newline
+\newline
+[10] Prometheus - Monitoring system and time series database - https://prometheus.io/
+\newline
+\newline
+[11] Architecture web FIT IoT Lab - \newline https://github.com/iot-lab/iot-lab/tree/master/web-view
+
+\chapter{Conception}
+\label{chap:Conception}
+
+Cette partie est dédiée au système dans son ensemble et à la manière dont il a été pensé et conceptualisé. Nous voulons ici présenter les différents systèmes qui composent notre solution, ainsi que les différentes interactions qui les caractérisent. Les diagrammes ont pour but de clarifier le propos et de fluidifier la compréhension.
+
+\section{Ensemble du système - Diagramme d'architecture - Figure 3.1}
+Ce diagramme d'architecture représente où sont placés les différentes parties prenantes pour l'exécution de la collecte automatique des données. Ainsi que d'un ordre partiel pour comprendre le mécanisme global.
+
+\section{Scénario - Diagramme de séquence - Figure 3.2}
+
+Cette section a donc pour but d'expliciter la séquence souhaitée à la fin du projet pour que la partie majoritaire du projet soit réussie.
+Ainsi, la séquence décrite dans le diagramme en figure 3.1 est la suivante:
+\begin{enumerate}
+\item{Le script s'exécute automatiquement à une certaine heure de la journée, vérifie la disponibilité des n\oe uds et réserve un maximum d'entre eux}
+\item{Une fois les n\oe uds réservés grâce à l'API REST, ils sont flashés avec le bon firmware et commencent leur capture de données}
+\item{Dès lors, le Serial aggregator commence à écouter les n\oe uds et récupère les données qui lui sont envoyées par lien série. Une fois qu'il a tout reçu, il renvoie ces données au script Python qui les traite.}
+\item{Une fois traitées, ces données sont formatées et envoyées vers la Base de données temporelles pour écriture et stockage}
+\end{enumerate}
+
+\begin{figure*}[!ht]
+    \includegraphics[width=1\textwidth]{Images/diagrammeArchi}
+    \caption{Diagramme d'architecture}
+\end{figure*}
+
+\begin{figure*}[!ht]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Images/diagseq}
+	\caption{Diagramme de séquence}
+	\label{fig:DiagSequence}
+<<<<<<< HEAD
+\end{figure}
+
+%-------------------------------------------------------------------------------------------------------------
+
+% \part{Réalisations} % À décommenter si l'état de l'art a nécessité plusieurs chapitres.
+% \label{part:Realisations}
+
+
+
+\chapter{Planification}
+
+Cette partie inclut des graphiques relatifs à notre travail. Nous avons découpés nos tâches en 5 catégories :
+\begin{itemize}
+	\item Tutoriel FIT IoT Lab
+	\item Recherches bibliographiques
+	\item Développement Firmware/Python
+	\item Rédaction de rapport, bilan de réunions,...
+	\item Contact : les réunions et appels
+\end{itemize}
+
+Dans l'ensemble, l'estimation de nos tâche ont étés proches de la réalité mais nous avons globalement sous-estimé les heures nécessaires pour réaliser notre travail. Nous avons donc dû augmenter nos horaires sur certaines semaines plus libres que d'autres. Cela nous a permis de nous reconcentrer sur des petites tâches comme conseillé par Julien Vandaele pour obtenir une démo pour la première soutenance.
+
+\begin{figure}[htp]
+    \includegraphics[width=0.5\textwidth]{Images/tempsTache}
+    \caption{Temps par catégorie de tâche}
+\end{figure}
+
+\begin{figure}[htp]
+    \includegraphics[width=0.5\textwidth]{Images/repartitionTache}
+    \caption{Répartition du temps par catégorie}
+\end{figure}
+
+\begin{figure*}
+   \centering
+          \includegraphics[width=1.15\textwidth]{Images/ganttTache}
+   \caption{Planning effectif}
+   \label{fig:PlanningEffectif}
+\end{figure*}
+
+
+
+\chapter{Fiches de suivi}
+\label{ann:FichesSuivi}
+
+Cette annexe est \emph{obligatoire}.
+
+\begin{fichesuivi}{7 Octobre 2019}{13 Octobre 2019}
+   \tempstravailA{6}{30}
+   \tempstravailB{5}{30}
+
+   \begin{travaileffectue}
+      \begin{itemize}
+         \item Prise de connaissance du sujet
+         \item Prise en main de la plateforme FIT IoT lab
+         \item Premiers contacts avec le commanditaire - encadrant
+         \item Début de recherches bibliographiques
+      \end{itemize}
+   \end{travaileffectue}
+
+   \begin{travailnoneffectue}
+   \end{travailnoneffectue}
+
+   \begin{echange}
+      \begin{itemize}
+         \item Demande d'informations auprès de Julien Vandaele
+         \begin{itemize}
+         \item Précisions du sujet et questions générales
+         \item Début de reformulation du sujet
+         \end{itemize}
+      \end{itemize}
+   \end{echange}
+
+   \begin{planification}
+      \begin{itemize}
+         \item Travail plus profond sur le sujet - Recherche de problématique
+         \item Recherches bibliographiques
+         \item Prise en main de la plateforme FIT IoT lab
+      \end{itemize}
+   \end{planification}
+\end{fichesuivi}
+
+\begin{fichesuivi}{14 Octobre 2019}{20 Octobre 2019}
+   \tempstravailA{11}{00}
+   \tempstravailB{11}{00}
+
+   \begin{travaileffectue}
+   \begin{itemize}
+   \item Documentation sur la plateforme FIT
+   \begin{itemize}
+   		\item{Nodes M3}
+   		\item{Tutoriels FIT IoT lab}
+   		\item{API REST FIT IoT lab}
+   \end{itemize}
+   \item{Début de tests de code sur l'API REST de FIT IoT lab}
+   \item{Début de rédaction de rapport - Introduction}
+   \item{Prise en main d'InfluxDB}
+   \end{itemize}
+   \end{travaileffectue}
+
+   \begin{travailnoneffectue}
+   \end{travailnoneffectue}
+
+   \begin{echange}
+   \begin{itemize}
+   \item{Mails de présentation et précisions du sujet par mail}
+   \end{itemize}
+   \end{echange}
+
+   \begin{planification}
+   \begin{itemize}
+   \item{Continuation des recherches bibliographiques}
+   \item{Tutoriels FIT IoT lab}
+   \item{Rédaction de l'introduction du rapport}
+   \item{Visioconférence}
+   \end{itemize}
+   \end{planification}
+\end{fichesuivi}
+
+\begin{fichesuivi}{21 Octobre 2019}{27 octobre 2019}
+   \tempstravailA{5}{30}
+   \tempstravailB{5}{30}
+
+   \begin{travaileffectue}
+   \begin{itemize}
+   \item{Visioconférence avec Julien Vandaele, qui aura permis de finalement délimiter le sujet et lui donner un cadre précis}
+   \item{Tutoriels FIT IoT lab: SSH / Build firmwares}
+   \item{Début de rédaction du rapport de réunion pour rendu la semaine prochaine}
+   \end{itemize}
+   \end{travaileffectue}
+	
+   \begin{travailnoneffectue}
+   \begin{itemize}
+   \item{Plus de tutoriels}
+   \item{Rédaction du rapport}
+   \item{Lectures bibliographiques}
+   \item{Tout ce travail n'ayant pas été effectué à cause d'une semaine chargée}
+   \end{itemize}
+   \end{travailnoneffectue}
+
+   \begin{echange}
+   \begin{itemize}
+   \item{Visioconférence}
+   \end{itemize}
+   \end{echange}
+
+   \begin{planification}
+   \begin{itemize}
+   \item{Lectures bibliographiques / Étude de la plateforme FIT IoT}
+   \begin{itemize}
+   \item{Impact de la présence humaine sur divers protocoles}
+   \item{Tutoriels FIT IoT lab}
+   \end{itemize}
+   \item{Début de programmation d'un firmware de test}
+   \end{itemize}
+   \end{planification}
+\end{fichesuivi}
+
+\begin{fichesuivi}{28 Octobre 2019}{3 Novembre 2019}
+   \tempstravailA{3}{30}
+   \tempstravailB{3}{30}
+
+   \begin{travaileffectue}
+   \begin{itemize}
+   \item{Début de listing des possibilités pour les Systèmes de bases de données temporelles}
+   \end{itemize}
+   \end{travaileffectue}
+
+   \begin{travailnoneffectue}
+   \begin{itemize}
+   \item{Travail bibliographique}
+   \item{Etude de la plateforme FIT IoT lab}
+   \end{itemize}
+   \end{travailnoneffectue}
+
+   \begin{echange}
+   \end{echange}
+
+   \begin{planification}
+   \begin{itemize}
+   \item{Rattrapage du travail non effectué lors des deux dernières semaines}
+   \begin{itemize}
+   \item{Recherches bibliographiques}
+   \item{Etude de la plateforme FIT IoT lab}
+   \end{itemize}
+   \item{Listing et choix d'une base de données idéale}
+   \item{Début de travail sur un premier firmware pour expériences sur capteurs}
+   \end{itemize}
+   \end{planification}
+\end{fichesuivi}
+
+\begin{fichesuivi}{4 Novembre 2019}{10 Novembre 2019}
+   \tempstravailA{15}{00}
+   \tempstravailB{15}{00}
+
+   \begin{travaileffectue}
+   \begin{itemize}
+   \item{Etat de l'art sur les bases de données temporelles}
+   \begin{itemize}
+   \item{Préparation d'une présentation de solutions}
+   \end{itemize}
+   \item{Diagrammes de séquence pour s'assurer de la marche à suivre pour le développement}
+   \item{Etude des noeuds M3}
+   \item{Début de développement d'une démonstration simple de script de collecte de bases de données}
+   \end{itemize}
+   \end{travaileffectue}
+
+   \begin{travailnoneffectue}
+   \end{travailnoneffectue}
+
+   \begin{echange}
+   \begin{itemize}
+   \item{Échanges autour de la séquence d'expérimentation, précisions finales du sujet}
+   \end{itemize}
+   \end{echange}
+
+   \begin{planification}
+   \begin{itemize}
+   \item{Réunion prévue le 12/11 à 15h}
+   \item{Rédaction du rapport}
+   \item{Développement du script suivant le scénario}
+   \item{Recherches bibliographiques centrées sur l'intéraction Humains/réseaux wireless}
+   \end{itemize}
+   \end{planification}
+\end{fichesuivi}
+
+\begin{fichesuivi}{11 Novembre 2019}{17 Novembre 2019}
+   \tempstravailA{10}{00}
+   \tempstravailB{9}{00}
+
+   \begin{travaileffectue}
+   \begin{itemize}
+   \item{Suite de l'état de l'art sur les bases de données temporelles}
+   \item{Rédaction du rapport}
+   \begin{itemize}
+   \item{Rédaction de l'état de l'art sur les bases de données}
+   \item{Présentation de la plateforme FIT IoT lab}
+   \end{itemize}
+   \item{Développement de script suivant le scénario}
+   \begin{itemize}
+   \item{Diagrammes de séquencevalidés par le commanditaire et les encadrants}
+   \end{itemize}
+   \item{Recherches bibliographiques centrées sur l'intéraction humains/réseaux wireless}
+   \begin{itemize}
+   \item{Ces recherches n'ont pas été pertinentes puisqu'aucun article en lien avec notre problématique n'était dans le sujet. Par ailleurs, cette question ne sera traitée que bien plus tard, il n'était donc pas nécessaire d'investir du temps dès maintenant sur le sujet}  
+   \end{itemize}
+   \item{Tutoriel sur le développement de firmwares}
+   \begin{itemize}
+   \item{Tutoriel Contiki}
+   \item{Tutoriel de départ}
+   \end{itemize}
+   \end{itemize}
+   \end{travaileffectue}
+
+   \begin{travailnoneffectue}
+   \end{travailnoneffectue}
+
+   \begin{echange}
+   \begin{itemize}
+   \item{Réunion le 12/11 (1h30)}
+   \begin{itemize}
+   \item{Présentation de l'état de l'art sur les BDD temporelles}
+   \item{Reformulation et recentrage sur les besoins du projet}
+   \item{Projet abordé de façon plus agile que normalement}
+   \item{Attendus pour la prochaine réunion (Présentation Powerpoint pour la soutenance, Rapport, étape firmware)}
+   \end{itemize}
+   \end{itemize}
+   \end{echange}
+
+   \begin{planification}
+   \begin{itemize}
+   \item{Poursuite de la découverte des tutoriels firmware en réalisation d'une première réalisation de firmware (développement C}
+   \item{Etat de l'art sur les différentes plateformes de développement des firmware}
+   \item{Apprentissage d'une librairie Python en vue d'une utilisation de SSH pour se connecter sur FIT IoT lab}
+   \end{itemize}
+   \end{planification}
+   
+\end{fichesuivi}
+\begin{fichesuivi}{17 Novembre 2019}{24 Novembre 2019}
+   \tempstravailA{17}{00}
+   \tempstravailB{19}{00}
+
+   \begin{travaileffectue}
+   \begin{itemize}
+   \item{Développement Firmware}
+   \begin{itemize}
+   \item{Recherche dans les firmwares exemple existant afin de déterminer si certains sont liés à notre problème}
+   \item{Analyse du code des firmware existants}
+   \item{Installation de l'environnement de travail en local}
+   \item{Début de programmation d'un firmware maison}
+   \end{itemize}
+   \item{Python SSH}
+   \begin{itemize}
+   \item{Recherche de différents packages existants pour utiliser SSH en python (Paramiko - Fabrik - Quelles différences? - Que choisir ?)}
+   \item{tutoriels sur les packages en question}
+   \item{Premier test de connexion SSH sur FIT via Python}
+   \item{Scénario basique de l'algorithme}
+   \end{itemize}
+   \end{itemize}
+   \end{travaileffectue}
+
+   \begin{travailnoneffectue}
+   \end{travailnoneffectue}
+
+   \begin{echange}
+   \begin{itemize}
+   \item{Bilan de réunion du 12/11}
+   \end{itemize}
+   \end{echange}
+
+   \begin{planification}
+   \begin{itemize}
+   \item{Python SSH}
+   \begin{itemize}
+   \item{Ecrire la liste des commandes SSH à réaliser}
+   \item{Commencer à intégrer le scénario dans Python}
+   \end{itemize}
+   \item{Finition du firmware maison objectif pour la réunion de la semaine suivante}
+   \end{itemize}
+   \end{planification}
+\end{fichesuivi}
+
+\begin{fichesuivi}{24 Novembre 2019}{01 Décembre 2019}
+   \tempstravailA{28}{0}
+   \tempstravailB{25}{0}
+
+   \begin{travaileffectue}
+   \begin{itemize}
+   
+   	\item  Développement Firmware
+   		\begin{itemize}
+   			\item Développement, test et debug du firmware Sur Contiki
+   			\item Intégration au code de Pierre-adrien
+   			\item Début de tests sur RIOT
+   		\end{itemize}
+   
+   	\item  Python SSH 
+   		\begin{itemize}
+   			\item Dev Fabric Python 
+   			\item => Méthode python SSH avortée (voir échange avec le commanditaire)
+   		\end{itemize}
+
+	\item  Frontend SSH 
+   		\begin{itemize}
+   			\item Librairie subprocess / os 
+   			\item Dev subprocess => exécution de commande bash
+   			\item Format des données
+   		\end{itemize}
+   		
+   	\item  Rédaction du rapport 
+   		\begin{itemize}
+   			\item Introduction 
+   			\item Etat de l?art : mise en forme
+   			\item Conception
+   			\item Autres
+   		\end{itemize}
+   		
+\end{itemize}
+   
+
+   \end{travaileffectue}
+
+   \begin{travailnoneffectue}
+   \end{travailnoneffectue}
+
+   \begin{echange}
+   \begin{itemize}
+   	\item Discussion Python SSH
+   	
+   	Julien a fait une remarque sur Python SSH ne voyant pas l?utilité de celui-ci. Notre point de vue était de réaliser le script python en local puis se connecter en SSH par la suite sur le frontend SSH afin de lancer les commandes pour lancer l?expérience, récolter les coordonnées,... La vision de Julien est de mettre le script directement sur le frontend SSH pour ne pas avoir à l?héberger par la suite. Ainsi aucune connexion SSH serait nécessaire.
+=> Le développement sur le frontend SSH a abouti en utilisant la librarie os, subprocess pour lancer les commandes
+ 
+ 
+   	\item Librairie manquante pour l?exploitation du capteur de température des noeuds m3 en contiki
+\begin{itemize}
+\item Librairie manquante pour l?exploitation du capteur de \item Possibilité que cela existe en contiki-ng
+\item Besoin potentiel de créer ce code
+\item Ou de changer de solution (Riot par exemple)
+\end{itemize}   	 
+
+
+\end{itemize}   
+
+   \end{echange}
+
+   \begin{planification}
+   \begin{itemize}
+   \item Développement Démo 
+   	\begin{itemize}
+   	 \item Ajouter de la généricité pour le script
+   	 \item Automatiser le script
+   	\end{itemize}
+   	\item Firmware RIOT
+   	\item Préparation soutenance
+   \end{itemize}
+
+
+
+
+   \end{planification}
+\end{fichesuivi}
+
+\begin{fichesuivi}{}{}
+   \tempstravailA{0}{0}
+   \tempstravailB{0}{0}
+
+   \begin{travaileffectue}
+   \end{travaileffectue}
+
+   \begin{travailnoneffectue}
+   \end{travailnoneffectue}
+
+   \begin{echange}
+   \end{echange}
+
+   \begin{planification}
+   \end{planification}
+\end{fichesuivi}
+
+\begin{fichesuivi}{}{}
+   \tempstravailA{0}{0}
+   \tempstravailB{0}{0}
+
+   \begin{travaileffectue}
+   \end{travaileffectue}
+
+   \begin{travailnoneffectue}
+   \end{travailnoneffectue}
+
+   \begin{echange}
+   \end{echange}
+
+   \begin{planification}
+   \end{planification}
+\end{fichesuivi}
+
+\begin{fichesuivi}{}{}
+   \tempstravailA{0}{0}
+   \tempstravailB{0}{0}
+
+   \begin{travaileffectue}
+   \end{travaileffectue}
+
+   \begin{travailnoneffectue}
+   \end{travailnoneffectue}
+
+   \begin{echange}
+   \end{echange}
+
+   \begin{planification}
+   \end{planification}
+\end{fichesuivi}
+
+\begin{fichesuivi}{}{}
+   \tempstravailA{0}{0}
+   \tempstravailB{0}{0}
+
+   \begin{travaileffectue}
+   \end{travaileffectue}
+
+   \begin{travailnoneffectue}
+   \end{travailnoneffectue}
+
+   \begin{echange}
+   \end{echange}
+
+   \begin{planification}
+   \end{planification}
+\end{fichesuivi}
+
+\begin{fichesuivi}{}{}
+   \tempstravailA{0}{0}
+   \tempstravailB{0}{0}
+
+   \begin{travaileffectue}
+   \end{travaileffectue}
+
+   \begin{travailnoneffectue}
+   \end{travailnoneffectue}
+
+   \begin{echange}
+   \end{echange}
+
+   \begin{planification}
+   \end{planification}
+\end{fichesuivi}
+
+\begin{fichesuivi}{}{}
+   \tempstravailA{0}{0}
+   \tempstravailB{0}{0}
+
+   \begin{travaileffectue}
+   \end{travaileffectue}
+
+   \begin{travailnoneffectue}
+   \end{travailnoneffectue}
+
+   \begin{echange}
+   \end{echange}
+
+   \begin{planification}
+   \end{planification}
+\end{fichesuivi}
+
+\begin{fichesuivi}{}{}
+   \tempstravailA{0}{0}
+   \tempstravailB{0}{0}
+
+   \begin{travaileffectue}
+   \end{travaileffectue}
+
+   \begin{travailnoneffectue}
+   \end{travailnoneffectue}
+
+   \begin{echange}
+   \end{echange}
+
+   \begin{planification}
+   \end{planification}
+\end{fichesuivi}
+
+\begin{fichesuivi}{}{}
+   \tempstravailA{0}{0}
+   \tempstravailB{0}{0}
+
+   \begin{travaileffectue}
+   \end{travaileffectue}
+
+   \begin{travailnoneffectue}
+   \end{travailnoneffectue}
+
+   \begin{echange}
+   \end{echange}
+
+   \begin{planification}
+   \end{planification}
+\end{fichesuivi}
+
+\begin{fichesuivi}{}{}
+   \tempstravailA{0}{0}
+   \tempstravailB{0}{0}
+
+   \begin{travaileffectue}
+   \end{travaileffectue}
+
+   \begin{travailnoneffectue}
+   \end{travailnoneffectue}
+
+   \begin{echange}
+   \end{echange}
+
+   \begin{planification}
+   \end{planification}
+\end{fichesuivi}
+
+\begin{fichesuivi}{}{}
+   \tempstravailA{0}{0}
+   \tempstravailB{0}{0}
+
+   \begin{travaileffectue}
+   \end{travaileffectue}
+
+   \begin{travailnoneffectue}
+   \end{travailnoneffectue}
+
+   \begin{echange}
+   \end{echange}
+
+   \begin{planification}
+   \end{planification}
+\end{fichesuivi}
+
+Le tableau récapitulatif du temps consacré au projet est \emph{obligatoire}.
+Si vous n'utilisez pas strictement le modèle de fiche de suivi fourni, il vous faudra l'établir vous-même.
+Dans le cas contraire, une commande permet de le générer automatiquement avec le texte qui le référence et des hyper-liens vers chacune des fiches (paragraphe ci-dessous).
+
+\printweeksummary
+
+\chapter{Auto-contrôle et auto-évaluation}
+
+Cette annexe est \emph{obligatoire}.
+
+La figure~\ref{fig:AutoEvaluationTravailIntermediaire} permet d'énumérer un certain nombre de points importants dans les trois composantes du travail~:
+\begin{enumerate}
+   \item rapport~;
+   \item présentation orale~;
+   \item travail de fond~;
+\end{enumerate}
+ainsi que d'évaluer notre niveau de satisfaction à l'issue de la phase~I, composée de trois étapes~:
+\begin{enumerate}
+   \item étude préalable~;
+   \item étude bibliographique~;
+   \item conception générale.
+\end{enumerate}
+
+Les points de satisfaction ou d'insatisfaction peuvent être approfondis.
+
+\begin{figure*}
+   \centering
+      \ifscreen % macro TeX (issue de la classe report-rd-info.cls) permettant d'ajuster le contenu en fonction du l'orientation du document (<<~screen~>> ou pas)
+         \rotatebox{90}{\includegraphics[width=0.9\textheight]{Images/Grille-Evaluation-PRD1}}
+      \else
+         \includegraphics[width=0.9\textwidth]{Images/Grille-Evaluation-PRD1}
+      \fi
+   \caption{Points à contrôler à l'issue de la phase I}
+   \label{fig:AutoEvaluationTravailIntermediaire}
+\end{figure*}
+
+La figure~\ref{fig:AutoEvaluationTravailFinal} permet d'énumérer un certain nombre de points importants dans les trois composantes du travail ainsi que d'évaluer notre niveau de satisfaction à l'issue de la phase~II, constituée de~:
+\begin{enumerate}
+   \item la conception détaillée~;
+   \item la réalisation~;
+   \item la recette.
+\end{enumerate}
+
+\begin{figure*}
+   \centering
+      \ifscreen
+         \rotatebox{90}{\includegraphics[width=0.9\textheight]{Images/Grille-Evaluation-PRD2}}
+      \else
+         \includegraphics[width=0.9\textwidth]{Images/Grille-Evaluation-PRD2}
+      \fi
+   \caption{Points à contrôler à l'issue de la phase II}
+   \label{fig:AutoEvaluationTravailFinal}
+\end{figure*}
+
+\end{document}
