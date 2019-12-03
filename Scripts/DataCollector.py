@@ -1,10 +1,5 @@
+#!/bin/bash
 # -*- coding: utf-8 -*-
-"""
-Created on Wed Nov 20 15:22:33 2019
-
-@author: Pierre-adrien
-"""
-
 import os
 import json
 import sys
@@ -22,6 +17,7 @@ args=parser.parse_args()
 print(" ****************** \n * Data Collector *\n ****************** \n")
 site = args.site
 ratio = args.ratio
+scriptRepertory = "/senslab/users/delisle/pred-fit_iot_lab_collecte-de-donnees-auto/Scripts/"
 print("Site: "+str(site)+", Ratio: "+str(ratio))
 rGetAliveNodes = subprocess.check_output("iotlab-experiment info --site "+site+" --state Alive --archi m3:at86rf231 -l", shell=True)
 res = json.loads(rGetAliveNodes)
@@ -29,11 +25,16 @@ nbAliveNodes = len(res["items"])
 nbSubmit = int(nbAliveNodes*ratio)
 print("Launching an experiment with : "+str(nbSubmit)+" nodes")
 
-rSubmit = subprocess.check_output('iotlab-experiment submit -n Local-python-BigSubmit -d 1 -l '+str(nbSubmit)+',archi=m3:at86rf231+site="'+site+'"+mobile=0,./firmwares/firmware-5donnees-iotlab-m3', shell=True)
+rSubmit = subprocess.check_output('iotlab-experiment submit -n cron-Submit-auto -d 1 -l '+str(nbSubmit)+',archi=m3:at86rf231+site="'+site+'"+mobile=0,'+scriptRepertory+'firmwares/firmware-5donnees-iotlab-m3', shell=True)
 experimentId = str(json.loads(rSubmit)["id"])
 rWait = subprocess.check_output('iotlab-experiment wait --id '+experimentId, shell=True)
-
+check1 = datetime.now()
 rSerialAggregator = subprocess.check_output("serial_aggregator -i "+experimentId, shell=True)
+print("R serial_aggregator")
+print(rSerialAggregator)
+check2 = datetime.now() - check1
+print("TIME Serial aggregator")
+print(abs(check2))
 rawData = str(rSerialAggregator)
 #arrayData = [{"node":,"timestamp":,"type":,"values":}]
 capturedData = []
@@ -43,14 +44,11 @@ for line in dataLines:
     dictData = {"node":data[1],"timestamp":data[0],"type":data[2],"value":data[3],"x":0,"y":0,"z":0}
     capturedData.append(dictData)
 
-
-
 rGetCoords = subprocess.check_output("iotlab experiment get -r -i "+experimentId, shell=True)
 nodes = json.loads(rGetCoords.encode('utf-8'))["items"]
 dictCoords = {}
 for node in nodes :
     dictCoords[node["network_address"].replace("."+site+".iot-lab.info","")] = {"x":node["x"].encode("utf-8"),"y":node["y"].encode("utf-8"),"z":node["z"].encode("utf-8")}
-
 
 for data in capturedData:
     data["x"],data["y"],data["z"] = dictCoords[data["node"]]["x"],dictCoords[data["node"]]["y"],dictCoords[data["node"]]["z"]
@@ -59,6 +57,6 @@ print("Writing in log file...")
 now = datetime.now()
 date_time = now.strftime("%d-%m-%Y-%H_%M_%S")
 
-with open("log/logDataCollector"+date_time+".txt", 'w') as outfile:
+with open(scriptRepertory+"log/logDataCollector"+date_time+".txt", 'w') as outfile:
     json.dump(capturedData, outfile)
 print("Done !")
