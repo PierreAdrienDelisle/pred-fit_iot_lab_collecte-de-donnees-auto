@@ -7,16 +7,29 @@ Created on Wed Nov 20 15:22:33 2019
 
 import os
 import json
-
+import sys
 import subprocess
+import argparse
+from datetime import datetime
+
+parser=argparse.ArgumentParser(
+    description='''Enable to launch a data collector to write in a file all logs of m3 nodes''',
+    epilog="""----""")
+parser.add_argument('ratio', type=float, nargs='?',const=1, default=0.3, help='The ratio of node you will take on 1 site.For example if 100 m3 nodes are avalaible on Lille, you will put 0.3 and get 20 nodes on Lille')
+parser.add_argument('site', type=str, nargs='?',const=1, default="lille", help='The site where you are running the experiment')
+args=parser.parse_args()
+
 print(" ****************** \n * Data Collector *\n ****************** \n")
-rGetAliveNodes = subprocess.check_output("iotlab-experiment info --site lille --state Alive --archi m3:at86rf231 -l", shell=True)
+site = args.site
+ratio = args.ratio
+print("Site: "+str(site)+", Ratio: "+str(ratio))
+rGetAliveNodes = subprocess.check_output("iotlab-experiment info --site "+site+" --state Alive --archi m3:at86rf231 -l", shell=True)
 res = json.loads(rGetAliveNodes)
 nbAliveNodes = len(res["items"])
-nbSubmit = nbAliveNodes*2//3
+nbSubmit = int(nbAliveNodes*ratio)
 print("Launching an experiment with : "+str(nbSubmit)+" nodes")
 
-rSubmit = subprocess.check_output('iotlab-experiment submit -n SSH-python-Submit -d 1 -l '+str(5)+',archi=m3:at86rf231+site=lille+mobile=0,./firmwares/firmware-pressure-light1.iotlab-m3', shell=True)
+rSubmit = subprocess.check_output('iotlab-experiment submit -n Local-python-BigSubmit -d 1 -l '+str(nbSubmit)+',archi=m3:at86rf231+site="'+site+'"+mobile=0,./firmwares/firmware-5donnees-iotlab-m3', shell=True)
 experimentId = str(json.loads(rSubmit)["id"])
 rWait = subprocess.check_output('iotlab-experiment wait --id '+experimentId, shell=True)
 
@@ -27,26 +40,25 @@ capturedData = []
 dataLines = rawData.splitlines()
 for line in dataLines:
     data = line.split(";")
-    dictData = {"node":data[1],"timestamp":data[0],"value":data[2],"x":0,"y":0,"z":0}
+    dictData = {"node":data[1],"timestamp":data[0],"type":data[2],"value":data[3],"x":0,"y":0,"z":0}
     capturedData.append(dictData)
 
-print("Captured Data")
-print(capturedData)
 
 
 rGetCoords = subprocess.check_output("iotlab experiment get -r -i "+experimentId, shell=True)
 nodes = json.loads(rGetCoords.encode('utf-8'))["items"]
 dictCoords = {}
 for node in nodes :
-    dictCoords[node["network_address"].replace(".lille.iot-lab.info","")] = {"x":node["x"].encode("utf-8"),"y":node["y"].encode("utf-8"),"z":node["z"].encode("utf-8")}
+    dictCoords[node["network_address"].replace("."+site+".iot-lab.info","")] = {"x":node["x"].encode("utf-8"),"y":node["y"].encode("utf-8"),"z":node["z"].encode("utf-8")}
 
-print("dictCoords")
-print(dictCoords)
 
 for data in capturedData:
     data["x"],data["y"],data["z"] = dictCoords[data["node"]]["x"],dictCoords[data["node"]]["y"],dictCoords[data["node"]]["z"]
 
-print("Final Capture : ")
-print(capturedData)
+print("Writing in log file...")
+now = datetime.now()
+date_time = now.strftime("%d-%m-%Y-%H_%M_%S")
 
-#rStop = subprocess.check_output('iotlab-experiment stop --id '+experimentId, shell=True)
+with open("log/logDataCollector"+date_time+".txt", 'w') as outfile:
+    json.dump(capturedData, outfile)
+print("Done !")
