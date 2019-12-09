@@ -5,7 +5,7 @@ import json
 import sys
 import subprocess
 import argparse
-from datetime import datetime
+from datetime import datetime, timezone
 import ast
 
 parser=argparse.ArgumentParser(
@@ -21,18 +21,19 @@ ratio = args.ratio
 scriptRepertory = "/senslab/users/delisle/pred-fit_iot_lab_collecte-de-donnees-auto/Scripts/"
 print("Site: "+str(site)+", Ratio: "+str(ratio)+"%")
 rGetAliveNodes = subprocess.check_output("iotlab-experiment info --site "+site+" --state Alive --archi m3:at86rf231 -l", shell=True)
-res = json.loads(rGetAliveNodes)
+res = json.loads(rGetAliveNodes.decode('utf-8'))
 nbAliveNodes = len(res["items"])
 nbSubmit = int(nbAliveNodes*ratio/100)
 print("Launching an experiment with : "+str(nbSubmit)+" nodes")
 
 rSubmit = subprocess.check_output('iotlab-experiment submit -n cron-Submit-auto -d 1 -l '+str(nbSubmit)+',archi=m3:at86rf231+site="'+site+'"+mobile=0,'+scriptRepertory+'firmwares/firmware-5donnees-iotlab-m3', shell=True)
-experimentId = str(json.loads(rSubmit)["id"])
+experimentId = str(json.loads(rSubmit.decode('utf-8'))["id"])
 rWait = subprocess.check_output('iotlab-experiment wait --id '+experimentId, shell=True)
 check1 = datetime.now()
 rSerialAggregator = subprocess.check_output("serial_aggregator -i "+experimentId, shell=True)
+rSerialAggregator = json.loads(json.dumps(rSerialAggregator.decode('utf-8')))
 check2 = datetime.now() - check1
-print("TIME Serial aggregator")
+print("Time Serial aggregator")
 print(abs(check2))
 rawData = str(rSerialAggregator)
 #arrayData = [{"node":,"timestamp":,"type":,"values":}]
@@ -46,6 +47,7 @@ for line in dataLines:
 for elem in capturedData:
     sum = 0
     n = 0
+    elem["timestamp"] = datetime.fromtimestamp(elem["timestamp"], timezone.utc).strftime("%d/%m/%Y-%H/%M/%S")
     elem["value"] = ast.literal_eval(elem["value"])
     for v in elem["value"]:
         sum += v
@@ -53,7 +55,7 @@ for elem in capturedData:
     elem["mean"] = sum/n
 
 rGetCoords = subprocess.check_output("iotlab experiment get -r -i "+experimentId, shell=True)
-nodes = json.loads(rGetCoords.encode('utf-8'))["items"]
+nodes = json.loads(rGetCoords.decode('utf-8'))["items"]
 dictCoords = {}
 for node in nodes :
     dictCoords[node["network_address"].replace("."+site+".iot-lab.info","")] = {"x":node["x"].encode("utf-8"),"y":node["y"].encode("utf-8"),"z":node["z"].encode("utf-8")}
