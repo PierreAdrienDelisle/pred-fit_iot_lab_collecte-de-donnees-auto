@@ -47,7 +47,7 @@ for line in dataLines:
 for elem in capturedData:
     sum = 0
     n = 0
-    elem["timestamp"] = datetime.fromtimestamp(elem["timestamp"], timezone.utc).strftime("%d/%m/%Y-%H/%M/%S")
+    elem["timestamp"] = datetime.fromtimestamp(elem["timestamp"], timezone.utc).strftime("%d/%m/%Y-%H:%M:%S.%f")
     elem["value"] = ast.literal_eval(elem["value"])
     for v in elem["value"]:
         sum += v
