@@ -28,7 +28,12 @@ def histogram(pathname, datatype):
     data = tab_from_data(pathname, datatype)
     lnode, lvalue = separate_data(data)
     if datatype == "pressure":
-        plt.bar(lnode, height=lvalue, bottom=900)
+        plt.bar(lnode, height=lvalue, bottom=0)
+        plt.axis(ymin=min(lvalue)-10, ymax=max(lvalue)+10)
     else:
         plt.bar(lnode, height=lvalue)
-    plt.savefig("pathname/hist.png")
+    plt.title(datatype + " captured on each node")
+    plt.savefig("hist.png")
+
+
+histogram("/home/sonzero/Documents/Work/pred-fit_iot_lab_collecte-de-donnees-auto/Scripts/logDataCollector09-12-2019-17_45_30.txt", "pressure")
