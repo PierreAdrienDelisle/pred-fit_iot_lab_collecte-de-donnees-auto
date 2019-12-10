@@ -36,4 +36,4 @@ def histogram(pathname, datatype):
     plt.savefig("hist.png")
 
 
-histogram("/home/sonzero/Documents/Work/pred-fit_iot_lab_collecte-de-donnees-auto/Scripts/logDataCollector09-12-2019-17_45_30.txt", "pressure")
+#histogram("/home/sonzero/Documents/Work/pred-fit_iot_lab_collecte-de-donnees-auto/Scripts/logDataCollector09-12-2019-17_45_30.txt", "pressure")
