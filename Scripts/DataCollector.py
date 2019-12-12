@@ -7,7 +7,12 @@ import subprocess
 import argparse
 from datetime import datetime, timezone
 import ast
+import influxdb
+#from hist.py import histogram
 
+
+
+## Enable to have options and a --help
 parser=argparse.ArgumentParser(
     description='''Enable to launch a data collector to write in a file all logs of m3 nodes''',
     epilog="""----""")
@@ -15,19 +20,23 @@ parser.add_argument('ratio', type=int, nargs='?',const=1, default=30, help='The 
 parser.add_argument('site', type=str, nargs='?',const=1, default="lille", help='The site where you are running the experiment')
 args=parser.parse_args()
 
+## Beginning of the script
 print(" ****************** \n * Data Collector *\n ****************** \n")
 site = args.site
 ratio = args.ratio
-scriptRepertory = "/senslab/users/delisle/pred-fit_iot_lab_collecte-de-donnees-auto/Scripts/"
+repo = "/senslab/users/delisle/pred-fit_iot_lab_collecte-de-donnees-auto/Scripts/"
 print("Site: "+str(site)+", Ratio: "+str(ratio)+"%")
+
+## Look after the number of avalaible nodes and lauch an experiment with the ratio
 rGetAliveNodes = subprocess.check_output("iotlab-experiment info --site "+site+" --state Alive --archi m3:at86rf231 -l", shell=True)
 res = json.loads(rGetAliveNodes.decode('utf-8'))
 nbAliveNodes = len(res["items"])
 nbSubmit = int(nbAliveNodes*ratio/100)
 print("Launching an experiment with : "+str(nbSubmit)+" nodes")
-
-rSubmit = subprocess.check_output('iotlab-experiment submit -n cron-Submit-auto -d 1 -l '+str(nbSubmit)+',archi=m3:at86rf231+site="'+site+'"+mobile=0,'+scriptRepertory+'firmwares/firmware-5donnees-iotlab-m3', shell=True)
+rSubmit = subprocess.check_output('iotlab-experiment submit -n cron-Submit-auto -d 1 -l '+str(nbSubmit)+',archi=m3:at86rf231+site="'+site+'"+mobile=0,'+repo+'firmwares/firmware-5donnees-iotlab-m3', shell=True)
 experimentId = str(json.loads(rSubmit.decode('utf-8'))["id"])
+
+## Wait for the experiment to run and launch serial_aggregator
 rWait = subprocess.check_output('iotlab-experiment wait --id '+experimentId, shell=True)
 check1 = datetime.now()
 rSerialAggregator = subprocess.check_output("serial_aggregator -i "+experimentId, shell=True)
@@ -36,7 +45,8 @@ check2 = datetime.now() - check1
 print("Time Serial aggregator")
 print(abs(check2))
 rawData = str(rSerialAggregator)
-#arrayData = [{"node":,"timestamp":,"type":,"values":}]
+
+## Split up data from serial_aggregator and put it in a JSON format
 capturedData = []
 dataLines = rawData.splitlines()
 for line in dataLines:
@@ -54,6 +64,7 @@ for elem in capturedData:
         n += 1
     elem["mean"] = sum/n
 
+## Get X,Y,Z coords of each node
 rGetCoords = subprocess.check_output("iotlab experiment get -r -i "+experimentId, shell=True)
 nodes = json.loads(rGetCoords.decode('utf-8'))["items"]
 dictCoords = {}
@@ -63,10 +74,13 @@ for node in nodes :
 for data in capturedData:
     data["x"],data["y"],data["z"] = float(dictCoords[data["node"]]["x"]),float(dictCoords[data["node"]]["y"]),float(dictCoords[data["node"]]["z"])
 
+
+## Write in a log file the captured data
 print("Writing in log file...")
 now = datetime.now()
 date_time = now.strftime("%d-%m-%Y-%H_%M_%S")
-
-with open(scriptRepertory+"log/logDataCollector"+date_time+".txt", 'w') as outfile:
+filename = repo+"log/logDataCollector"+date_time+".json"
+with open(filename, 'w') as outfile:
     json.dump(capturedData, outfile)
+#histogram(filename, "light")
 print("Done !")
