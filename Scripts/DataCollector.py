@@ -7,9 +7,10 @@ import subprocess
 import argparse
 from datetime import datetime, timezone
 import ast
-import influxdb
+import time
+import re
+#from influxdb import InfluxDBClient
 #from hist.py import histogram
-
 
 
 ## Enable to have options and a --help
@@ -32,8 +33,9 @@ rGetAliveNodes = subprocess.check_output("iotlab-experiment info --site "+site+"
 res = json.loads(rGetAliveNodes.decode('utf-8'))
 nbAliveNodes = len(res["items"])
 nbSubmit = int(nbAliveNodes*ratio/100)
+nbSubmit=50
 print("Launching an experiment with : "+str(nbSubmit)+" nodes")
-rSubmit = subprocess.check_output('iotlab-experiment submit -n cron-Submit-auto -d 1 -l '+str(nbSubmit)+',archi=m3:at86rf231+site="'+site+'"+mobile=0,'+repo+'firmwares/firmware-5donnees-iotlab-m3', shell=True)
+rSubmit = subprocess.check_output('iotlab-experiment submit -n monitorProfile -d 1 -l '+str(nbSubmit)+',archi=m3:at86rf231+site="'+site+'"+mobile=0,'+repo+'firmwares/firmware-5donnees-iotlab-m3,TestMonitor', shell=True)
 experimentId = str(json.loads(rSubmit.decode('utf-8'))["id"])
 
 ## Wait for the experiment to run and launch serial_aggregator
@@ -74,13 +76,30 @@ for node in nodes :
 for data in capturedData:
     data["x"],data["y"],data["z"] = float(dictCoords[data["node"]]["x"]),float(dictCoords[data["node"]]["y"]),float(dictCoords[data["node"]]["z"])
 
-
-## Write in a log file the captured data
+# Radio output
+print("Radio output")
+directory = "/senslab/users/delisle/.iot-lab/"+experimentId+"/radio/"
+time.sleep(5) #Wait for radio output to be ready
+regex = re.compile(r"[0-9]+[.][0-9]+[\s][0-9]+[\s][0-9]+[\s][0-9]+[\s][0-9]+[\s][0-9]+[\s][-+\s][0-9]+") #Regex to find radio output lines
+rssiOutput = []
+for file in os.listdir(directory):
+    node = file.split(".")[0].split("_")
+    node = node[0]+'-'+node[1]
+    with open(directory+file,'r') as f:
+        for line in f:
+            if(re.match(regex, line)):
+                rssiTab = line.split()
+                rssiVal = rssiTab[0]
+                rssiTimestamp = datetime.fromtimestamp(float(rssiTab[3]), timezone.utc).strftime("%d/%m/%Y-%H:%M:%S.%f")
+                rssiChannel = rssiTab[5]
+                rssiOutput.append({"node":node,"value":rssiVal,"time":rssiTimestamp,"channel":rssiChannel})
+dataDict = {"capturedData":capturedData,"rssi":rssiOutput}
+# ## Write in a log file the captured data
 print("Writing in log file...")
 now = datetime.now()
 date_time = now.strftime("%d-%m-%Y-%H_%M_%S")
 filename = repo+"log/logDataCollector"+date_time+".json"
 with open(filename, 'w') as outfile:
-    json.dump(capturedData, outfile)
-#histogram(filename, "light")
+     json.dump(dataDict, outfile)
+# #histogram(filename, "light")
 print("Done !")
