@@ -33,7 +33,7 @@ rGetAliveNodes = subprocess.check_output("iotlab-experiment info --site "+site+"
 res = json.loads(rGetAliveNodes.decode('utf-8'))
 nbAliveNodes = len(res["items"])
 nbSubmit = int(nbAliveNodes*ratio/100)
-nbSubmit=50
+nbSubmit=150
 print("Launching an experiment with : "+str(nbSubmit)+" nodes")
 rSubmit = subprocess.check_output('iotlab-experiment submit -n monitorProfile -d 1 -l '+str(nbSubmit)+',archi=m3:at86rf231+site="'+site+'"+mobile=0,'+repo+'firmwares/firmware-5donnees-iotlab-m3,TestMonitor', shell=True)
 experimentId = str(json.loads(rSubmit.decode('utf-8'))["id"])
@@ -53,7 +53,7 @@ capturedData = []
 dataLines = rawData.splitlines()
 for line in dataLines:
     data = line.split(";")
-    dictData = {"node":data[1],"timestamp":float(data[0]),"type":data[2],"value":data[3],"mean":0,"x":0,"y":0,"z":0}
+    dictData = {"node":data[1],"timestamp":float(data[0]),"type":data[2],"value":data[3],"mean":0}
     capturedData.append(dictData)
 
 for elem in capturedData:
@@ -66,6 +66,7 @@ for elem in capturedData:
         n += 1
     elem["mean"] = sum/n
 
+"""
 ## Get X,Y,Z coords of each node
 rGetCoords = subprocess.check_output("iotlab experiment get -r -i "+experimentId, shell=True)
 nodes = json.loads(rGetCoords.decode('utf-8'))["items"]
@@ -75,7 +76,7 @@ for node in nodes :
 
 for data in capturedData:
     data["x"],data["y"],data["z"] = float(dictCoords[data["node"]]["x"]),float(dictCoords[data["node"]]["y"]),float(dictCoords[data["node"]]["z"])
-
+"""
 # Radio output
 print("Radio output")
 directory = "/senslab/users/delisle/.iot-lab/"+experimentId+"/radio/"
