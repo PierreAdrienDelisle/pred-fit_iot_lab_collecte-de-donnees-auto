@@ -20,24 +20,35 @@ data_example = []
 for line in open('4.json', 'r'):
     data_example.append(json.loads(line))
 
-data_example = data_example[0]
-data = []
-for elem in data_example:
-    data.append({"measurement":elem["type"],
+capturedData = data_example[0]["capturedData"]
+dataInfluxCaptured = []
+for elem in capturedData:
+    dataInfluxCaptured.append({"measurement":elem["type"],
                  "time":elem["timestamp"],
-                 "fields": {"node" : elem["node"],
-                            "mean": elem["mean"],
-                            "x":elem["x"],
-                            "y":elem["y"],
-                            "z":elem["z"],
-                            "type":elem["type"],
+                 "tags":{"node":elem["node"]},
+                 "fields": {"mean": elem["mean"],
                          }
                      })
 
-client.write_points(data)
+client.write_points(dataInfluxCaptured)
 
+rssiData = data_example[0]["rssi"]
+dataInfluxRssi = []
+for elem in rssiData:
+    dataInfluxRssi.append({"measurement":"rssi",
+                 "time":elem["time"],
+                 "tags":{"node":elem["node"]},
+                 "fields": {"value": elem["value"],
+                            "channel":elem["channel"],
+                         }
+
+            })
+with open("test.json","w") as f:
+    json.dump(dataInfluxRssi,f)
+print(len(dataInfluxRssi))
+client.write_points(dataInfluxRssi)
 #Query data
-results = client.query('SELECT "mean" FROM "pressure"')
+results = client.query('SELECT "value" FROM "rssi"')
 print(results.raw)
 '''
 points = results.get_points(tags={'user': 'Carol'})
