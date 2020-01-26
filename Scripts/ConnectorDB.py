@@ -17,7 +17,7 @@ client.switch_database('dbTest') #focus this DB
 #Insert data
 #Example : Duration time of a brushing teeth
 data_example = []
-for line in open('4.json', 'r'):
+for line in open('6.json', 'r'):
     data_example.append(json.loads(line))
 
 capturedData = data_example[0]["capturedData"]
