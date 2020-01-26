@@ -9,9 +9,9 @@ from datetime import datetime, timezone
 import ast
 import time
 import re
+import pty
 #from influxdb import InfluxDBClient
 #from hist.py import histogram
-
 
 ## Enable to have options and a --help
 parser=argparse.ArgumentParser(
@@ -23,6 +23,9 @@ args=parser.parse_args()
 
 ## Beginning of the script
 print(" ****************** \n * Data Collector *\n ****************** \n")
+master, slave = pty.openpty()
+s_name = os.ttyname(slave)
+print(s_name)
 site = args.site
 ratio = args.ratio
 repo = "/senslab/users/delisle/pred-fit_iot_lab_collecte-de-donnees-auto/Scripts/"
@@ -33,15 +36,22 @@ rGetAliveNodes = subprocess.check_output("iotlab-experiment info --site "+site+"
 res = json.loads(rGetAliveNodes.decode('utf-8'))
 nbAliveNodes = len(res["items"])
 nbSubmit = int(nbAliveNodes*ratio/100)
-nbSubmit=150
 print("Launching an experiment with : "+str(nbSubmit)+" nodes")
-rSubmit = subprocess.check_output('iotlab-experiment submit -n monitorProfile -d 1 -l '+str(nbSubmit)+',archi=m3:at86rf231+site="'+site+'"+mobile=0,'+repo+'firmwares/firmware-5donnees-iotlab-m3,TestMonitor', shell=True)
+rSubmit = subprocess.check_output('iotlab-experiment submit -n AutoCollect -d 1 -l '+str(nbSubmit)+',archi=m3:at86rf231+site="'+site+'"+mobile=0,'+repo+'firmwares/firmware-5donnees-iotlab-m3,TestMonitor', shell=True)
 experimentId = str(json.loads(rSubmit.decode('utf-8'))["id"])
 
 ## Wait for the experiment to run and launch serial_aggregator
+wait1 = datetime.now()
 rWait = subprocess.check_output('iotlab-experiment wait --id '+experimentId, shell=True)
+wait2 = datetime.now() - wait1
+print("Time waited")
+print(abs(wait2))
+print(json.loads(rWait.decode('utf-8')))
+
 check1 = datetime.now()
-rSerialAggregator = subprocess.check_output("serial_aggregator -i "+experimentId, shell=True)
+rSerialAggregator = subprocess.check_output("serial_aggregator -i "+experimentId+" < "+s_name, shell=True)
+
+#rSerialAggregator = iotlabaggregator.serial.main(["-i",experimentId])
 rSerialAggregator = json.loads(json.dumps(rSerialAggregator.decode('utf-8')))
 check2 = datetime.now() - check1
 print("Time Serial aggregator")
@@ -53,6 +63,7 @@ capturedData = []
 dataLines = rawData.splitlines()
 for line in dataLines:
     data = line.split(";")
+    print(data)
     dictData = {"node":data[1],"timestamp":float(data[0]),"type":data[2],"value":data[3],"mean":0}
     capturedData.append(dictData)
 
