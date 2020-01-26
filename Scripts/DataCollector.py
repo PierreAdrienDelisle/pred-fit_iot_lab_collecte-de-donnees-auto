@@ -63,7 +63,6 @@ capturedData = []
 dataLines = rawData.splitlines()
 for line in dataLines:
     data = line.split(";")
-    print(data)
     dictData = {"node":data[1],"timestamp":float(data[0]),"type":data[2],"value":data[3],"mean":0}
     capturedData.append(dictData)
 
