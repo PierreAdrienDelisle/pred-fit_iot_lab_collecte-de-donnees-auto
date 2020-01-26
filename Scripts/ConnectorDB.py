@@ -3,12 +3,22 @@
 ### ConnectorDB : Tools to connect to an Influx DB
 from influxdb import InfluxDBClient
 import json
+import argparse
 
+parser=argparse.ArgumentParser(
+    description='''Connect to an influxDB database, the expected format is like DataCollector : {rssi,capturedData}''',
+    epilog="""----""")
+parser.add_argument('-i', '--input', help='Input file name', required=True)
+parser.add_argument('host', type=str, nargs='?',const=1, default="localhost", help='The ip adress of the DB, by default localhost')
+parser.add_argument('port', type=int, nargs='?',const=1, default="8086", help='The port of the DB, by default 8086')
 
-
+args=parser.parse_args()
+file = args.file
+host = args.host
+port = args.port
 ## TESTING
 # API Doc : https://influxdb-python.readthedocs.io/en/latest/api-documentation.html
-client = InfluxDBClient(host='localhost', port=8086)
+client = InfluxDBClient(host=host, port=port)
 #client = InfluxDBClient(host='localhost', port=8086, username='admin', password='admin',ssl=True, verify_ssl=True)
 client.create_database('dbTest')
 a = client.get_list_database()
@@ -17,7 +27,7 @@ client.switch_database('dbTest') #focus this DB
 #Insert data
 #Example : Duration time of a brushing teeth
 data_example = []
-for line in open('6.json', 'r'):
+for line in open(file, 'r'):
     data_example.append(json.loads(line))
 
 capturedData = data_example[0]["capturedData"]
@@ -43,13 +53,10 @@ for elem in rssiData:
                          }
 
             })
-with open("test.json","w") as f:
-    json.dump(dataInfluxRssi,f)
-print(len(dataInfluxRssi))
 client.write_points(dataInfluxRssi)
 #Query data
-results = client.query('SELECT "value" FROM "rssi"')
-print(results.raw)
+#results = client.query('SELECT "value" FROM "rssi"')
+#print(results.raw)
 '''
 points = results.get_points(tags={'user': 'Carol'})
 for point in points: #☻Iterate over each point to show duration
