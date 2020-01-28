@@ -100,7 +100,7 @@ for file in os.listdir(directory):
         for line in f:
             if(re.match(regex, line)):
                 rssiTab = line.split()
-                rssiVal = rssiTab[0]
+                rssiVal = rssiTab[6]
                 rssiTimestamp = datetime.fromtimestamp(float(rssiTab[3]), timezone.utc).strftime("%d/%m/%Y-%H:%M:%S.%f")
                 rssiChannel = rssiTab[5]
                 rssiOutput.append({"node":node,"value":rssiVal,"time":rssiTimestamp,"channel":rssiChannel})
