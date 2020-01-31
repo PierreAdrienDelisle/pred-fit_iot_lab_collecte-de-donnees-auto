@@ -21,4 +21,4 @@
 # 
 # m h  dom mon dow   command
 PATH=/sbin:/bin:/usr/sbin:/usr/local/sbin:/usr/local/bin:/usr/bin
-*/2 * * * * python ~/pred-fit_iot_lab_collecte-de-donnees-auto/Scripts/DataCollector.py 0.2 lille
+*/2 * * * * python ~/pred-fit_iot_lab_collecte-de-donnees-auto/Scripts/DataCollector.py 70 lille
