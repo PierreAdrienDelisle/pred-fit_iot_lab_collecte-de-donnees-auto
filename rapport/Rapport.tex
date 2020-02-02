@@ -76,7 +76,7 @@
 \begin{abstract}
 %\small % À décommenter si le résumé est légèrement trop long pour tenir dans la page
 
-La plateforme FIT IoT lab, créée pour tester différentes aspects importants pour les thématiques qui entourent l'Internet des objets, est constituée de 6 sites, répartis en France, qui contiennent de nombreux n\oe uds capteurs, et permettent de nombreuses expérimentations.
+La plateforme FIT (Future Internet Testing facility) IoT lab, créée pour tester différentes aspects importants pour les thématiques qui entourent l'Internet des objets, est constituée de 6 sites, répartis en France, qui contiennent de nombreux n\oe uds capteurs, et permettent de nombreuses expérimentations.
 
 La problème, très technique, est ici de collecter automatiquement, à intervalles réguliers dans la journée, différentes données sur des puces M3, qui constituent la majorité du parc de la plateforme FIT Lilloise, telles que la luminosité ou la température. Les objectifs pour arriver à une solution sont donc les suivantes:
 \begin{enumerate}
@@ -87,8 +87,8 @@ La problème, très technique, est ici de collecter automatiquement, à intervalles
 \end{abstract}
 \begin{classification}
 %\small % Idem
-   \terms{Internet des objets, FIT IoT, Données, Acquisition, Représentation, Stockage.}
-   \keywords{Captation automatique, N\oe uds m3, Lille,}
+   \terms{Internet des objets, FIT IoT, Données, Acquisition, Représentation, Stockage, Radio.}
+   \keywords{Captation automatique, N\oe uds m3, Lille, protocole, RPL, perturbations}
 \end{classification}
 
 \maketitle
@@ -115,7 +115,7 @@ Comme expliqué précédemment, ce projet s'inscrit dans l'environnement FIT IoT La
 
 \section{Présentation de la problématique}
 
-En se basant sur cette plateforme, les chercheurs de l'Inria, à Lille voudraient avoir à disposition des données temporelles sur les données captées par les n\oe uds m3, pour effectuer différentes expérimentations. De fait, le but de ce projet est de mettre en place un système automatique de capture de données, à différents moments de la journée, et sur un maximum de n\oe uds disponibles. 
+En se basant sur cette plateforme, les chercheurs de l'Inria, à Lille voudraient avoir à disposition des données temporelles sur les données captées par les n\oe uds m3, pour effectuer différentes expérimentations. De fait, le but de ce projet est de mettre en place un système automatique de capture de données, à différents moments de la journée, et sur un maximum de n\oe uds disponibles. Ces capteurs se placent aussi dans un cadre d'un bâtiment où les perturbations sont possibles. Il faudra donc étudier via les relevés radio si cela à un impact sur les expériences soumises.
 
 \section{Objectifs poursuivis}
 
@@ -123,27 +123,52 @@ Dans un premier temps, l'objectif principal est bien la mise en place de cette s
 
 Par la suite, il nous faudra proposer une documentation extensive du travail fourni pour assurer une continuation du projet.
 
-Enfin, et si il nous reste du temps, nous aimerions expérimenter plus en avant sur des
-thématiques réseau / radio.	
+Puis une mise en place d'un protocole radio afin de mettre en évidence ou non, la possible perturbation radio induite entre expériences ou par l'environnement utilisé par de nombreuses personnes diverses (hall d'entrée d'un bâtiment).
 
 \section{Travail à réaliser et travail réalisé}
 
-Pour satisfaire notre objectif principal, il nous faut implémenter plusieurs choses:
+Pour satisfaire notre objectif principal; étant la collecte de données automatiques de capteurs m3, il nous faut implémenter plusieurs choses:
 \begin{enumerate}
-   \item Un firmware dédié aux n\oe uds m3, qui lorsqu'il est flashé, capte les données sur différents capteurs à déterminer, et les renvoie sur leur lien série.~;
-   \item Un script qui récupère les données à la sortie, et les pousse sur une base de données temporelle~;
-   \item Une base de données temporelles, qui dès qu'elle sera remplie, sera sujette à exploitation. ~;
+   \item Un firmware dédié aux n\oe uds m3, qui lorsqu'il est flashé, capte les données sur différents capteurs à déterminer, et les renvoie sur leur lien série : Lumière, Pression, valeurs radio.~;
+   \item Une base de données de type temporelle afin qu'elle soit adapté aux problématiques de petites mesures estampillés en grand nombre. ~;
+   \item Un script automatique liant les données captés et la base de données, il devra effectuer diverses tâches pour lancer l'expérience de collecte et en récupérer le résultat.
 \end{enumerate}
    
-A ce jour, pour l'objectif principal, nous avons déjà un premier prototype fonctionnel assez basique, pour la captation de données et la récupération de ces données côté logiciel. Il nous reste donc à améliorer cette captation et à tester d'autres solutions, et à implémenter le côté base de données.
+Notre second objectif de perturbations radio, va nécessiter plusieurs étapes pour être concluant :
+\begin{enumerate}
+   \item Mettre en place un protocole réseau dans FIT IoT Lab~;
+   \item D'après les données radio précédemment récoltées dans la base, de trouver de possibles perturbations radio ~;
+   \item La réalisation du protocole réseau dans des conditions "perturbées" ou non pour observer si les performances s'en trouvent affectées.
+   
+\end{enumerate}
+   
+
+
+Le premier objectif est totalement satisfait, à savoir que, la solution de collecte automatique est mise en place via plusieurs technologies : 
+\begin{enumerate}
+   \item Contiki pour le firmware ~;
+   \item InfluxDB pour la base de données ~;
+   \item Script python associé à cron pour l'automatisation~;
+\end{enumerate}
+
+
+Le second objectif 
+
+[ REMPLIR ]
+????
+????
+????
+
+
 
 \section{Plan de l'étude}
 
-Ce rapport arrivant au milieu du projet, il ne peut être que peu étoffé pour le moment, de fait, le nombre de paragraphes reflète l'avancement de notre travail. De fait, notre étude se basera sur ces différentes parties:
+Ce rapport contient les différentes étapes du projet, à savoir la collecte de données automatique puis la captation radio et son impact réseau. Dans les parties à suivre, il y aura donc, premièrement, une présentation de la solution mêlée dans un second temps au recherches sur les perturbations radio.
 
-Le chapitre~\ref{chap:EtatArt} se concentrera sur les études technologiques et la montée en compétence que nous avons effectuée sur ce début de projet, et que nous continuerons d'effectuer par la suite. En effet, le sujet étant plus technologique qu'orienté recherche, un état de l'art scientifique n'était pas pertinent. Nous avons donc effectué un état de l'art technologique que nous détaillerons dans cette partie.
 
-Le chapitre~\ref{chap:Conception} est dédié aux différents choix technologiques, diagrammes et concepts qui forment notre système. Il est central car il constitue une base de travail solide sur laquelle se retourner à tout moment lors du travail pour notre groupe.
+Le chapitre~\ref{chap:EtatArt} se concentrera sur les études technologiques et la montée en compétence que nous avons effectuée sur ce début de projet.  L'état de l'art sera donc technique avec la présentation de la plateforme, les firmwares M3 et les bases de données temporelles. Puis ensuite, une partie dédié aux métriques réseaux et impacts sur la qualité des protocoles.
+
+Le chapitre~\ref{chap:Conception} est dédié aux différents choix technologiques, diagrammes et concepts qui forment notre système. Ainsi que l'exploitation du protocole réseau RPL (Routing Protocol for Low-Power and Lossy Networks) qui sera utilisé pour tester nos hypothèses. Il est central car il constitue une base de travail solide sur laquelle se retourner à tout moment lors du travail pour notre groupe.
 
 %-------------------------------------------------------------------------------------------------------------
 
@@ -162,10 +187,12 @@ Le chapitre~\ref{chap:Conception} est dédié aux différents choix technologiques,
 	FIT IoT Lab est une plateforme de service  d'infrastructure IoT. Il existe sur cette plateforme plus de 1500 noeuds capteurs de différents types (M3,A8,turtlebot,...) répartis sur 6 sites : Grenoble, Lille, Lyon, Paris, Saclay et Strasbourg. L'objectif est de fournir aux chercheurs une infrastructure riche qu'ils peuvent ensuite réserver et tester pour leur propres expériences en utilisant ces noeuds.
 	IoT Lab fait partie du consortium FIT (Future Internet Testing facility) qui réuni plusieurs institutions de recherche et universités sur ce projet de plateforme de tests à grande échelle : FIT IoT Lab, FIT Wireless et FIT Cloud.
 	
+	
+
 \subsection{Architecture IoT Lab}
-La plateforme est décomposée en plusieurs parties :
+La plateforme est décomposée en plusieurs parties (Figure 2.2):
 \begin{itemize}
-	\item Site web - FIT IoT Lab
+	\item Site web - FIT IoT Lab (Webportal) 
 	
 	Il permet d'accéder au banc d'essai en ligne, réserver des noeuds capteurs pour une expérience avec un firmware dédié et une durée. Il contient aussi les tutoriels permettant de prendre en main la plateforme.
 	
@@ -175,19 +202,42 @@ La plateforme est décomposée en plusieurs parties :
 	
 	\item Frontend SSH
 	
-	La frontend SSH est un ordinateur distant auquel chaque utilisateur de FIT IoT Lab peut se connecter via son compte. Elle est utile pour lancer directement des expériences, les gérer et prendre des informations diverses et variées. Cette frontend SSH s'appuie sur l'API REST pour fonctionner mais elle permet d'utiliser des scripts en local sur cet ordinateur distant afin de réaliser des tâches plus complexes comme le "serial aggregator" qui va agréger toutes les entrées des liens séries de nos noeuds. Les scripts sont écrits généralement en Python.
+	La frontend SSH est un serveur distant auquel chaque utilisateur de FIT IoT Lab peut se connecter via son compte sur un site particulier, dans le cadre de notre étude Lille. Elle est utile pour lancer directement des expériences, les gérer et prendre des informations diverses et variées. Cette frontend SSH s'appuie sur l'API REST pour fonctionner mais elle permet d'utiliser des scripts en local sur cet ordinateur distant afin de réaliser des tâches plus complexes comme le "serial aggregator" qui va agréger toutes les entrées des liens séries de nos noeuds. Les scripts sont écrits généralement en Python.
 	
 	\item Noeuds capteurs
 	
 	Il existe plusieurs types de noeuds : A8, M3, Firefly, Lora, Arduino, WSN430 et les turtlebots qui sont des unités mobiles. Chaque noeud à une documentation qui lui est propre. Cela permet une grande diversité dans l'expérimentation. Sur ces noeuds il faut ajouter un firmware pour obtenir le comportement par défaut attendu de chacun d'eux, le développement firmware s'effectue en C.
-	 
-\end{itemize}
 	
-\begin{figure}[hp]
-    \includegraphics[width=0.5\textwidth]{Images/web-view_archi}
-    \caption{Graphique architecture web FIT IoT Lab [11]}
-\end{figure}
+	\item Noeuds M3 (Figure 2.1)
+	
+	Il est essentiel de parler des capacités des noeuds M3 puisqu'ils seront notre objet d'étude sur les différentes problématiques traitées. 
+	La carte contient plusieurs capteurs de mesures ambiantes : lumière, pression, gyroscope, accéléromètre.
+	Pour les communications radio, la carte utilise la norme 802.15.4 PHY 2.4 Ghz. 
+	La carte peut s'utiliser avec les différents OS (Operating System) suivants : Contiki, RIOT et FreeRTOS.
+	
+	
+	\begin{figure}[h]
+    \includegraphics[width=0.5\textwidth]{Images/m3}
+    \caption{Carte M3}
+	\end{figure}	
+	
+	\end{itemize}
 
+	Un noeud M3 est composé :
+\begin{itemize}
+	\item De la carte M3 (Open Node) qui va être manipulé par l'utilisateur qui va avoir un accès total dessus (mémoire, OS et firmware utilisé).
+	\item Une Gateway qui permet la connexion à cette carte et accès à son port série.
+	\item Un noeud de contrôle (Control Node) qui va être le moyen d'envoyer ses instructions passives ou actives à la carte via la gateway.
+\end{itemize}
+
+Dans la suite, nous discuterons indistinctement de la carte m3 et du noeud m3.
+
+\begin{figure}[hp]
+    \includegraphics[width=0.5\textwidth]{Images/resume-fit}
+    \caption{Graphique architecture FIT IoT Lab}
+\end{figure}	
+	
+	
 \subsection{Tutoriels essentiels}
 
 Dans cette section, nous présenterons les tutoriels essentiels de la plateforme que nous avons dû suivre pour réaliser notre solution.
@@ -208,10 +258,6 @@ Dans cette section, nous présenterons les tutoriels essentiels de la plateforme 
 		
 		Une présentation du script "serial aggregator" qui permet d'agréger tous les liens séries relatifs à une expérience. Il permet aussi d'envoyer des messages à tous les liens qu'il agrège.
 		
-		\item Run a script in background [5]
-		
-		En prenant exemple sur le script "serial aggregator", ce tutoriel permet de mettre en place une exécution automatique d'un script directement à la soumission d'une expérience et d'ensuite récupérer ces logs.
-			
 		
 		
 \end{itemize}	 
@@ -231,7 +277,7 @@ En y regardant de plus près, nous avons malheureusement remarqué que dans le cad
 \subsubsection{Ressources d'apprentissage}
 Le point de choix principal se trouve au niveau de la facilité d'apprentissage de la plateforme. De fait, la présence de nombreuses ressources est un point central dans le choix d'une technologie.
 
-En l?occurrence, Contiki vient avec des tutoriels de base pour apprendre à compiler du code C en firmware Contiki \footnote{https://www.iot-lab.info/tutorials/contiki-compilation/}. Ce qui le rend plus accessible, c'est surtout ses nombreux exemples qui permettent de rapidement comprendre comment sont programmés les Firmwares sur cet OS. 
+En l'occurrence, Contiki vient avec des tutoriels de base pour apprendre à compiler du code C en firmware Contiki \footnote{https://www.iot-lab.info/tutorials/contiki-compilation/}. Ce qui le rend plus accessible, c'est surtout ses nombreux exemples qui permettent de rapidement comprendre comment sont programmés les Firmwares sur cet OS. 
 
 Deux exemples, particulièrement, sont importants dans notre cas:
 Le premier, appelé 01-serial-echo, est un firmware qui, lorsqu'il reçoit un message sur son lien série, renvoie le message sur le lien série, à la manière de la commande echo. Ceci est important pour nous car nous avons besoin de renvoyer les données sur le lien série, ainsi que recevoir par exemple une instruction de capture de données. Cette base de code contient aussi tout ce qui est nécessaire la base des mécanismes évènementiels.
@@ -249,7 +295,7 @@ RIOT vient tout comme Contiki avec une bonne base d'exemples et de tutoriels fou
 \subsubsection{Inconvénients}
 De prime abord, le code permettant de programmer des firmwares grâce à RIOT semble plus compliqué que celui de Contiki.
 \subsubsection{Ressources d'apprentissage}
-Pour la plateforme RIOT, les mêmes tutoriels existent que pour Contiki \footnote{https://www.iot-lab.info/tutorials/riot-compilation/}
+Pour la plateforme RIOT, les mêmes tutoriels existent que pour Contiki \footnote{https://www.iot-lab.info/tutorials/riot-compilation/ [REMPLIR] [CHANGER]}
 
 Par ailleurs, des exemples permettent aussi de comprendre le fonctionnement global de la plateforme et d'en extraire les principes de base. Malgré cela, il n'existe pas d'exemple traitant directement avec les capteurs, et il nous faudra donc aller chercher plus en profondeur dans la documentation pour trouver des solutions à ce niveau.
 
@@ -302,7 +348,8 @@ Sur ces graphiques, on observe le coût en temps de la requête en fonction du nom
 Lors de ce benchmarking, on peut observer qu'InfluxDB [9] est nettement en avance sur les autres TSDBs. C'est pourquoi notre premier choix technique se basera sur cette base de données. Néanmoins nous gardons à l'esprit d'autres possibilités de TSDBs, il sera donc important dans la partie conception de bien prendre en compte une certaine facilité à changer de TSDB si nécessaire. De plus, il n'est pas impossible par la suite de changer vers Prometheus [10] étant une TSDB déjà utilisée pour certains projets Fit IoT Lab.
 
 
-
+\section{Protocole Réseau pour IoT}
+\section{Métriques réseau sur le bruit et qualité}
 
 \section{Récapitulatif}
 
@@ -322,44 +369,9 @@ Nous avons pu aboutir à une première solution en prenant des choix qui nous semb
 
 À l'issue de ce travail de recherche bibliographique, il apparaît que plusieurs propositions peuvent servir de base à la résolution de notre problème.
 
-Il semble se détacher un certain nombre de directions privilégiées que nous allons exploiter en priorité dans nos propositions.
+Il semble se détacher un certain nombre de directions privilégiées que nous allons exploiter en priorité dans nos propositions. [CHANGER] Tableau récap
 Celles-ci font l'objet de l'étude du chapitre suivant.
 
-
-\bibliography{biblio}
-[1] Getting started with IoT-LAB ? the tutorial for beginners -  https://www.iot-lab.info/tutorials/getting-started-tutorial/
-\newline
-\newline
-[2] Configure your SSH access - \newline https://www.iot-lab.info/tutorials/ssh-access/
-\newline
-\newline
-[3] Experiment CLI client -  https://www.iot-lab.info/tutorials/iotlab-experimenttools-client/
-\newline
-\newline
-[4] Nodes Serial Link Aggregation - \newline https://www.iot-lab.info/tutorials/serial-aggregator/
-\newline
-\newline
-[5]Running script on SSH frontend - \newline https://www.iot-lab.info/tutorials/iotlab-runscript-client/
-\newline
-\newline
-[6] Survey and Comparison of Open Source Time Series Databases - Andreas Bader,Oliver Kopp,Michael Falkenthal - 2017
-\newline
-\newline
-[7] Benchmarking Time Series Databases with IoTDB-Benchmark for IoT Scenarios - Rui Liu, Jun Yuan - 2019
-\newline
-\newline
-[8] DB-Engines Ranking, \newline
-https://db-engines.com/en/ranking/time+series+dbms
-\newline
-\newline
-[9] Time Series Database (TSDB) Explained | InfluxDB - 
-https://www.influxdata.com/time-series-database/
-\newline
-\newline
-[10] Prometheus - Monitoring system and time series database - https://prometheus.io/
-\newline
-\newline
-[11] Architecture web FIT IoT Lab - \newline https://github.com/iot-lab/iot-lab/tree/master/web-view
 
 \chapter{Conception}
 \label{chap:Conception}
@@ -368,6 +380,26 @@ Cette partie est dédiée au système dans son ensemble et à la manière dont il a é
 
 \section{Ensemble du système - Diagramme d'architecture - Figure 3.1}
 Ce diagramme d'architecture représente où sont placés les différentes parties prenantes pour l'exécution de la collecte automatique des données. Ainsi que d'un ordre partiel pour comprendre le mécanisme global.
+La solution nécessite 2 sites pour fonctionner : Grenoble là où l'API REST est localisé et Lille pour les noeuds M3.
+Sur Lille, trois composants sont nécessaires :
+	\begin{itemize}
+		\item Frontend SSH contenant un compte configuré avec le script DataCollector dessus et le crontab en arrière plan pour l'automatisation.
+		\item Testbed de Lille, c'est à dire le bâtiment de Lille contenant tous les noeuds M3.
+		\item Seveur Inria, un emplacement pour héberger la base de données.
+	\end{itemize}
+	
+Les différentes étapes de la solution sont :
+\begin{itemize}
+	\item 1 - Exécution automatique, par le deamon Cron du script DataCollector. Crontab permet de paramétrer une ligne de commande à lancer toutes les X minutes où un schéma horaire particulier. On peut aussi utiliser systemd qui est un autre deamon réalisant la même tâche.
+	\item 2 - Exécution de CLI Tools. Le script va faire une succession d'appels à l'API REST pour avoir plusieurs information. Premièrement, prendre l'état du Testbed (combien de noeuds sont disponibles sur la plateforme), puis de lancer l'expérience en fonction avec notre firmware et un profil de monitoring radio. Enfin, attendre que l'expérience lancée soit prête pour démarrer l'étape 5.
+	\item 3 - Programmation des noeuds. L'API REST va réserver les noeuds et donner le firmware associé à l'expérience.
+	\item 4 - Flash des noeuds. On associe les noeuds à leur firmware, ils vont donc relever 5 données et les envoyer ensuite sur leurs liens séries.
+	\item 5 - Lancement Serial Aggregator. Une fois l'expérience prête, on lance le script serial aggregator qui va écouter les liens séries de tous les noeuds d'une expérience.
+	\item 6 - Ecoute des liens séries. L'expérience ne dure qu'une minute pour éviter de monopoliser la plateforme FIT de Lille. Au bout de la minute, les connections se ferment à tous les noeuds, ce qui arrête le serial aggregator qui va rassembler toutes les données.
+	\item 7 - Ecriture dans la BDD. Le script DataCollector récupère la sortie du serial aggregator et prépare son format pour pousser ses données dans InfluxDB en JSON.
+\end{itemize}
+[REMPLIR]
+
 
 \section{Scénario - Diagramme de séquence - Figure 3.2}
 
@@ -379,9 +411,35 @@ Ainsi, la séquence décrite dans le diagramme en figure 3.1 est la suivante:
 \item{Dès lors, le Serial aggregator commence à écouter les n\oe uds et récupère les données qui lui sont envoyées par lien série. Une fois qu'il a tout reçu, il renvoie ces données au script Python qui les traite.}
 \item{Une fois traitées, ces données sont formatées et envoyées vers la Base de données temporelles pour écriture et stockage}
 \end{enumerate}
+[REMPLIR] (Plusieurs cas de figures à mettre)
+
+
+\section{Schéma de Base de données}
+
+Nous avons eu deux propositions de schéma de base de données afin de savoir comment mieux représenter les données et leurs utilisations. 
+
+\subsection{Tuple de données}
+	La première idée est de faire un tuple de données avec : Noeud, Timestamp, LightValue, PressureValue, RssiValue, RssiChannel. Cela peut paraître à priori une bonne solution contenant toutes les informations d'un noeud à un instant T. Le premier problème est que les données ne sont pas prises au même moment exactement, ce qui signifie que les données RSSI, lumière et pression ne partage pas la même estampille de temps. De plus, cette façon de conceptualisation revient à un schéma classique de base de données relationnelles. Or dans notre cas, nos données ne sont pas liés exceptés par leur numéro de noeud.
+
+
+\subsection{Table par type de données}
+Une solution alternative peut être de représenter la base de données avec une table par type de donnée stockée. Cela permet de garder une estampille correcte avec la valeur de donnée associé. Afin de garder le lien entre les données, à savoir le noeud capté, on utilise un "tag" qui représente l'utilisateur de la ressource. Ainsi, toutes les données captés par un noeud M3-1XX seront marquées par ce même nom. On peut ainsi traiter les données sur ce tag. Le système InfluxQL favorise ce schéma puisqu'il est optimisé pour les requêtes InfluxQL (langage SQL pour InfluxDB).
+Le schéma de base de données temporelles final reste simple puisqu'il est composé seulement de 3 tables :
+	\begin{itemize}
+		\item Light, contient les données de lumière en lux
+		\item Pressure, contient les données de pression en maBar
+		\item RSSI, contient les données radio en dBm
+	\end{itemize}
+
+
+\begin{figure}[h]
+    \includegraphics[width=0.5\textwidth]{Images/schema-BDD}
+    \caption{Schéma base de données}
+\end{figure}
+
 
 \begin{figure*}[!ht]
-    \includegraphics[width=1\textwidth]{Images/diagrammeArchi}
+    \includegraphics[width=1\textwidth]{Images/diagrammeArchi-v2}
     \caption{Diagramme d'architecture}
 \end{figure*}
 
@@ -390,8 +448,7 @@ Ainsi, la séquence décrite dans le diagramme en figure 3.1 est la suivante:
 	\includegraphics[width=0.8\textwidth]{Images/diagseq}
 	\caption{Diagramme de séquence}
 	\label{fig:DiagSequence}
-<<<<<<< HEAD
-\end{figure}
+\end{figure*}
 
 %-------------------------------------------------------------------------------------------------------------
 
@@ -429,6 +486,9 @@ Dans l'ensemble, l'estimation de nos tâche ont étés proches de la réalité mais n
    \caption{Planning effectif}
    \label{fig:PlanningEffectif}
 \end{figure*}
+
+
+
 
 
 
@@ -1015,5 +1075,40 @@ La figure~\ref{fig:AutoEvaluationTravailFinal} permet d'énumérer un certain nomb
    \caption{Points à contrôler à l'issue de la phase II}
    \label{fig:AutoEvaluationTravailFinal}
 \end{figure*}
+
+
+\bibliography{biblio}
+[1] Getting started with IoT-LAB ? the tutorial for beginners -  https://www.iot-lab.info/tutorials/getting-started-tutorial/
+\newline
+\newline
+[2] Configure your SSH access - \newline https://www.iot-lab.info/tutorials/ssh-access/
+\newline
+\newline
+[3] Experiment CLI client -  https://www.iot-lab.info/tutorials/iotlab-experimenttools-client/
+\newline
+\newline
+[4] Nodes Serial Link Aggregation - \newline https://www.iot-lab.info/tutorials/serial-aggregator/
+\newline
+\newline
+[5] - [REMPLIR] (Retiré parce que pas pertinent)
+\newline
+\newline
+[6] Survey and Comparison of Open Source Time Series Databases - Andreas Bader,Oliver Kopp,Michael Falkenthal - 2017
+\newline
+\newline
+[7] Benchmarking Time Series Databases with IoTDB-Benchmark for IoT Scenarios - Rui Liu, Jun Yuan - 2019
+\newline
+\newline
+[8] DB-Engines Ranking, \newline
+https://db-engines.com/en/ranking/time+series+dbms
+\newline
+\newline
+[9] Time Series Database (TSDB) Explained | InfluxDB - 
+https://www.influxdata.com/time-series-database/
+\newline
+\newline
+[10] Prometheus - Monitoring system and time series database - https://prometheus.io/
+\newline
+\newline
 
 \end{document}
