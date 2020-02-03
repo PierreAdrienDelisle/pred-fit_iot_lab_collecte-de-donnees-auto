@@ -347,7 +347,7 @@ Afin d'affiner notre choix, nous avons pris en compte le deuxième benchmarking [
 Sur ces graphiques, on observe le coût en temps de la requête en fonction du nombre d'entrées sur cette dernière.
 Lors de ce benchmarking, on peut observer qu'InfluxDB [9] est nettement en avance sur les autres TSDBs. C'est pourquoi notre premier choix technique se basera sur cette base de données. Néanmoins nous gardons à l'esprit d'autres possibilités de TSDBs, il sera donc important dans la partie conception de bien prendre en compte une certaine facilité à changer de TSDB si nécessaire. De plus, il n'est pas impossible par la suite de changer vers Prometheus [10] étant une TSDB déjà utilisée pour certains projets Fit IoT Lab.
 
-\section{Grafana}
+
 \section{Protocole RPL}
 \section{Métriques réseau sur le bruit et qualité}
 
@@ -378,26 +378,6 @@ Celles-ci font l'objet de l'étude du chapitre suivant.
 
 Cette partie est dédiée au système dans son ensemble et à la manière dont il a été pensé et conceptualisé. Nous voulons ici présenter les différents systèmes qui composent notre solution, ainsi que les différentes interactions qui les caractérisent. Les diagrammes ont pour but de clarifier le propos et de fluidifier la compréhension.
 
-\section{Ensemble du système - Diagramme d'architecture }
-Ce diagramme d'architecture (Figure \ref{fig:DiagArchi} ) représente où sont placés les différentes parties prenantes pour l'exécution de la collecte automatique des données. Ainsi que d'un ordre partiel pour comprendre le mécanisme global.
-La solution nécessite 2 sites pour fonctionner : Grenoble là où l'API REST est localisé et Lille pour les noeuds M3.
-Sur Lille, trois composants sont nécessaires :
-	\begin{itemize}
-		\item Frontend SSH contenant un compte configuré avec le script DataCollector dessus et le crontab en arrière plan pour l'automatisation.
-		\item Testbed de Lille, c'est à dire le bâtiment de Lille contenant tous les noeuds M3.
-		\item Seveur Inria, un emplacement pour héberger la base de données.
-	\end{itemize}
-	
-Les différentes étapes de la solution sont :
-\begin{itemize}
-	\item 1 - Exécution automatique, par le deamon Cron du script DataCollector. Crontab permet de paramétrer une ligne de commande à lancer toutes les X minutes où un schéma horaire particulier. On peut aussi utiliser systemd qui est un autre deamon réalisant la même tâche.
-	\item 2 - Exécution de CLI Tools. Le script va faire une succession d'appels à l'API REST pour avoir plusieurs information. Premièrement, prendre l'état du Testbed (combien de noeuds sont disponibles sur la plateforme), puis de lancer l'expérience en fonction avec notre firmware et un profil de monitoring radio. Enfin, attendre que l'expérience lancée soit prête pour démarrer l'étape 5.
-	\item 3 - Programmation des noeuds. L'API REST va réserver les noeuds et donner le firmware associé à l'expérience.
-	\item 4 - Flash des noeuds. On associe les noeuds à leur firmware, ils vont donc relever 5 données et les envoyer ensuite sur leurs liens séries.
-	\item 5 - Lancement Serial Aggregator. Une fois l'expérience prête, on lance le script serial aggregator qui va écouter les liens séries de tous les noeuds d'une expérience.
-	\item 6 - Ecoute des liens séries. L'expérience ne dure qu'une minute pour éviter de monopoliser la plateforme FIT de Lille. Au bout de la minute, les connections se ferment à tous les noeuds, ce qui arrête le serial aggregator qui va rassembler toutes les données.
-	\item 7 - Ecriture dans la BDD. Le script DataCollector récupère la sortie du serial aggregator et prépare son format pour pousser ses données dans InfluxDB en JSON.
-\end{itemize}
 
 
 
@@ -424,7 +404,30 @@ Ainsi, la différence décrite dans le diagramme en figure \ref{fig:DiagSequenceB}
 \item{Récupération et mise en forme dans la base de données.}
 \end{enumerate}
 
+\subsection{Choix}
+Le scénario A permet d'avoir un meilleur contrôle sur la captation puisqu'on va directement accéder aux noeuds néanmoins il nécessite une grande synchronisation et beaucoup de connexions en même temps à leurs interface. C'est pourquoi la deuxième approche avec le serial aggregator est préférée dans notre cas. Cela permet une implémentation plus aisée en utilisant les outils déjà développés mais aussi un seul point de sortie pour toutes les données. Le script python va donc être simplifié et plus lisible.
 
+
+\section{Ensemble du système - Diagramme d'architecture }
+Ce diagramme d'architecture (Figure \ref{fig:DiagArchi} ) représente où sont placés les différentes parties prenantes pour l'exécution de la collecte automatique des données. Ainsi que d'un ordre partiel pour comprendre le mécanisme global.
+La solution nécessite 2 sites pour fonctionner : Grenoble là où l'API REST est localisé et Lille pour les noeuds M3.
+Sur Lille, trois composants sont nécessaires :
+	\begin{itemize}
+		\item Frontend SSH contenant un compte configuré avec le script DataCollector dessus et le crontab en arrière plan pour l'automatisation.
+		\item Testbed de Lille, c'est à dire le bâtiment de Lille contenant tous les noeuds M3.
+		\item Seveur Inria, un emplacement pour héberger la base de données.
+	\end{itemize}
+	
+Les différentes étapes de la solution sont :
+\begin{itemize}
+	\item 1 - Exécution automatique, par le deamon Cron du script DataCollector. Crontab permet de paramétrer une ligne de commande à lancer toutes les X minutes où un schéma horaire particulier. On peut aussi utiliser systemd qui est un autre deamon réalisant la même tâche.
+	\item 2 - Exécution de CLI Tools. Le script va faire une succession d'appels à l'API REST pour avoir plusieurs information. Premièrement, prendre l'état du Testbed (combien de noeuds sont disponibles sur la plateforme), puis de lancer l'expérience en fonction avec notre firmware et un profil de monitoring radio. Enfin, attendre que l'expérience lancée soit prête pour démarrer l'étape 5.
+	\item 3 - Programmation des noeuds. L'API REST va réserver les noeuds et donner le firmware associé à l'expérience.
+	\item 4 - Flash des noeuds. On associe les noeuds à leur firmware, ils vont donc relever 5 données et les envoyer ensuite sur leurs liens séries.
+	\item 5 - Lancement Serial Aggregator. Une fois l'expérience prête, on lance le script serial aggregator qui va écouter les liens séries de tous les noeuds d'une expérience.
+	\item 6 - Ecoute des liens séries. L'expérience ne dure qu'une minute pour éviter de monopoliser la plateforme FIT de Lille. Au bout de la minute, les connections se ferment à tous les noeuds, ce qui arrête le serial aggregator qui va rassembler toutes les données.
+	\item 7 - Ecriture dans la BDD. Le script DataCollector récupère la sortie du serial aggregator et prépare son format pour pousser ses données dans InfluxDB en JSON.
+\end{itemize}
 
 \section{Schéma de Base de données}
 
@@ -437,17 +440,28 @@ Nous avons eu deux propositions de schéma de base de données afin de savoir comm
 \subsection{Table par type de données}
 Une solution alternative peut être de représenter la base de données avec une table par type de donnée stockée. Cela permet de garder une estampille correcte avec la valeur de donnée associé. Afin de garder le lien entre les données, à savoir le noeud capté, on utilise un "tag" qui représente l'utilisateur de la ressource. Ainsi, toutes les données captés par un noeud M3-1XX seront marquées par ce même nom. On peut ainsi traiter les données sur ce tag. Le système InfluxQL favorise ce schéma puisqu'il est optimisé pour les requêtes InfluxQL (langage SQL pour InfluxDB).
 Le schéma de base de données temporelles final reste simple puisqu'il est composé seulement de 3 tables :
-	\begin{itemize}
+\begin{itemize}
 		\item Light, contient les données de lumière en lux
 		\item Pressure, contient les données de pression en maBar
 		\item RSSI, contient les données radio en dBm
-	\end{itemize}
-
-
+\end{itemize}
+	
 \begin{figure}[h]
     \includegraphics[width=0.5\textwidth]{Images/schema-BDD}
     \caption{Schéma base de données}
 \end{figure}
+
+
+\section{Grafana}
+
+	Après la collecte de données, il nous fallait un outil pour la visualisation des données et son exploitation. C'est pourquoi nous avons choisi Grafana qui est un outil web permettant de facilement intégrer les données InfluxDB via une interface web avec un vue simplifiée. Une vue classique de nos données peut se représenter ainsi : figure \ref{fig:Grafana_example}
+	
+\begin{figure*}[!ht]
+	\centering
+    \includegraphics[width=1.1\textwidth]{Images/grafana}
+    \caption{Exemple de visualisation des données captées - 02/02/2020}
+    \label{fig:Grafana_example}
+\end{figure*}
 
 
 \begin{figure*}[!ht]
@@ -459,14 +473,14 @@ Le schéma de base de données temporelles final reste simple puisqu'il est compos
 \begin{figure*}[!ht]
 	\centering
 	\includegraphics[width=0.9\textwidth]{Images/diagseq2}
-	\caption{Diagramme de séquence version A}
+	\caption{Diagramme de séquence scénario A}
 	\label{fig:DiagSequenceA}
 \end{figure*}
 
 \begin{figure*}[!ht]
 	\centering
 	\includegraphics[width=0.8\textwidth]{Images/diagseq}
-	\caption{Diagramme de séquence version B}
+	\caption{Diagramme de séquence scénario B}
 	\label{fig:DiagSequenceB}
 \end{figure*}
 
