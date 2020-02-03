@@ -349,7 +349,38 @@ Lors de ce benchmarking, on peut observer qu'InfluxDB [9] est nettement en avanc
 
 \section{Grafana}
 \section{Protocole RPL}
+Dans notre optique d'analyser l'influence de l'activité humaine, nous avions besoin d'un protocole de routage léger qui soit facilement implémentable, étant donné le peu de temps qu'il nous restait pour travailler dessus. Par ailleurs, nous voulions aussi qu'il ne soit pas trop solide, afin que lors de pics d'affluence, le protocole aie du mal ou n'arrive pas à converger vers un arbre acceptable.
+
+RPL (Routing protocol for Lossy networks) est un protocole qui remplit toutes ses caractéristiques. Étant déjà  implémenté dans Contiki, sous FIT IoT lab , nous n'avons quasiment pas de temps de développement à prendre en compte. Par ailleurs, et contrairement à d'autres protocoles plus solides de Routage, RPL est très sensible à des pertes de paquets.
+
 \section{Métriques réseau sur le bruit et qualité}
+
+En termes de métriques réseau, il nous fallait une métrique qui aie plusieurs caractéristiques: Une implémentation dans Contiki, une métrique qui soit un reflet du bruit ambiant, et qui existe sur les n\oe uds m3. Nous avions le droit entre trois métriques différentes, qui auraient pu être acceptables dans notre sujet:
+
+\begin{itemize}
+		\item Le LQI: Link Quality Indicator
+		\item L'ETX: Expected transmission count
+		\item Le RSSI: Received Signal Strength Indication
+	\end{itemize}
+	
+Nous allons donc par la suite les présenter puis expliquer notre choix
+\subsection{LQI: Link Quality Indicator}
+Le LQI est un indicateur de qualité de lien. En se basant sur le R-ED ou sur une estimation du rapport signal / bruit, l?implémentation décidée par les constructeurs renvoie une valeur entre 0 et 255. Cette valeur est alors une estimation de la qualité ou de la force du lien entre deux noeuds, pour un paquet donné. Une valeur de 0 correspond à un lien inutilisable, là ou une valeur de 255 indique un lien parfait.
+
+\subsection{ETX: Expected transmission count}
+
+L?ETX est une métrique permettant de déterminer la qualité d?un chemin entre deux noeuds, dans un réseau sans-fil.
+Le calcul est relativement simple, c?est le nombre d?envois de paquets nécessaire pour recevoir un certain nombre de paquets sans aucune erreur. Par exemple, si l?on veut transmettre 1000 paquets, et qu?il nous faut 2000 transmissions pour tout transmettre sans erreur, alors la valeur de l?ETX est 2000/1000 soit 2. Ainsi un ETX de 1 signifie que l?on a un chemin qui ne pose jamais souci, et cette valeur peut monter jusqu?à l?infini, si par exemple le chemin est rompu.
+
+\subsection{RSSI: Received Signal Strength Indication}
+
+Le RSSI est une indication relative de la puissance reçue sur un canal, exprimée en dBm. Cette valeur permet de calculer le bruit ambiant sur un noeud, et ainsi de déterminer l?activité radio ambiante à un moment donné. Cette valeur est relativement simple à récupérer dans FIT, en ajoutant un profil de monitoring à une expérience. Encore une fois ici, il n?existe pas de norme précisant la manière de calculer le RSSI, et l?implémentation est laissée libre au constructeur.
+
+\subsection{Conclusion et choix de métrique}
+Notre choix s?est de ce fait finalement porté sur le RSSI, et ce pour plusieurs raisons:
+L?implémentation et sa mise en place dans les expériences FIT IoT lab est évidente et rapide. Le besoin de cette métrique étant arrivé relativement tard dans le projet, nous n?aurions pas eu le temps de mettre en place une autre métrique. De ce fait, ce choix s'est naturellement fait directement.
+Malgré cela, c?est aussi la valeur qui correspond le plus à notre problématique, et qui nous permet le mieux de trouver une réponse. Bien que les autres métriques nous auraient aussi permis de conclure, nous pensons avoir fait le choix idéal avec cette métrique.
+
 
 \section{Récapitulatif}
 
