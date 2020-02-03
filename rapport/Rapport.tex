@@ -347,8 +347,8 @@ Afin d'affiner notre choix, nous avons pris en compte le deuxième benchmarking [
 Sur ces graphiques, on observe le coût en temps de la requête en fonction du nombre d'entrées sur cette dernière.
 Lors de ce benchmarking, on peut observer qu'InfluxDB [9] est nettement en avance sur les autres TSDBs. C'est pourquoi notre premier choix technique se basera sur cette base de données. Néanmoins nous gardons à l'esprit d'autres possibilités de TSDBs, il sera donc important dans la partie conception de bien prendre en compte une certaine facilité à changer de TSDB si nécessaire. De plus, il n'est pas impossible par la suite de changer vers Prometheus [10] étant une TSDB déjà utilisée pour certains projets Fit IoT Lab.
 
-
-\section{Protocole Réseau pour IoT}
+\section{Grafana}
+\section{Protocole RPL}
 \section{Métriques réseau sur le bruit et qualité}
 
 \section{Récapitulatif}
@@ -378,8 +378,8 @@ Celles-ci font l'objet de l'étude du chapitre suivant.
 
 Cette partie est dédiée au système dans son ensemble et à la manière dont il a été pensé et conceptualisé. Nous voulons ici présenter les différents systèmes qui composent notre solution, ainsi que les différentes interactions qui les caractérisent. Les diagrammes ont pour but de clarifier le propos et de fluidifier la compréhension.
 
-\section{Ensemble du système - Diagramme d'architecture - Figure 3.1}
-Ce diagramme d'architecture représente où sont placés les différentes parties prenantes pour l'exécution de la collecte automatique des données. Ainsi que d'un ordre partiel pour comprendre le mécanisme global.
+\section{Ensemble du système - Diagramme d'architecture }
+Ce diagramme d'architecture (Figure \ref{fig:DiagArchi} ) représente où sont placés les différentes parties prenantes pour l'exécution de la collecte automatique des données. Ainsi que d'un ordre partiel pour comprendre le mécanisme global.
 La solution nécessite 2 sites pour fonctionner : Grenoble là où l'API REST est localisé et Lille pour les noeuds M3.
 Sur Lille, trois composants sont nécessaires :
 	\begin{itemize}
@@ -398,20 +398,32 @@ Les différentes étapes de la solution sont :
 	\item 6 - Ecoute des liens séries. L'expérience ne dure qu'une minute pour éviter de monopoliser la plateforme FIT de Lille. Au bout de la minute, les connections se ferment à tous les noeuds, ce qui arrête le serial aggregator qui va rassembler toutes les données.
 	\item 7 - Ecriture dans la BDD. Le script DataCollector récupère la sortie du serial aggregator et prépare son format pour pousser ses données dans InfluxDB en JSON.
 \end{itemize}
-[REMPLIR]
 
 
-\section{Scénario - Diagramme de séquence - Figure 3.2}
 
-Cette section a donc pour but d'expliciter la séquence souhaitée à la fin du projet pour que la partie majoritaire du projet soit réussie.
-Ainsi, la séquence décrite dans le diagramme en figure 3.1 est la suivante:
+\section{Scénario - Diagramme de séquence}
+
+Cette section a donc pour but d'expliciter la séquence souhaitée à la fin du projet pour que la partie majoritaire du projet soit réussie. Nous nous sommes penchés sur deux scénarios différents de diagramme de séquence.
+
+\subsection{Scénario A}
+Le scénario A (figure \ref{fig:DiagSequenceA}) s'exécute dans la séquence suivante : 
 \begin{enumerate}
 \item{Le script s'exécute automatiquement à une certaine heure de la journée, vérifie la disponibilité des n\oe uds et réserve un maximum d'entre eux}
 \item{Une fois les n\oe uds réservés grâce à l'API REST, ils sont flashés avec le bon firmware et commencent leur capture de données}
-\item{Dès lors, le Serial aggregator commence à écouter les n\oe uds et récupère les données qui lui sont envoyées par lien série. Une fois qu'il a tout reçu, il renvoie ces données au script Python qui les traite.}
+\item{Puis on accède directement à un noeud pour faire une demande de données via une entrée prédéfinie. On ré-exécute ceci pour chaque noeud soit séquentiellement, soit via des threads}
 \item{Une fois traitées, ces données sont formatées et envoyées vers la Base de données temporelles pour écriture et stockage}
 \end{enumerate}
-[REMPLIR] (Plusieurs cas de figures à mettre)
+
+\subsection{Scénario B}
+Le scénario B ressemble au scénario A mais il utilise le serial aggregator. Le début et fin du scénario sont donc les mêmes.
+Ainsi, la différence décrite dans le diagramme en figure \ref{fig:DiagSequenceB} ) est la suivante:
+
+\begin{enumerate}
+\item{Initialisation du script comme précedemment avec flash des noeuds.}
+\item{Dès lors, le Serial aggregator commence à écouter les n\oe uds et récupère les données qui lui sont envoyées par lien série. Une fois qu'il a tout reçu, il renvoie ces données au script Python qui les traite.}
+\item{Récupération et mise en forme dans la base de données.}
+\end{enumerate}
+
 
 
 \section{Schéma de Base de données}
@@ -441,13 +453,21 @@ Le schéma de base de données temporelles final reste simple puisqu'il est compos
 \begin{figure*}[!ht]
     \includegraphics[width=1\textwidth]{Images/diagrammeArchi-v2}
     \caption{Diagramme d'architecture}
+    \label{fig:DiagArchi}
+\end{figure*}
+
+\begin{figure*}[!ht]
+	\centering
+	\includegraphics[width=0.9\textwidth]{Images/diagseq2}
+	\caption{Diagramme de séquence version A}
+	\label{fig:DiagSequenceA}
 \end{figure*}
 
 \begin{figure*}[!ht]
 	\centering
 	\includegraphics[width=0.8\textwidth]{Images/diagseq}
-	\caption{Diagramme de séquence}
-	\label{fig:DiagSequence}
+	\caption{Diagramme de séquence version B}
+	\label{fig:DiagSequenceB}
 \end{figure*}
 
 %-------------------------------------------------------------------------------------------------------------
