@@ -73,7 +73,7 @@ else:
     for elem in capturedData:
         sum = 0
         n = 0
-        elem["timestamp"] = datetime.fromtimestamp(elem["timestamp"], timezone.utc).strftime("%d/%m/%Y-%H:%M:%S.%f")
+        elem["timestamp"] = datetime.fromtimestamp(elem["timestamp"], timezone.utc).strftime("%m/%d/%Y-%H:%M:%S.%f")
         elem["value"] = ast.literal_eval(elem["value"])
         for v in elem["value"]:
             sum += v
@@ -94,14 +94,14 @@ else:
                 if(re.match(regex, line)):
                     rssiTab = line.split()
                     rssiVal = rssiTab[6]
-                    rssiTimestamp = datetime.fromtimestamp(float(rssiTab[3]), timezone.utc).strftime("%d/%m/%Y-%H:%M:%S.%f")
+                    rssiTimestamp = datetime.fromtimestamp(float(rssiTab[3]+"."+rssiTab[4]), timezone.utc).strftime("%m/%d/%Y-%H:%M:%S.%f")
                     rssiChannel = rssiTab[5]
                     rssiOutput.append({"node":node,"value":rssiVal,"time":rssiTimestamp,"channel":rssiChannel})
     dataDict = {"capturedData":capturedData,"rssi":rssiOutput}
     ## Write in a log file the captured data
     print("Writing in log file...")
     now = datetime.now()
-    date_time = now.strftime("%d-%m-%Y-%H_%M_%S")
+    date_time = now.strftime("%m-%d-%Y-%H_%M_%S")
     filename = repo+"log/logDataCollector"+date_time+".json"
     with open(filename, 'w') as outfile:
          json.dump(dataDict, outfile)
