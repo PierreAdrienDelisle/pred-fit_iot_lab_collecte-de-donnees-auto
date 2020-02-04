@@ -536,10 +536,48 @@ Soulignons que, comme dans le chapitre précédent, si le volume de ce chapitre de
 \section{Script de collection de données}
 
 \subsection{Développements}
-
+	La solution de collecte de données (DataCollector) est totalement implémentée dans la plateforme FIT IoT Lab. Celle-ci respecte le schéma d'architecture \ref{fig:DiagArchi} et diagramme de séquence \ref{fig:DiagSequenceB}. 
+	
 \subsection{Expérimentations}
 
+Nous avons fait plusieurs expériences pour mesurer le RSSI qui posait certains problèmes d'irrégularités \ref{fig:bugRSSI} .
+Dans un premier temps, nous nous sommes penchés sur comment le RSSI était pris dans nos mesures. Il s'avère qu'une mauvaise valeur était retournée mais il restait une chose étrange à savoir que les canaux était tous passifs (-91 dBm constant) excepté le premier. Dans cette démarche nous avons essayé de savoir si notre code était encore en défaut ou si l'utilisation d'un "monitor profile" (outil fourni par FIT pour capter les canaux radios) posait un problème d'implémentation.
+Il s'avère que notre problème n'était pas dans ces 2 propositions mais venait de la fréquence de relevé d'expérimentation. En effet, la communication radio étant de l'ordre d'une dizaine de micro-secondes et notre période de 4s, il y avait un problème d'échelle. C'est pourquoi en intensifiant les relevés en dizaine de millisecondes, on retrouve des valeurs fluctuant sur tous les canaux.
+
+\begin{figure}[htp]
+    \includegraphics[width=0.50\textwidth]{Images/rssi_bug}
+    \caption{Grafana - Bug sur le RSSI}
+    \label{fig:bugRSSI}
+\end{figure}
+
 \subsection{Résultats}
+
+Via Grafana, on peut visualiser nos différentes données à savoir :
+\begin{itemize}
+ \item Lumière: figure \ref{fig:lumiere} .
+\item Pression:  figure \ref{fig:pression} .
+\item RSSI:  figure \ref{fig:rssi} .
+\end{itemize}
+
+
+\begin{figure}[htp]
+    \includegraphics[width=0.50\textwidth]{Images/grafana_light}
+    \caption{Grafana - captation lumière 29-31/01/2020}
+    \label{fig:lumiere}
+\end{figure}
+
+
+\begin{figure}[htp]
+    \includegraphics[width=0.50\textwidth]{Images/grafana_pressure}
+    \caption {Grafana - captation pression 29-31/01/2020}
+    \label{fig:pression}
+\end{figure}
+
+\begin{figure}[htp]
+    \includegraphics[width=0.50\textwidth]{Images/grafana_rssi}
+    \caption{Grafana - captation rssi 29-31/01/2020}
+    \label{fig:rssi}
+\end{figure}
 
 \section{Reproductibilité du protocole RPL}
 

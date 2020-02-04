@@ -13,15 +13,15 @@ parser.add_argument('host', type=str, nargs='?',const=1, default="localhost", he
 parser.add_argument('port', type=int, nargs='?',const=1, default="8086", help='The port of the DB, by default 8086')
 
 args=parser.parse_args()
-file = args.file
+file = args.input
 host = args.host
 port = args.port
 ## TESTING
 # API Doc : https://influxdb-python.readthedocs.io/en/latest/api-documentation.html
 client = InfluxDBClient(host=host, port=port)
 #client = InfluxDBClient(host='localhost', port=8086, username='admin', password='admin',ssl=True, verify_ssl=True)
-client.create_database('dbTest')
-a = client.get_list_database()
+#client.create_database('dbTest')
+#a = client.get_list_database()
 client.switch_database('dbTest') #focus this DB
 
 #Insert data
