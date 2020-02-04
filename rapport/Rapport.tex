@@ -351,9 +351,12 @@ Sur ces graphiques, on observe le coût en temps de la requête en fonction du nom
 Lors de ce benchmarking, on peut observer qu'InfluxDB [9] est nettement en avance sur les autres TSDBs. C'est pourquoi notre premier choix technique se basera sur cette base de données. Néanmoins nous gardons à l'esprit d'autres possibilités de TSDBs, il sera donc important dans la partie conception de bien prendre en compte une certaine facilité à changer de TSDB si nécessaire. De plus, il n'est pas impossible par la suite de changer vers Prometheus [10] étant une TSDB déjà utilisée pour certains projets Fit IoT Lab.
 
 \section{Protocole RPL}
-Dans notre optique d'analyser l'influence de l'activité humaine, nous avions besoin d'un protocole de routage léger qui soit facilement implémentable, étant donné le peu de temps qu'il nous restait pour travailler dessus. Par ailleurs, nous voulions aussi qu'il ne soit pas trop solide, afin que lors de pics d'affluence, le protocole aie du mal ou n'arrive pas à converger vers un arbre acceptable.
 
-RPL (Routing protocol for Lossy networks) est un protocole qui remplit toutes ses caractéristiques. Étant déjà  implémenté dans Contiki, sous FIT IoT lab , nous n'avons quasiment pas de temps de développement à prendre en compte. Par ailleurs, et contrairement à d'autres protocoles plus solides de Routage, RPL est très sensible à des pertes de paquets.
+RPL (Routing protocol for Low-power and Lossy networks)), est un protocole de routage qui est adapté à l'IoT. Basé sur un système d'arbre de routage, il se base sur deux types de n\oe uds: Dans le réseau, un client est désigné comme étant routeur de bordure. Ce routeur aura pour tâche de renvoyer les paquets remontant vers lui vers la branche qu'il faut. Les autres clients seront alors de simples clients qui renverront leurs paquets vers leur père dans la hiérarchie de l'arbre.
+
+Dans notre optique d'analyser l'influence de l'activité humaine dans une plateforme telle que celle de FIT, nous avions besoin d'un protocole de routage léger qui soit facilement implémentable, étant donné le peu de temps qu'il nous restait pour travailler dessus. Par ailleurs, nous voulions aussi qu'il ne soit pas trop solide, afin que lors de pics d'affluence, le protocole n'arrive pas à converger vers un arbre acceptable.
+
+RPL est un protocole qui remplit toutes ses caractéristiques. Étant déjà implémenté dans Contiki, sous FIT IoT lab , nous n'avons quasiment pas de temps de développement à prendre en compte. Par ailleurs, et contrairement à d'autres protocoles plus solides de Routage, RPL est très sensible à des pertes de paquets, ce qui nous permet d'exploiter une solution qui puisse avoir des soucis en cas de bruit sur la plateforme.
 
 \section{Métriques réseau sur le bruit et qualité}
 
@@ -530,18 +533,35 @@ Auquel cas, le chapitre va commencer par une section sur le produit développé.
 Soulignons que, comme dans le chapitre précédent, si le volume de ce chapitre devient très important, il est préférable de le transformer en partie de rapport, les sections suivantes devenant des chapitres, et ainsi de suite pour les parties hiérarchiquement inférieures.
 \end{structuration}
 
-\section{Notre proposition i}
+\section{Script de collection de données}
 
 \subsection{Développements}
-
-\subsubsection{Contraintes liées aux propositions}
-
-\subsubsection{Contraintes liées au développement}
-
 
 \subsection{Expérimentations}
 
 \subsection{Résultats}
+
+\section{Reproductibilité du protocole RPL}
+
+\subsection{Développements}
+Cette partie est sûrement l'une de celles qui aura demandé le moins de développement. En effet, le protocole RPL possède déjà une implémentation dans FIT IoT lab, sous la technologie Contiki.
+
+Par ailleurs, les différents scripts permettant d'affecter des préfixes IPv6 ou de regarder la topologie de l'arbre RPL créé sur chaque n\oe ud est déjà fournie par la plateforme FIT. Il n'y a donc pas eu de développement quant à ces questions ci.
+
+Le plus important a donc été la manière de penser cette expérience et de la designer afin qu'elle puisse nous apporter des solutions qui soient exploitables
+
+
+\subsection{Expérimentations}
+
+Nous utilisons donc le système d'expériences de FIT IoT Lab pour réserver 30 n\oe uds m3 sur la plateforme. Ces n\oe uds se doivent d'être assez proches afin que RPL puisse en router un maximum dans un arbre de routage. Dans ses 30 n\oe uds, on en sélectionne un (Si possible toujours le même), qui sera alors le routeur de bordure, c'est à dire la racine de l'arbre défini par RPL. Les autres n\oe uds sont de simples clients qui sont chargés de générer du trafic en temps normal (Ici, ils ne font que se router)
+
+Dès que l'expérience est démarrée, nous affectons un préfixe IPv6 aux n\oe uds que nous avons réservés grâce à la frontale SSH. Sur cette même frontale, nous vérifions alors le bon établissement de l'arbre de routage RPL. Dès que la solution a convergé, on note le temps que l'expérience a pris et on recommence.
+
+La difficulté vient avant tout du fait que cette expérience n'est qu'assez peu reproductible. En effet, à chaque fois que l'on recommence, la topologie de l'arbre est différente, certains n\oe uds ne rentrent pas dans l'arbre etc..
+
+\subsection{Résultats}
+
+[Cette partie sera remplie dès que j'aurai pu obtenir assez de résultats pour émettre une conclusion quant à notre travail. Jusqu'ici, et avec les tests que j'ai pu effectuer ce mardi, il semblerait qu'augmenter le nombre de n\oe uds change fortement la reproductibilité de l'expérience. Je suis en collection de données à l'instant même]
 
 
 \chapter{Planification}
