@@ -101,7 +101,7 @@ else:
     ## Write in a log file the captured data
     print("Writing in log file...")
     now = datetime.now()
-    date_time = now.strftime("%d-%m-%Y-%H_%M_%S")
+    date_time = now.strftime("%m-%d-%Y-%H_%M_%S")
     filename = repo+"log/logDataCollector"+date_time+".json"
     with open(filename, 'w') as outfile:
          json.dump(dataDict, outfile)
