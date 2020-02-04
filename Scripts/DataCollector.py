@@ -94,7 +94,7 @@ else:
                 if(re.match(regex, line)):
                     rssiTab = line.split()
                     rssiVal = rssiTab[6]
-                    rssiTimestamp = datetime.fromtimestamp(float(rssiTab[3]), timezone.utc).strftime("%d/%m/%Y-%H:%M:%S.%f")
+                    rssiTimestamp = datetime.fromtimestamp(float(rssiTab[3]+rssiTab[4]), timezone.utc).strftime("%d/%m/%Y-%H:%M:%S.%f")
                     rssiChannel = rssiTab[5]
                     rssiOutput.append({"node":node,"value":rssiVal,"time":rssiTimestamp,"channel":rssiChannel})
     dataDict = {"capturedData":capturedData,"rssi":rssiOutput}
