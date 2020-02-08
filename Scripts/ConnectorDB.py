@@ -45,7 +45,8 @@ client.write_points(dataInfluxCaptured)
 rssiData = data_example[0]["rssi"]
 dataInfluxRssi = []
 for elem in rssiData:
-    dataInfluxRssi.append({"measurement":"rssi",
+    if(elem != {}):
+        dataInfluxRssi.append({"measurement":"rssi",
                  "time":elem["time"],
                  "tags":{"node":elem["node"]},
                  "fields": {"value": elem["value"],
