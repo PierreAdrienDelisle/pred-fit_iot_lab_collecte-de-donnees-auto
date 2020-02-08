@@ -66,7 +66,7 @@
    % - le troisième paramètre permet d'adapter la largeur du logo afin
    %   de le rendre visuellement comparable à ceux mis par défaut (université de Nantes et
    %   éventuellement laboratoire)
-\date{29 novembre 2019}
+\date{04 février 2020}
    % - en français les mois ne prennent pas de majuscule (sauf si vous ne mettez pas le jour)
    % - inutile de mettre un 0 devant les jours 1 à 9 du mois~!
    % - le jour est peut-être même une précision inutile...
@@ -187,17 +187,17 @@ Le chapitre~\ref{chap:Conception} est dédié aux différents choix technologiques,
 
 \subsection{Présentation}
 
-	FIT IoT Lab est une plateforme de service  d'infrastructure IoT. Il existe sur cette plateforme plus de 1500 noeuds capteurs de différents types (M3,A8,turtlebot,...) répartis sur 6 sites : Grenoble, Lille, Lyon, Paris, Saclay et Strasbourg. L'objectif est de fournir aux chercheurs une infrastructure riche qu'ils peuvent ensuite réserver et tester pour leur propres expériences en utilisant ces noeuds.
 	IoT Lab fait partie du consortium FIT (Future Internet Testing facility) qui réuni plusieurs institutions de recherche et universités sur ce projet de plateforme de tests à grande échelle : FIT IoT Lab, FIT Wireless et FIT Cloud.
+	FIT IoT Lab est une plateforme de service  d'infrastructure IoT. Il existe sur cette plateforme plus de 1500 noeuds capteurs de différents types (M3,A8,turtlebot,...) répartis sur 6 sites : Grenoble, Lille, Lyon, Paris, Saclay et Strasbourg. L'objectif est de fournir aux chercheurs une infrastructure riche qu'ils peuvent ensuite réserver et tester pour leur propres expériences en utilisant ces noeuds.
 	
 	
 
 \subsection{Architecture IoT Lab}
-La plateforme est décomposée en plusieurs parties (Figure 2.2):
+La plateforme est décomposée en plusieurs parties (figure \ref{fig:graphArchi}):
 \begin{itemize}
 	\item Site web - FIT IoT Lab (Webportal) 
 	
-	Il permet d'accéder au banc d'essai en ligne, réserver des noeuds capteurs pour une expérience avec un firmware dédié et une durée. Il contient aussi les tutoriels permettant de prendre en main la plateforme.
+	Il permet d'accéder au banc d'essai en ligne, réserver des noeuds capteurs pour une expérience avec un firmware dédié et une durée. Il contient aussi les tutoriels permettant de prendre en main la plateforme. Celui-ci est un client de l'API REST.
 	
 	\item L'API REST 
 	
@@ -205,13 +205,13 @@ La plateforme est décomposée en plusieurs parties (Figure 2.2):
 	
 	\item Frontend SSH
 	
-	La frontend SSH est un serveur distant auquel chaque utilisateur de FIT IoT Lab peut se connecter via son compte sur un site particulier, dans le cadre de notre étude Lille. Elle est utile pour lancer directement des expériences, les gérer et prendre des informations diverses et variées. Cette frontend SSH s'appuie sur l'API REST pour fonctionner mais elle permet d'utiliser des scripts en local sur cet ordinateur distant afin de réaliser des tâches plus complexes comme le "serial aggregator" qui va agréger toutes les entrées des liens séries de nos noeuds. Les scripts sont écrits généralement en Python.
+	La frontend SSH est un serveur distant auquel chaque utilisateur de FIT IoT Lab peut se connecter via son compte sur un site particulier, dans le cadre de notre étude Lille. Elle est utile pour lancer directement des expériences, les gérer et prendre des informations diverses et variées. Cette frontend SSH s'appuie sur l'API REST pour fonctionner mais elle permet d'utiliser des scripts en local sur cet ordinateur distant afin de réaliser des tâches plus complexes comme le "serial aggregator" qui va agréger toutes les entrées des liens séries de nos noeuds. Les scripts sont écrits généralement en Python. De plus, cet accès permet par la suite de se connecter directement aux noeuds d'une expérience qu'on aurait lancé pour observer son comportement en détails.
 	
 	\item Noeuds capteurs
 	
 	Il existe plusieurs types de noeuds : A8, M3, Firefly, Lora, Arduino, WSN430 et les turtlebots qui sont des unités mobiles. Chaque noeud à une documentation qui lui est propre. Cela permet une grande diversité dans l'expérimentation. Sur ces noeuds il faut ajouter un firmware pour obtenir le comportement par défaut attendu de chacun d'eux, le développement firmware s'effectue en C.
 	
-	\item Noeuds M3 (Figure 2.1)
+	\item Noeuds M3 (figure \ref{fig:carteM3})
 	
 	Il est essentiel de parler des capacités des noeuds M3 puisqu'ils seront notre objet d'étude sur les différentes problématiques traitées. 
 	La carte contient plusieurs capteurs de mesures ambiantes : lumière, pression, gyroscope, accéléromètre.
@@ -222,22 +222,31 @@ La plateforme est décomposée en plusieurs parties (Figure 2.2):
 	\begin{figure}[h]
     \includegraphics[width=0.5\textwidth]{Images/m3}
     \caption{Carte M3}
+    \label{fig:carteM3}
 	\end{figure}	
 	
 	\end{itemize}
 
-	Un noeud M3 est composé :
+	Un noeud M3 est composé (figure \ref{fig:noeudM3}) :
 \begin{itemize}
 	\item De la carte M3 (Open Node) qui va être manipulé par l'utilisateur qui va avoir un accès total dessus (mémoire, OS et firmware utilisé).
 	\item Une Gateway qui permet la connexion à cette carte et accès à son port série.
-	\item Un noeud de contrôle (Control Node) qui va être le moyen d'envoyer ses instructions passives ou actives à la carte via la gateway.
+	\item Un noeud de contrôle (Control Node) qui va être le moyen d'envoyer ses instructions passives ou actives à la carte via la gateway et récupérer les données collectées de l'open-node.
 \end{itemize}
 
+	\begin{figure}[h]
+    \includegraphics[width=0.5\textwidth]{Images/what-is-a-node}
+    \caption{Noeud M3}
+    \label{fig:noeudM3}
+	\end{figure}	
+	
 Dans la suite, nous discuterons indistinctement de la carte m3 et du noeud m3.
 
+	
 \begin{figure}[hp]
     \includegraphics[width=0.5\textwidth]{Images/resume-fit}
     \caption{Graphique architecture FIT IoT Lab}
+    \label{fig:graphArchi}
 \end{figure}	
 	
 	
@@ -247,19 +256,19 @@ Dans cette section, nous présenterons les tutoriels essentiels de la plateforme 
 	\begin{itemize}
 		\item Getting started ? the tutorial for beginners  [1]
 		
-		Ce tutoriel vise à faire une première soumission d'expérience via la plateforme web : réserver des noeuds, ajouter un firmware et y accéder directement via SSH sur le banc d'essai.
+		Ce tutoriel vise à faire une première soumission d'expérience via la plateforme web : réserver des noeuds, ajouter un firmware et y accéder directement via SSH sur le banc d'essai. Cela nous a permis entre autre de découvrir la plateforme dans son ensemble et comprendre le but visé de celle-ci.
 			
 		\item SSH access [2]
 		
-		Cette partie permet d'obtenir un accès  SSH sur la frontend en faisant un échange de clé RSA via le site web. 
+		Cette partie permet d'obtenir un accès  SSH sur la frontend en faisant un échange de clé RSA via le site web. Nous avons donc pu grâce à ceci configurer un accès privilégié à notre compte sur la frontend SSH, d'ici nous avons pu déployer notre script et accéder aux noeuds d'une expérience en SSH.
 		
 		\item Experiment CLI Client [3]
 		
-		Ce tutoriel fait partie d'un ensemble de tutoriels à propos des "CLI tools" qui permettent de faire des appels à l'API REST en soumettant des expériences, en flashant les firmwares des noeuds etc... Celui-ci permet d'apprendre la partie "experiment" qui concerne la soumission d'expérience ains que de son suivi.
+		Ce tutoriel fait partie d'un ensemble de tutoriels à propos des "CLI tools" qui permettent de faire des appels à l'API REST en soumettant des expériences, en flashant les firmwares des noeuds etc... Celui-ci permet d'apprendre la partie "experiment" qui concerne la soumission d'expérience ainsi que de son suivi. Cela nous permet donc d'apprendre la plus grande partie des commandes relatives aux CLI Tools et savoir sur quoi s'appuyer pour notre script comme la soumission d'expérience ou encore récupérer l'état de la plateforme afin de savoir la disponibilité de celle-ci.
 		
 		\item Nodes Serial Link Aggregation [4]
 		
-		Une présentation du script "serial aggregator" qui permet d'agréger tous les liens séries relatifs à une expérience. Il permet aussi d'envoyer des messages à tous les liens qu'il agrège.
+		Une présentation du script "serial aggregator" qui permet d'agréger tous les liens séries relatifs à une expérience. Il permet aussi d'envoyer des messages à tous les liens qu'il agrège. Cette partie est essentielle pour notre projet puisque cet outil permettra d'agréger les données de tous nos noeuds M3 lors des expériences. 
 		
 		
 		
