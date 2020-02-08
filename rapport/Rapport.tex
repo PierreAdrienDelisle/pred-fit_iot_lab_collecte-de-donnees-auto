@@ -111,15 +111,30 @@ La problème, très technique, est ici de collecter automatiquement, à intervalles
 
 \section{Sujet d'étude}
 
-Comme expliqué précédemment, ce projet s'inscrit dans l'environnement FIT IoT Lab, qui est une plateforme d'expérimentation pour l'internet des objets. Cette plateforme est composée de six sites, répartis dans toute la France. Chaque site contient un grand nombre de plusieurs types de n\oe uds, qui permettent différentes expériences à distance.
+Ce projet s'inscrit dans l'environnement FIT IoT Lab, une plateforme d'expérimentation pour l'internet des objets. Composée de 6 sites répartis dans toute la France, chacun d'entre eux contient un grand nombre de plusieurs types de n\oe uds, qui permettent différentes expériences à distance. Ces n\oe uds sont généralement des cartes électroniques, mobiles ou non, qui contiennent différents équipements: 
+\begin{itemize}
+\item Capteurs
+\item Equipement radio pour communication avec des voisins
+\item LEDs
+\item Robot sur lequel est posée la carte
+\end{itemize}
+
+Il existe différents types de n\oe uds qui ont différents fonctionnements et buts, comme les capteurs m3 qui sont les cartes que l'on utilise. Nous présenterons ces cartes plus en détail dans la suite du document.
+
+Ces n\oe uds sont répartis à l'échelle d'un bâtiment dans chaque site de la plateforme, ce qui permet une cartographie par les cartes de ces sites. 
 
 \section{Présentation de la problématique}
 
-En se basant sur cette plateforme, les chercheurs de l'Inria, à Lille voudraient avoir à disposition des données temporelles sur les données captées par les n\oe uds m3, pour effectuer différentes expérimentations. De fait, le but de ce projet est de mettre en place un système automatique de capture de données, à différents moments de la journée, et sur un maximum de n\oe uds disponibles. Ces capteurs se placent aussi dans un cadre d'un bâtiment où les perturbations sont possibles. Il faudra donc étudier via les relevés radio si cela à un impact sur les expériences soumises.
+En se basant sur cette plateforme, les chercheurs de l'Inria, à Lille voudraient avoir à disposition des données temporelles sur leur bâtiment d'étude, qui pourrait dès lors s'apparenter à un bâtiment intelligent. Dès qu'elles seront disponibles, ces données constitueront une base libre qui, nous l'espérons, pourra être exploitée par les chercheurs pour différentes expérimentations. Ceci a donc pour but de faire gagner du temps à la recherche, ainsi qu'à fournir une méthode pour capter de nouvelles données.
+Ces données seront captées par des n\oe uds m3. Ces n\oe uds particuliers constituent une grande majorité du parc Lillois, et nous permettent donc d'obtenir une masse de données importante sur ce site.
+
+Par ailleurs, et grâce à cette masse de données, nous souhaitons étudier une seconde question: Dans une plateforme telle que FIT IoT, on peut se demander quel est l'impact des expériences des autres utilisateurs sur nos propres expérimentations. Nous souhaitons de fait étudier l'impact que peut avoir l'exploitation de la plateforme sur un protocole radio, et ainsi étudier la reproductibilité de ces expériences. 
 
 \section{Objectifs poursuivis}
 
-Dans un premier temps, l'objectif principal est bien la mise en place de cette solution de captation automatique. Il faut donc que toutes les briques logicielles soient mises en place afin que l'on puisse remplir une base de données à destination des chercheurs
+Dans un premier temps, l'objectif principal est bien la mise en place de cette solution de captation automatique. En effet, ces capteurs étant répartis dans tout le bâtiment Lillois, il peut être intéressant de monitorer ces cartes afin d'obtenir des informations sur l'endroit, et ainsi potentiellement en faire un bâtiment intelligent.
+
+Il faut donc que toutes les briques logicielles soient mises en place afin de pouvoir remplir une base de données à destination des chercheurs.
 
 Par la suite, il nous faudra proposer une documentation extensive du travail fourni pour assurer une continuation du projet.
 
@@ -127,18 +142,18 @@ Puis une mise en place d'un protocole radio afin de mettre en évidence ou non, l
 
 \section{Travail à réaliser et travail réalisé}
 
-Pour satisfaire notre objectif principal; étant la collecte de données automatiques de capteurs m3, il nous faut implémenter plusieurs choses:
+Afin de satisfaire notre objectif principal; la collecte de données automatiques de capteurs m3 ; il nous faut mettre en place plusieurs briques, qu'elles soient logicielles ou d'infrastructure. Dans notre problème, comme chaque partie de la plateforme est exploitée, il nous faut développer une solution pour chaque partie:
 \begin{enumerate}
-   \item Un firmware dédié aux n\oe uds m3, qui lorsqu'il est flashé, capte les données sur différents capteurs à déterminer, et les renvoie sur leur lien série : Lumière, Pression, valeurs radio.~;
-   \item Une base de données de type temporelle afin qu'elle soit adapté aux problématiques de petites mesures estampillés en grand nombre. ~;
-   \item Un script automatique liant les données captés et la base de données, il devra effectuer diverses tâches pour lancer l'expérience de collecte et en récupérer le résultat.
+   \item Au niveau des n\oe uds, il nous une solution logicielle de captation de données. Une fois captées, ces données doivent nous être renvoyées pour traitement et écriture dans la base de données.
+   \item Pour stocker les données captées par cette solution, il nous faut préparer et implémenter une base de données de type temporelle, qui est une solution adaptée à notre problématique liée au format des données: De très nombreuses petites mesures estampillées.
+   \item Enfin, il nous faut un applicatif qui se place entre ses deux solutions et qui permette de faire la jonction entre elles. Ici, ce serait un script qui contrôlerait tout, de la réservation des noeuds, à l'exploitation des données et leur envoi dans la base.
 \end{enumerate}
    
-Notre second objectif de perturbations radio, va nécessiter plusieurs étapes pour être concluant :
+Notre second objectif, qui est donc d'observer l'impact des perturbations radio sur les expériences de la plateforme FIT IoT lab, nécessitera aussi plusieurs briques qui permetteront de conclure
 \begin{enumerate}
-   \item Mettre en place un protocole réseau dans FIT IoT Lab~;
-   \item D'après les données radio précédemment récoltées dans la base, de trouver de possibles perturbations radio ~;
-   \item La réalisation du protocole réseau dans des conditions "perturbées" ou non pour observer si les performances s'en trouvent affectées.
+   \item Il nous faut un protocole radio à étudier, afin de déterminer les effets de ces perturbations;
+   \item Il nous faut surveiller ce protocole, récupérer plusieurs métriques quant à son fonctionnement, afin de déterminer si oui ou non il y a de réelles perturbations.
+   \item Enfin, il nous faut tester ce protocole dans des conditions volontairement perturbées afin de vérifier les limites de ce protocole.
    
 \end{enumerate}
    
@@ -154,7 +169,7 @@ Le premier objectif est totalement satisfait, à savoir que, la solution de colle
 
 Le second objectif, en revanche, n'aura pas pu être mené a bien dans le temps imparti. En effet, nous avons défini cet objectif que relativement tard dans le projet, et n'y avons que peu réfléchi
 
-De ce fait, bien que nous ayons mené une expérimentation, qui sera présentée dans la suite du rapport, celle-ci n'a malheureusement pas été concluante par rapport à ce que nous souhaitions montrer.
+De ce fait, bien que nous ayons mené une expérimentation, qui sera présentée dans la suite du rapport, la masse de données que nous avons récuperée est trop faible pour pouvoir établir une réelle conclusion. En effet, après une première partie ou nous pensions avoir trouvé une réelle reproductibilité d'expérience, nous avons observé qu'en augmentant le nombre de n\oe uds sur lesquels nous effectuons nos expériences, et même dans le cas où la plateforme ne subit que très peu de perturbations, la reproductibilité du protocole n'a pas pu être vérifiée.
 
 Le but était de montrer que l'activité de la plateforme, que ce soit au travers des expériences ou de l'activité humaine sur le site de Lille, pouvait avoir un impact assez important sur les expériences menées par les utilisateurs, par exemple avec une expérience de routage. Nous voulions de ce fait utiliser les technologies suivantes:
 \begin{enumerate}
@@ -277,19 +292,19 @@ Dans cette section, nous présenterons les tutoriels essentiels de la plateforme 
 
 \section{Firmwares}
 
-Comme expliqué par avant, la plateforme contient un grand nombre de n\oe uds capteurs qui permettent d'effectuer plusieurs expérimentations. Ces n\oe uds ont logiquement besoin d'une base logicielle pour fonctionner, et c'est ici qu'interviennent les firmwares. Il est central dans notre projet de programmer un firmware qui soit efficace et réponde à nos besoins. Pour cela, plusieurs solutions d'OS sont présentées sur la plateforme FIT. Il faudra de fait effectuer un choix quant à la solution qui sera employée. Les différents systèmes étudiés peuvent être trouvés sur le site de FIT IoT \footnote{https://www.iot-lab.info/operating-systems/}
+Comme expliqué par avant, la plateforme contient un grand nombre de n\oe uds capteurs qui permettent d'effectuer plusieurs expérimentations. Ces n\oe uds ont logiquement besoin d'une base logicielle pour fonctionner, et c'est ici qu'interviennent les firmwares. Il est central dans notre projet de programmer un firmware qui soit efficace et réponde à nos besoins. Pour cela, plusieurs solutions de systèmes d'exploitation disponibles, et présentées sur la plateforme FIT. Il faudra de fait effectuer un choix quant à la solution qui sera employée. Les différents systèmes étudiés peuvent être trouvés sur le site de FIT IoT \footnote{https://www.iot-lab.info/operating-systems/}
 
 \subsection{Contiki}
-Contiki-NG est un OS open-source, designé pour l'IoT, particulièrement pour la mise en place de protocoles réseaux (TCP/IP, IPv6, Low-Power protocols), basé sur le système de proto-threads.
+Contiki est un système d'exploitation open-source, designé pour l'IoT, particulièrement pour la mise en place de protocoles réseaux (TCP/IP, IPv6, Low-Power protocols), basé sur le système de proto-threads.
 \subsubsection{Avantages}
 Si nous nous sommes dans un premier temps engoufrés dans la solution Contiki, c'est que pour une première prise en main, la programmation semblait relativement simple.
-En effet, la plateforme FIT fournit du code exemple pour chaque OS, et Contiki avait la base d'exemples la plus variée. De fait, l'aggragation de deux exemples nous a permis d'arriver à une première solution plutôt acceptable.
+En effet, la plateforme FIT fournit du code exemple pour chaque système, et Contiki avait la base d'exemples la plus variée. De fait, l'aggragation de deux exemples nous a permis d'arriver à une première solution plutôt acceptable.
 \subsubsection{Inconvénients}
-En y regardant de plus près, nous avons malheureusement remarqué que dans le cadre des n\oe uds m3, la plateforme Contiki n'a pas de librairie pour la lecture des capteurs de température, qui est une donnée que nous aurions aimé étudier. De fait, et si nous ne trouvons pas de solution rapidement, nous basculerons sûrement sur une autre solution, malgré la simplicité de prise en main de la plateforme.
+En y regardant de plus près, nous avons malheureusement remarqué que dans le cadre des n\oe uds m3, la plateforme Contiki n'a pas de librairie pour la lecture des capteurs de température, qui est une donnée que nous aurions aimé étudier. Par ailleurs, le temps de développement d'une telle librairie étant trop important pour ce genre de projet, nous avons préféré ne pas nous y pencher.
 \subsubsection{Ressources d'apprentissage}
 Le point de choix principal se trouve au niveau de la facilité d'apprentissage de la plateforme. De fait, la présence de nombreuses ressources est un point central dans le choix d'une technologie.
 
-En l'occurrence, Contiki vient avec des tutoriels de base pour apprendre à compiler du code C en firmware Contiki \footnote{https://www.iot-lab.info/tutorials/contiki-compilation/}. Ce qui le rend plus accessible, c'est surtout ses nombreux exemples qui permettent de rapidement comprendre comment sont programmés les Firmwares sur cet OS. 
+En l'occurrence, Contiki vient avec des tutoriels de base pour apprendre à compiler du code C en firmware Contiki \footnote{https://www.iot-lab.info/tutorials/contiki-compilation/}. Ce qui le rend plus accessible, c'est surtout ses nombreux exemples qui permettent de rapidement comprendre comment sont programmés les Firmwares sur ce système d'exploitation. 
 
 Deux exemples, particulièrement, sont importants dans notre cas:
 Le premier, appelé 01-serial-echo, est un firmware qui, lorsqu'il reçoit un message sur son lien série, renvoie le message sur le lien série, à la manière de la commande echo. Ceci est important pour nous car nous avons besoin de renvoyer les données sur le lien série, ainsi que recevoir par exemple une instruction de capture de données. Cette base de code contient aussi tout ce qui est nécessaire la base des mécanismes évènementiels.
@@ -297,24 +312,21 @@ Le premier, appelé 01-serial-echo, est un firmware qui, lorsqu'il reçoit un mess
 Le second, appelé 03-sensors-collecting, est un firmware qui, à chaque seconde, renvoie sur son lien série les valeurs captées par tous les capteurs définis au préalable. Ici, on obtient donc la base qui permet de capter des données sur les capteurs, ainsi que la manière de mettre un chronomètre en place, ce qui est important pour notre problème.
 
 \subsection{RIOT}
-RIOT est un OS qui vise les équipements ayant des ressources minimales, et à donc pour objectif l'efficacité en tous domaines: Énergie, mémoire, modularité...
+RIOT est un système d'exploitation, qui vise les équipements ayant des ressources minimales, et à donc pour objectif l'efficacité en tous domaines: Énergie, mémoire, modularité...
 De même qu'avec Contiki, il est possible d'étudier de nombreux protocoles réseau grâce à ses librairies.
-
-L'étude de cette solution est encore en cours, car elle vient après l'étude et l'expérimentation de Contiki.
-
 \subsubsection{Avantages}
-RIOT vient tout comme Contiki avec une bonne base d'exemples et de tutoriels fournis par FIT IoT pour prendre facilement en main la plateforme. Par ailleurs, RIOT est régulièrement mis à jour et maintenu par sa communauté.
+RIOT vient tout comme Contiki avec une bonne base d'exemples et de tutoriels fournis par FIT IoT pour prendre facilement en main la plateforme. Par ailleurs, RIOT est plus régulièrement mis à jour et maintenu par sa communauté que Contiki.
 \subsubsection{Inconvénients}
-De prime abord, le code permettant de programmer des firmwares grâce à RIOT semble plus compliqué que celui de Contiki.
+De prime abord, le code permettant de programmer des firmwares grâce à RIOT semble relativement compliqué. C'est un système qui est plus obscur à comprendre de prime abord, et qui demande donc plus d'investissement pour être maîtrisé
 \subsubsection{Ressources d'apprentissage}
 Pour la plateforme RIOT, les mêmes tutoriels existent que pour Contiki [5].
 
-Par ailleurs, des exemples permettent aussi de comprendre le fonctionnement global de la plateforme et d'en extraire les principes de base. Malgré cela, il n'existe pas d'exemple traitant directement avec les capteurs, et il nous faudra donc aller chercher plus en profondeur dans la documentation pour trouver des solutions à ce niveau.
+Par ailleurs, des exemples permettent aussi de comprendre le fonctionnement global de la plateforme et d'en extraire les principes de base. Malgré cela, il n'existe pas d'exemple traitant directement avec les capteurs, et il nous faudrait donc aller chercher plus en profondeur dans la documentation pour trouver des solutions à ce niveau.
 
 \subsection{Analyse}
-Étant encore en phase de tests, nous ne pouvons pas donner un avis définitif sur la question de l'OS à utiliser. Malgré tout, chacune des solutions nous permettra à terme d'arriver à une solution très satisfaisante. En effet, le problème de base, au niveau du firmware, est relativement élémentaire et ne demande pas de programmation très compliquée.
+Étant donné le peu d'expertise que nous possedons dans le domaine, nous ne pouvons pas donner un avis définitif quant au système d'exploitation à utiliser. En effet  chacune des solutions nous aurait permis à terme d'arriver à une solution très satisfaisante. En effet, le problème de base, au niveau du firmware, est relativement élémentaire et ne demande pas de programmation très compliquée.
 
-Contiki, dans tous les cas, semble être une solution idéale pour avancer rapidement dans le problème et le résoudre efficacement.
+Contiki, de ce fait, nous a semblé être une solution idéale pour avancer rapidement dans le problème et le résoudre efficacement.
 
 
 \section{Base de données temporelle}
@@ -382,15 +394,17 @@ Lors de ce benchmarking, on peut observer qu'InfluxDB en rouge) [9] est nettemen
 	
 \section{Protocole RPL}
 
-RPL (Routing protocol for Low-power and Lossy networks)), est un protocole de routage qui est adapté à l'IoT. Basé sur un système d'arbre de routage, il se base sur deux types de n\oe uds: Dans le réseau, un client est désigné comme étant routeur de bordure. Ce routeur aura pour tâche de renvoyer les paquets remontant vers lui vers la branche qu'il faut. Les autres clients seront alors de simples clients qui renverront leurs paquets vers leur père dans la hiérarchie de l'arbre.
+RPL (Routing protocol for Low-power and Lossy networks)), est un protocole de routage qui est adapté à l'IoT, défini dans la RFC 6550 [11]. Basé sur un système d'arbre de routage, il se base sur deux types de n\oe uds: Dans le réseau, un client est désigné comme étant routeur de bordure. Ce routeur aura pour tâche de renvoyer les paquets remontant vers lui vers la branche qu'il faut. Les autres clients seront alors de simples clients qui renverront leurs paquets vers leur père dans la hiérarchie de l'arbre.
 
-Dans notre optique d'analyser l'influence de l'activité humaine dans une plateforme telle que celle de FIT, nous avions besoin d'un protocole de routage léger qui soit facilement implémentable, étant donné le peu de temps qu'il nous restait pour travailler dessus. Par ailleurs, nous voulions aussi qu'il ne soit pas trop solide, afin que lors de pics d'affluence, le protocole n'arrive pas à converger vers un arbre acceptable.
+Nous nous basons sur une version basique de RPL, mais il existe des améliorations à ce protocole qui ont été proposées. Nous pouvons par exemple évoquer les améliorations apportées par M. Brandon FOUBERT, que l'on peut retrouver dans l'article suivant [12], dont il a présenté les principes et les résultats lors des journées RSD organisées à Nantes, auxquelles nous avons pu assister dans le cadre de la formation.
 
-RPL est un protocole qui remplit toutes ses caractéristiques. Étant déjà implémenté dans Contiki, sous FIT IoT lab , nous n'avons quasiment pas de temps de développement à prendre en compte. Par ailleurs, et contrairement à d'autres protocoles plus solides de Routage, RPL est très sensible à des pertes de paquets, ce qui nous permet d'exploiter une solution qui puisse avoir des soucis en cas de bruit sur la plateforme.
+Dans notre optique d'analyser l'influence de l'activité humaine dans une plateforme telle que celle de FIT, nous avions besoin d'un protocole de routage léger qui soit facilement implémentable, étant donné le peu de temps qu'il nous restait pour travailler dessus. Par ailleurs, il devait être adapté aux réseaux mobiles, et avoir de potentielles problèmes.
+
+RPL est un protocole qui remplit toutes ses caractéristiques. Étant déjà implémenté dans Contiki, sous FIT IoT lab , nous n'avons quasiment pas de temps de développement à prendre en compte. Par ailleurs, RPL est très sensible à des pertes de paquets, ce qui nous permet d'exploiter une solution qui puisse avoir des soucis en cas de bruit sur la plateforme.
 
 \section{Métriques réseau sur le bruit et qualité}
 
-En termes de métriques réseau, il nous fallait une métrique qui aie plusieurs caractéristiques: Une implémentation dans Contiki, une métrique qui soit un reflet du bruit ambiant, et qui existe sur les n\oe uds m3. Nous avions le droit entre trois métriques différentes, qui auraient pu être acceptables dans notre sujet:
+En termes de réseau, il nous fallait une métrique qui nous permettrait d'évaluer la qualité du réseau, ainsi que le bruit ambiant. Nous avons découvert trois métriques différentes, qui auraient pu être acceptables dans notre sujet et qui permettent de faire ces deux choses. Il existe probablement d'autres indicateurs permettant de récupérer ces informations, mais nous avons préféré nous concentrer sur les trois suivantes:
 
 \begin{itemize}
 		\item Le LQI: Link Quality Indicator
@@ -399,13 +413,19 @@ En termes de métriques réseau, il nous fallait une métrique qui aie plusieurs ca
 	\end{itemize}
 	
 Nous allons donc par la suite les présenter puis expliquer notre choix
+
+\subsection{R-ED - Reciever ED}
+Sur cette notion se base deux des prochaines métriques, et il nous faut donc succinctement la présenter ici. C'est une estimation de la puissance du signal reçu dans la bande de fréquence du canal en question. Cette estimation est indépendante des données reçues et ne doit jamais lire les données en question. C'est une notion définie dans la RFC 802.15.4 [13], et dont on peut retrouver une définition dans cette référence [14], à la page 402.
+
 \subsection{LQI: Link Quality Indicator}
-Le LQI est un indicateur de qualité de lien. En se basant sur le R-ED ou sur une estimation du rapport signal / bruit, l'implémentation décidée par les constructeurs renvoie une valeur entre 0 et 255. Cette valeur est alors une estimation de la qualité ou de la force du lien entre deux noeuds, pour un paquet donné. Une valeur de 0 correspond à un lien inutilisable, là ou une valeur de 255 indique un lien parfait.
+
+Le LQI est un indicateur de qualité de lien. En se basant sur le R-ED ou sur une estimation du rapport signal / bruit, l'implémentation décidée par les constructeurs renvoie une valeur entre 0 et 255. Cette valeur est alors une estimation de la qualité ou de la force du lien entre deux noeuds, pour un paquet donné. Une valeur de 0 correspond à un lien inutilisable, là ou une valeur de 255 indique un lien parfait. Cette valeur est définie dans la RFC 802.15.4 [13] [14]
 
 \subsection{ETX: Expected transmission count}
 
 L'ETX est une métrique permettant de déterminer la qualité d'un chemin entre deux noeuds, dans un réseau sans-fil.
-Le calcul est relativement simple, c'est le nombre d'envois de paquets nécessaire pour recevoir un certain nombre de paquets sans aucune erreur. Par exemple, si l'on veut transmettre 1000 paquets, et qu'il nous faut 2000 transmissions pour tout transmettre sans erreur, alors la valeur de l'ETX est 2000/1000 soit 2. Ainsi un ETX de 1 signifie que l'on a un chemin qui ne pose jamais souci, et cette valeur peut monter jusqu'à l'infini, si par exemple le chemin est rompu.
+Le calcul est relativement simple, c'est le nombre d'envois de paquets nécessaire pour recevoir un certain nombre de paquets sans aucune erreur. Par exemple, si l'on veut transmettre 1000 paquets, et qu'il nous faut 2000 transmissions pour tout transmettre sans erreur, alors la valeur de l'ETX est 2000/1000 soit 2. Ainsi un ETX de 1 signifie que l'on a un chemin qui ne pose jamais souci, et cette valeur peut monter jusqu'à l'infini, si par exemple le chemin est rompu. Cette valeur est définie dans l'article suivant [15]
+
 
 \subsection{RSSI: Received Signal Strength Indication}
 
@@ -417,10 +437,10 @@ L'implémentation et sa mise en place dans les expériences FIT IoT lab est éviden
 Malgré cela, c'est aussi la valeur qui correspond le plus à notre problématique, et qui nous permet le mieux de trouver une réponse. Bien que les autres métriques nous auraient aussi permis de conclure, nous pensons avoir fait le choix idéal avec cette métrique.
 
 
-\section{Récapitulatif}
+\section{Conclusion}
 
 
-Sur cet état de l'art, nous avons pu résumer les différents éléments nécessaires à l'implémentation de notre solution à savoir :
+Sur cet état de l'art, nous avons présenté les différents éléments nécessaires à l'implémentation de notre solution à savoir :
 	\begin{itemize}
 		\item La plateforme FIT IoT Lab
 		\item Les firmwares M3
@@ -430,12 +450,14 @@ Sur cet état de l'art, nous avons pu résumer les différents éléments nécessaires
 Nous avons pu aboutir à une première solution en prenant des choix qui nous semble correct. A savoir le choix de développer sur la plateforme FIT via la frontend SSH afin de ne pas à avoir héberger notre script et directement lancer l'automatisation en local, mettre en place un premier firmware via Contiki puisqu'il offre une simplicité de programmation et déjà une bonne base d'exemple de firmwares et mettre en place dans un premier temps une base de données InfluxDB mais garder à l'esprit de bien compartimenter cette partie afin de ne pas avoir de problèmes d'intégration s'il y a une nécessité de migrer vers un autre type de base de données.
 
 
+
 \section{Conclusion}
 
 
 À l'issue de ce travail de recherche bibliographique, il apparaît que plusieurs propositions peuvent servir de base à la résolution de notre problème.
 
 Il semble se détacher un certain nombre de directions privilégiées que nous allons exploiter en priorité dans nos propositions.
+
 Celles-ci font l'objet de l'étude du chapitre suivant.
 
 
@@ -1341,7 +1363,7 @@ La figure~\ref{fig:AutoEvaluationTravailFinal} permet d'énumérer un certain nomb
 [1] Getting started with IoT-LAB : the tutorial for beginners -  https://www.iot-lab.info/tutorials/getting-started-tutorial/
 \newline
 \newline
-[2] Configure your SSH access - \newline https://www.iot-lab.info/tutorials/ssh-access/
+[2] Configure your SSH access - https://www.iot-lab.info/tutorials/ssh-access/
 \newline
 \newline
 [3] Experiment CLI client -  https://www.iot-lab.info/tutorials/iotlab-experimenttools-client/
@@ -1370,5 +1392,19 @@ https://www.influxdata.com/time-series-database/
 [10] Prometheus - Monitoring system and time series database - https://prometheus.io/
 \newline
 \newline
+[11] RPL: IPv6 Routing Protocol for Low-Power and Lossy Networks
+https://tools.ietf.org/html/rfc6550
+\newline
+\newline
+[12] Sharing is caring: a cooperation scheme for RPL network resilience and efficiency - 2019 - Brandon Foubert, Julien Montavont - hal-02095410 
+\newline
+\newline
+[13] IEEE Standard for Low-Rate Wireless Networks - IEEE 2015 - https://standards.ieee.org/content/ieee-standards/en/standard/802\_ 15\_ 4-2015.html
+\newline
+\newline
+[14] IEEE Standard for Low-Rate Wireless Networks IEEE 2015 https://www.silabs.com/content/usergenerated/asi/cloud/attachments/siliconlabs/en/community/wireless/proprietary/forum/jcr:content/content/primary/qna/802\_ 15\_ 4\_ promiscuous-tbzR/hivukadin\_ vukadi-iTXQ/802.15.4-2015.pdf
+\newline
+\newline
+[15 ] High-Throughput Routing forMulti-Hop Wireless Networks - Douglas S.J. De Couto - MIT 2004 - https://pdos.lcs.mit.edu/papers/grid:decouto-phd/thesis.pdf
 
 \end{document}
