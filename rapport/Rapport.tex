@@ -469,7 +469,7 @@ Cette partie est dédiée au système dans son ensemble et à la manière dont il a é
 
 \section{Scénario - Diagramme de séquence}
 
-Cette section a donc pour but d'expliciter la séquence souhaitée à la fin du projet pour que la partie majoritaire du projet soit réussie. Nous nous sommes penchés sur deux scénarios différents de diagramme de séquence.
+Cette section a pour but d?expliquer le fonctionnement de notre script de collecte de données à la fin du projet pour que la partie majoritaire du projet soit réussie. Nous nous sommes penchés sur deux scénarios différents de diagramme de séquence.
 
 \subsection{Scénario A}
 Le scénario A (figure \ref{fig:DiagSequenceA}) s'exécute dans la séquence suivante : 
@@ -481,7 +481,7 @@ Le scénario A (figure \ref{fig:DiagSequenceA}) s'exécute dans la séquence suivan
 \end{enumerate}
 
 \subsection{Scénario B}
-Le scénario B ressemble au scénario A mais il utilise le serial aggregator. Le début et fin du scénario sont donc les mêmes.
+Le scénario B ressemble au scénario A mais il utilise le serial aggregator. Comme décrit dans la partie état de l'art, le serial aggregator permet d'agréger toutes les données reçues par les noeuds M3 en un seul point. Le début et fin du scénario sont donc les mêmes.
 Ainsi, la différence décrite dans le diagramme en figure \ref{fig:DiagSequenceB} ) est la suivante:
 
 \begin{enumerate}
@@ -520,7 +520,7 @@ Les différentes étapes de la solution sont :
 Nous avons eu deux propositions de schéma de base de données afin de savoir comment mieux représenter les données et leurs utilisations. 
 
 \subsection{Tuple de données}
-	La première idée est de faire un tuple de données avec : Noeud, Timestamp, LightValue, PressureValue, RssiValue, RssiChannel. Cela peut paraître à priori une bonne solution contenant toutes les informations d'un noeud à un instant T. Le premier problème est que les données ne sont pas prises au même moment exactement, ce qui signifie que les données RSSI, lumière et pression ne partage pas la même estampille de temps. De plus, cette façon de conceptualisation revient à un schéma classique de base de données relationnelles. Or dans notre cas, nos données ne sont pas liés exceptés par leur numéro de noeud.
+	La première idée est de faire un tuple de données avec : Noeud, Timestamp, LightValue, PressureValue, RssiValue, RssiChannel. Cela peut paraître à priori une bonne solution contenant toutes les informations d'un noeud à un instant T. Le premier problème est que les données ne sont pas prises au même moment exactement, ce qui signifie que les données RSSI, lumière et pression ne partage pas la même estampille de temps. Sachant que les données seront traitées ensuite par des chercheurs pour entrainer de l'intelligence artificielle, il faut une précision dans les données. De plus, cette façon de conceptualisation revient à un schéma classique de base de données relationnelles. Or dans notre cas, nos données ne sont pas liés exceptés par leur numéro de noeud. Un autre problème qui pourrait arriver dans ce cas là, est une absence de données sur un instant. Cela peut arriver pour plusieurs raisons, soit le noeud n'a pas été choisi dans l'expérience (ce qui est possible car lors de la soumission, on ne demande qu'un nombre de noeuds et non des noeuds précis) ou alors un problème directement sur le noeud pour diverses raisons. Nous savons que ceci peut exister puisque certains noeuds sont reconnus pour avoir des problèmes à l'initialisation. 
 
 
 \subsection{Table par type de données}
@@ -537,6 +537,16 @@ Le schéma de base de données temporelles final reste simple puisqu'il est compos
     \includegraphics[width=0.5\textwidth]{Images/schema-BDD}
     \caption{Schéma base de données}
 \end{figure}
+
+\subsection{Stockage}
+Comment InfluxDB stocke t-il ses données ? Celui-ci découpe son organisation en 3 dossiers : 
+\begin{itemize}
+	\item Meta contient un certains nombre de paramètres et informations utiles : les users, databases existantes, retention policies, shards, and continuous queries. Les retentions policies sont un moyen de définir le recyclage de la base de données, c'est à dire à quelle moment va t-elle supprimer des données ou archiver. Les shards sont la vision d'InfluxDB sur les données, elle groupe les données selon des shards (en général par proximité temporelle) et va les stocker, supprimer, traiter au même endroit. Les continous queries sont un outil permettant de faire des requêtes en continue sur la base.
+	\item WAL (Write Ahead Log) est un dossier de cache pour les bases de données.
+	\item Data est le dossier contenant les bases de données. Il existe par défaut la base de données _internal contenant un certain nombre d'informations générales sur nos bases de données. Puis ensuite, il existe toutes les données relatives à nos collectes.
+
+\end{itemize}
+
 
 \section{Grafana}
 
@@ -606,30 +616,48 @@ Il s'avère que notre problème n'était pas dans ces 2 propositions mais venait de
 
 Via Grafana, on peut visualiser nos différentes données à savoir :
 \begin{itemize}
+
  \item Lumière: figure \ref{fig:lumiere} .
-\item Pression:  figure \ref{fig:pression} .
-\item RSSI:  figure \ref{fig:rssi} .
-\end{itemize}
-
-
-\begin{figure}[htp]
+ \begin{figure}[htp]
     \includegraphics[width=0.50\textwidth]{Images/grafana_light}
     \caption{Grafana - captation lumière 29-31/01/2020}
     \label{fig:lumiere}
 \end{figure}
-
-
+ La lumière est mesurée en lux. Une première chose intéressante qu'on peut remarquer est le fait qu'on observe des pics de lumières vers 6H, ce qui équivaut aux agents d'entretiens du bâtiment puis que la lumière monte globalement au cours de la journée.
+ 
+\item Pression:  figure \ref{fig:pression} .
 \begin{figure}[htp]
     \includegraphics[width=0.50\textwidth]{Images/grafana_pressure}
     \caption {Grafana - captation pression 29-31/01/2020}
     \label{fig:pression}
 \end{figure}
+La pression est en mBar. On peut observer que la pression atmosphérique est globalement la même pour tous les noeuds mais qu'il reste des variations. De plus on observe des lignes ne respectant pas la tendance globle qui sont dues à une absence de données de ses capteurs pendant le relevé, par exemple à cause d'une autre réservation de quelqu'un.
 
+\item RSSI:  figure \ref{fig:rssi}.
 \begin{figure}[htp]
-    \includegraphics[width=0.50\textwidth]{Images/grafana_rssi}
+    \includegraphics[width=0.50\textwidth]{Images/grafana_rssi2}
     \caption{Grafana - captation rssi 29-31/01/2020}
     \label{fig:rssi}
 \end{figure}
+Le RSSI est complexe à mesurer puisque, comme dit précédemment, la fréquence de mesure influe sur ce qu'on va obtenir. Mais il est impossible de mettre une fréquence trop élevé comme 1 ms puisque cela augmenterait considérablement la taille des données. L'astuce utilisée est de mettre une fréquence assez faible (environ 10 ms) et de supprimer les fréquences à -91dbm lorsqu'il n'y a pas d'activité radio. C'est à dire que dès lors qu'il y a un changement de RSSI, celui ci va enregistrer son entrée mais aussi l'entrée précédente et future. Ainsi dès que deux valeurs consécutives de RSSI sont à -91dBm (équivaut à aucune activité radio particulière), on efface la donnée pour limiter un nombre très important de points non intéressant.
+
+\begin{figure}[htp]
+    \includegraphics[width=0.50\textwidth]{Images/grafana_rssi2}
+    \caption{Grafana - captation rssi channel 11 08/02/2020-14:00:26 à 14:00:32}
+    \label{fig:rssi}
+\end{figure}
+
+Une vue par noeud \ref{fig:rssiM3} est mise aussi en place pour pouvoir mieux visualiser les valeurs de RSSI étant très rapprochées sur une petite période.
+
+\begin{figure}[htp]
+    \includegraphics[width=0.50\textwidth]{Images/grafana_rssi3}
+    \caption{Grafana - captation rssi channel 11, noeud m3-104, 08/02/2020-14:00:26 à 14:00:32}
+    \label{fig:rssiM3}
+\end{figure}
+
+\end{itemize}
+
+
 
 \section{Reproductibilité du protocole RPL}
 
