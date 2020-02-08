@@ -86,9 +86,12 @@ else:
     time.sleep(5) #Wait for radio output to be ready
     regex = re.compile(r"[0-9]+[.][0-9]+[\s][0-9]+[\s][0-9]+[\s][0-9]+[\s][0-9]+[\s][0-9]+[\s][-+\s][0-9]+") #Regex to find radio output lines
     rssiOutput = []
-    for file in os.listdir(directory):
+    nbDrop = 0 #Drop to avoid the number of "useless" rssi data
+    for file in os.listdir(directory): # m3_1XX.oml files
         node = file.split(".")[0].split("_")
         node = node[0]+'-'+node[1]
+        lastRssiValue = "0"
+        lastRssiData = {} #contains last value of rssi data : have a -91 dbm value before a new rssi value
         with open(directory+file,'r') as f:
             for line in f:
                 if(re.match(regex, line)):
@@ -96,7 +99,17 @@ else:
                     rssiVal = rssiTab[6]
                     rssiTimestamp = datetime.fromtimestamp(float(rssiTab[3]+"."+rssiTab[4]), timezone.utc).strftime("%m/%d/%Y-%H:%M:%S.%f")
                     rssiChannel = rssiTab[5]
-                    rssiOutput.append({"node":node,"value":rssiVal,"time":rssiTimestamp,"channel":rssiChannel})
+                    rssiData = {"node":node,"value":rssiVal,"time":rssiTimestamp,"channel":rssiChannel}
+                    if(lastRssiValue != rssiVal or rssiVal != "-91"): #Drop data if many -91 db on rssi
+                        if(lastRssiValue !="0"): #not first value
+                            rssiOutput.append(lastRssiData)
+                        rssiOutput.append(rssiData)
+                    else: # lastRssiValue == rssiVal and rssiVal == -91
+                        nbDrop +=1
+                        lastRssiData = rssiData
+                    lastRssiValue = rssiVal
+    print("Dropped value at -91 dbm: "+str(nbDrop)+ " values")
+
     dataDict = {"capturedData":capturedData,"rssi":rssiOutput}
     ## Write in a log file the captured data
     print("Writing in log file...")
