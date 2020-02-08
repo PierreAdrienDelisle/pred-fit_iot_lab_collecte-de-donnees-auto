@@ -254,7 +254,7 @@ Dans la suite, nous discuterons indistinctement de la carte m3 et du noeud m3.
 
 Dans cette section, nous présenterons les tutoriels essentiels de la plateforme que nous avons dû suivre pour réaliser notre solution.
 	\begin{itemize}
-		\item Getting started ? the tutorial for beginners  [1]
+		\item Getting started: the tutorial for beginners  [1]
 		
 		Ce tutoriel vise à faire une première soumission d'expérience via la plateforme web : réserver des noeuds, ajouter un firmware et y accéder directement via SSH sur le banc d'essai. Cela nous a permis entre autre de découvrir la plateforme dans son ensemble et comprendre le but visé de celle-ci.
 			
@@ -322,7 +322,7 @@ Contiki, dans tous les cas, semble être une solution idéale pour avancer rapidem
 \subsection{Présentation}
 
 Une fois la collecte de données automatisée, nous aurons des données horodatées mais il reste néanmoins la question d'où stocker ces données.
-Afin de mener le projet au bout, nous aurons besoin d'une base de données temporelle. En effet, celle-ci est indispensable pour stocker des données horodatées sur un grand volume.
+Afin de mener le projet au bout, nous aurons besoin d'une base de données temporelle. En effet, celle-ci est indispensable pour stocker des données horodatées, non-relationnelles (mesures indépendantes les unes des autres), avec peu d'attributs et sur un grand volume.
 
 
 \subsection{Analyse}
@@ -330,7 +330,7 @@ Afin de mener le projet au bout, nous aurons besoin d'une base de données tempor
 Tout d'abord, quelles sont les caractéristiques propres à une base de données temporelle? Les Time Series Databases (notées TSDB) ont besoin d'un horodatage sur les données avec une proximité physique si l'horodatage est proche, les données sont à proximité afin de traiter celles-ci plus efficacement. Ensuite, elles se doivent d'exécuter des "range queries" rapidement, c'est à dire des requêtes rapportant toutes les données inférieures ou supérieures à une condition (ici la condition la plus utilisée sera le temps). Les TSDB se doivent d'obtenir une rapidité d'écriture élevée sur la base puisqu'elle sera remplie fréquemment, elles doivent donc rester le plus possible disponible afin d'éviter de perdre des données. En plus de ces aspects techniques, la TSDB choisie devra avoir une communauté active pour considérer qu'elle est fiable et qu'il y a de la documentation autour ou de l'aide communautaire pour maintenir la solution dans le temps.
 Pour évaluer ces différents points, nous nous sommes référés à deux benchmarking fait en 2017 [6] et en 2019 [7].
 \newline
-Dans le premier benchmarking [6], celui ci pointe plusieurs aspects à savoir :
+Dans le premier benchmarking [6], il se concentre sur un aspect 'features' des bases de données, à savoir qu'elles caractéristiques ont-elles. Celui-ci pointe plusieurs aspects à savoir :
 \begin{itemize}
    \item Distribution/Clusterability : disponibilité, extensibilité, et un équilibreur de charge
     \item Functions : fonctions disponibles dans le système MIN/MAX/SUM
@@ -341,24 +341,45 @@ Dans le premier benchmarking [6], celui ci pointe plusieurs aspects à savoir :
 \end{itemize}
 Ce rapport montre qu'aucune base de données ne peux implémenter toutes les fonctionnalités existantes sur les TSDBs. Néanmoins, elle montre plusieurs avantages sur certaines TSDBs et leurs inconvénients.
 \newline
-Pour recentrer les recherches sur la solution à choisir nous avons donc pris en compte le classement de popularité des bases de données fait par db-engines [8]. Celui-ci permet d'avoir une vision sur les bases qui sont très utilisées, mises à jour et donc actives.
-\begin{figure}[hp]
-    \includegraphics[width=0.6\textwidth]{Images/rankingTDSB}
-    \caption{Classement d'activité sur les bases de données temporelles}
-    
-\end{figure}
-\newline
-Celles qui ressortent sont InfluxDB, KDB+ et Prometheus. InfluxDB étant loin devant les autres TSDBs.
-\newline
-Afin d'affiner notre choix, nous avons pris en compte le deuxième benchmarking [7] qui se concentre sur des scénarios IoT et donc prend en compte la performance sur des requêtes SQL particulières ainsi que le volume de données utilisé pour une entrée ou encore le nombre d'entrées possibles en même temps.
+Pour recentrer les recherches sur la solution à choisir nous avons donc pris en compte le classement de popularité des bases de données fait par db-engines (figure \ref{fig:rankingTSDB}) [8]. Celui-ci permet d'avoir une vision sur les bases qui sont très utilisées, mises à jour et donc actives.
 
 \begin{figure}[h]
+    \includegraphics[width=0.6\textwidth]{Images/rankingTDSB}
+    \caption{Classement d'activité sur les bases de données temporelles}
+    \label{fig:rankingTSDB}
+\end{figure}
+
+
+Celles qui ressortent sont InfluxDB, KDB+ et Prometheus. InfluxDB étant loin devant les autres TSDBs.
+\begin{itemize}
+	\item InfluxDB est une TSDB open-source qui a été conçue pour stocker et superviser ses données événementielles, en temps réel et est orientée IoT avec beaucoup de possibilités de visualisation.
+	\item KDB+ est orienté aussi IoT et accentue son avantage sur la rapidité d'entrées / sorties de sa solution permettant de s'adapter aux besoins de grandes infrastructures industrielles.
+	\item  Prometheus est open-source et propose des outils de visualisation et des requêtes simplifiées afin d'accéder aux données et un système d'alertes avancé.
+\end{itemize}
+
+Afin d'affiner notre choix, nous avons pris en compte le deuxième benchmarking [7] qui se concentre sur des scénarios IoT et donc prend en compte la performance sur des requêtes SQL particulières, le volume de données utilisé pour une entrée ainsi que le nombre d'entrées possibles/sorties en même temps afin de savoir si la base de données à une bonne capacité d'écriture et de lecture. Néanmoins sur cette étude, on ne distingue pas d'exemple de données, il est discuté de données "générées" néanmoins dans un cadre IoT. 
+
+\begin{figure}[htp]
     \includegraphics[width=0.5\textwidth]{Images/queryRankingTSDB2}
     \caption{Temps de réponse moyen en fonction de la charge [7]}
+    \label{fig:courbes}
 \end{figure}
-Sur ces graphiques, on observe le coût en temps de la requête en fonction du nombre d'entrées sur cette dernière.
-Lors de ce benchmarking, on peut observer qu'InfluxDB [9] est nettement en avance sur les autres TSDBs. C'est pourquoi notre premier choix technique se basera sur cette base de données. Néanmoins nous gardons à l'esprit d'autres possibilités de TSDBs, il sera donc important dans la partie conception de bien prendre en compte une certaine facilité à changer de TSDB si nécessaire. De plus, il n'est pas impossible par la suite de changer vers Prometheus [10] étant une TSDB déjà utilisée pour certains projets Fit IoT Lab.
+Sur ces graphiques (figure \ref{fig:courbes}), on observe le coût en temps de la requête en fonction du nombre d'entrées sur cette dernière.
+Lors de ce benchmarking, on peut observer qu'InfluxDB en rouge) [9] est nettement en avance sur les autres TSDBs. Puisque le temps de réponse de celle-ci est bien inférieur aux différentes requêtes est bien inférieur. Là ou elle est moins performante est sur le "SELECT *" (All data query - c), or dans notre cas, les tables seront très courtes (une à deux données max par tables). C'est pourquoi notre premier choix technique se basera sur cette base de données. Néanmoins nous gardons à l'esprit d'autres possibilités de TSDBs, il sera donc important dans la partie conception de bien prendre en compte une certaine facilité à changer de TSDB si nécessaire. De plus, il n'est pas impossible par la suite de changer vers Prometheus [10] étant une TSDB déjà utilisée pour certains projets Fit IoT Lab.
 
+\section {Automatisation via Linux}
+
+	Cette partie vise à déterminer quelles solutions existent sous Linux pour réaliser une tâche automatique comme l'exécution d'un script python qui est notre objectif
+	
+	\subsection{Cron}
+	Cron ou crontab est un daemon linux qui dérive de "chrono table" en anglais. Celui-ci permet de lancer une tâche en arrière plan via un système simple. Pour exécuter une tâche crontab, il suffit d'éditer un fichier via la commande "crontab -e" et y mettre : un motif d'exécution horaire et notre commande. Par exemple, la ligne suivante : "0 */2 * * * python exemple.py" signifie qu'on exécute le script exemple.py toutes les 2 heures.
+	
+	\subsection{Systemd}
+	Systemd est un système d'initialisation et un daemon linux. Il permet aussi d'automatiser les tâches sous la forme de services. Ainsi on peut lancer, arrêter, relancer le service si besoin. Pour la configuration, on utilise deux fichiers pour configurer respectivement : le temps auquel la tâche va s'exécuter et la tâche en elle même avec son environnement.
+	
+	\subsection{Comparaison}
+	Systemd et cron sont deux solutions possibles pour notre script python. L'avantage de systemd est le fait qu'il soit plus complet et que plusieurs tâches peuvent être aisément exécutées et débuggées en même temps. Néamoins, il introduit plus de complexité avec un système de fichiers là où crontab ne nécessite qu'une ligne. De plus crontab à un système de mail qui nous peut nous alerter si une tâche ne s'est pas effectué correctement. Ainsi dans notre cas où nous n'avons qu'une tâche simple à effectuer, il semble approprié de déployer crontab plutôt que systemd. Néanmoins, si la solution venait à évoluer par la suite pour avoir plusieurs relevés différents avec d'autres scripts, il serait recommandé d'utiliser systemd. 
+	
 \section{Protocole RPL}
 
 RPL (Routing protocol for Low-power and Lossy networks)), est un protocole de routage qui est adapté à l'IoT. Basé sur un système d'arbre de routage, il se base sur deux types de n\oe uds: Dans le réseau, un client est désigné comme étant routeur de bordure. Ce routeur aura pour tâche de renvoyer les paquets remontant vers lui vers la branche qu'il faut. Les autres clients seront alors de simples clients qui renverront leurs paquets vers leur père dans la hiérarchie de l'arbre.
@@ -379,21 +400,21 @@ En termes de métriques réseau, il nous fallait une métrique qui aie plusieurs ca
 	
 Nous allons donc par la suite les présenter puis expliquer notre choix
 \subsection{LQI: Link Quality Indicator}
-Le LQI est un indicateur de qualité de lien. En se basant sur le R-ED ou sur une estimation du rapport signal / bruit, l?implémentation décidée par les constructeurs renvoie une valeur entre 0 et 255. Cette valeur est alors une estimation de la qualité ou de la force du lien entre deux noeuds, pour un paquet donné. Une valeur de 0 correspond à un lien inutilisable, là ou une valeur de 255 indique un lien parfait.
+Le LQI est un indicateur de qualité de lien. En se basant sur le R-ED ou sur une estimation du rapport signal / bruit, l'implémentation décidée par les constructeurs renvoie une valeur entre 0 et 255. Cette valeur est alors une estimation de la qualité ou de la force du lien entre deux noeuds, pour un paquet donné. Une valeur de 0 correspond à un lien inutilisable, là ou une valeur de 255 indique un lien parfait.
 
 \subsection{ETX: Expected transmission count}
 
-L?ETX est une métrique permettant de déterminer la qualité d?un chemin entre deux noeuds, dans un réseau sans-fil.
-Le calcul est relativement simple, c?est le nombre d?envois de paquets nécessaire pour recevoir un certain nombre de paquets sans aucune erreur. Par exemple, si l?on veut transmettre 1000 paquets, et qu?il nous faut 2000 transmissions pour tout transmettre sans erreur, alors la valeur de l?ETX est 2000/1000 soit 2. Ainsi un ETX de 1 signifie que l?on a un chemin qui ne pose jamais souci, et cette valeur peut monter jusqu?à l?infini, si par exemple le chemin est rompu.
+L'ETX est une métrique permettant de déterminer la qualité d'un chemin entre deux noeuds, dans un réseau sans-fil.
+Le calcul est relativement simple, c'est le nombre d'envois de paquets nécessaire pour recevoir un certain nombre de paquets sans aucune erreur. Par exemple, si l'on veut transmettre 1000 paquets, et qu'il nous faut 2000 transmissions pour tout transmettre sans erreur, alors la valeur de l'ETX est 2000/1000 soit 2. Ainsi un ETX de 1 signifie que l'on a un chemin qui ne pose jamais souci, et cette valeur peut monter jusqu'à l'infini, si par exemple le chemin est rompu.
 
 \subsection{RSSI: Received Signal Strength Indication}
 
-Le RSSI est une indication relative de la puissance reçue sur un canal, exprimée en dBm. Cette valeur permet de calculer le bruit ambiant sur un noeud, et ainsi de déterminer l?activité radio ambiante à un moment donné. Cette valeur est relativement simple à récupérer dans FIT, en ajoutant un profil de monitoring à une expérience. Encore une fois ici, il n?existe pas de norme précisant la manière de calculer le RSSI, et l?implémentation est laissée libre au constructeur.
+Le RSSI est une indication relative de la puissance reçue sur un canal, exprimée en dBm. Cette valeur permet de calculer le bruit ambiant sur un noeud, et ainsi de déterminer l'activité radio ambiante à un moment donné. Cette valeur est relativement simple à récupérer dans FIT, en ajoutant un profil de monitoring à une expérience. Encore une fois ici, il n'existe pas de norme précisant la manière de calculer le RSSI, et l'implémentation est laissée libre au constructeur.
 
 \subsection{Conclusion et choix de métrique}
-Notre choix s?est de ce fait finalement porté sur le RSSI, et ce pour plusieurs raisons:
-L?implémentation et sa mise en place dans les expériences FIT IoT lab est évidente et rapide. Le besoin de cette métrique étant arrivé relativement tard dans le projet, nous n?aurions pas eu le temps de mettre en place une autre métrique. De ce fait, ce choix s'est naturellement fait directement.
-Malgré cela, c?est aussi la valeur qui correspond le plus à notre problématique, et qui nous permet le mieux de trouver une réponse. Bien que les autres métriques nous auraient aussi permis de conclure, nous pensons avoir fait le choix idéal avec cette métrique.
+Notre choix s'est de ce fait finalement porté sur le RSSI, et ce pour plusieurs raisons:
+L'implémentation et sa mise en place dans les expériences FIT IoT lab est évidente et rapide. Le besoin de cette métrique étant arrivé relativement tard dans le projet, nous n'aurions pas eu le temps de mettre en place une autre métrique. De ce fait, ce choix s'est naturellement fait directement.
+Malgré cela, c'est aussi la valeur qui correspond le plus à notre problématique, et qui nous permet le mieux de trouver une réponse. Bien que les autres métriques nous auraient aussi permis de conclure, nous pensons avoir fait le choix idéal avec cette métrique.
 
 
 \section{Récapitulatif}
@@ -414,7 +435,7 @@ Nous avons pu aboutir à une première solution en prenant des choix qui nous semb
 
 À l'issue de ce travail de recherche bibliographique, il apparaît que plusieurs propositions peuvent servir de base à la résolution de notre problème.
 
-Il semble se détacher un certain nombre de directions privilégiées que nous allons exploiter en priorité dans nos propositions. [CHANGER] Tableau récap
+Il semble se détacher un certain nombre de directions privilégiées que nous allons exploiter en priorité dans nos propositions.
 Celles-ci font l'objet de l'étude du chapitre suivant.
 
 
@@ -977,7 +998,7 @@ Cette annexe est \emph{obligatoire}.
    	\item  Rédaction du rapport 
    		\begin{itemize}
    			\item Introduction 
-   			\item Etat de l?art : mise en forme
+   			\item Etat de l'art : mise en forme
    			\item Conception
    			\item Autres
    		\end{itemize}
@@ -994,13 +1015,13 @@ Cette annexe est \emph{obligatoire}.
    \begin{itemize}
    	\item Discussion Python SSH
    	
-   	Julien a fait une remarque sur Python SSH ne voyant pas l?utilité de celui-ci. Notre point de vue était de réaliser le script python en local puis se connecter en SSH par la suite sur le frontend SSH afin de lancer les commandes pour lancer l?expérience, récolter les coordonnées,... La vision de Julien est de mettre le script directement sur le frontend SSH pour ne pas avoir à l?héberger par la suite. Ainsi aucune connexion SSH serait nécessaire.
+   	Julien a fait une remarque sur Python SSH ne voyant pas l'utilité de celui-ci. Notre point de vue était de réaliser le script python en local puis se connecter en SSH par la suite sur le frontend SSH afin de lancer les commandes pour lancer l'expérience, récolter les coordonnées,... La vision de Julien est de mettre le script directement sur le frontend SSH pour ne pas avoir à l'héberger par la suite. Ainsi aucune connexion SSH serait nécessaire.
 => Le développement sur le frontend SSH a abouti en utilisant la librarie os, subprocess pour lancer les commandes
  
  
-   	\item Librairie manquante pour l?exploitation du capteur de température des noeuds m3 en contiki
+   	\item Librairie manquante pour l'exploitation du capteur de température des noeuds m3 en contiki
 \begin{itemize}
-\item Librairie manquante pour l?exploitation du capteur de \item Possibilité que cela existe en contiki-ng
+\item Librairie manquante pour l'exploitation du capteur de \item Possibilité que cela existe en contiki-ng
 \item Besoin potentiel de créer ce code
 \item Ou de changer de solution (Riot par exemple)
 \end{itemize}   	 
@@ -1317,7 +1338,7 @@ La figure~\ref{fig:AutoEvaluationTravailFinal} permet d'énumérer un certain nomb
 
 
 \bibliography{biblio}
-[1] Getting started with IoT-LAB ? the tutorial for beginners -  https://www.iot-lab.info/tutorials/getting-started-tutorial/
+[1] Getting started with IoT-LAB : the tutorial for beginners -  https://www.iot-lab.info/tutorials/getting-started-tutorial/
 \newline
 \newline
 [2] Configure your SSH access - \newline https://www.iot-lab.info/tutorials/ssh-access/
