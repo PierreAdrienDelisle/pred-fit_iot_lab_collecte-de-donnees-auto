@@ -543,15 +543,20 @@ Comment InfluxDB stocke t-il ses données ? Celui-ci découpe son organisation en 
 \begin{itemize}
 	\item Meta contient un certains nombre de paramètres et informations utiles : les users, databases existantes, retention policies, shards, and continuous queries. Les retentions policies sont un moyen de définir le recyclage de la base de données, c'est à dire à quelle moment va t-elle supprimer des données ou archiver. Les shards sont la vision d'InfluxDB sur les données, elle groupe les données selon des shards (en général par proximité temporelle) et va les stocker, supprimer, traiter au même endroit. Les continous queries sont un outil permettant de faire des requêtes en continue sur la base.
 	\item WAL (Write Ahead Log) est un dossier de cache pour les bases de données.
-	\item Data est le dossier contenant les bases de données. Il existe par défaut la base de données _internal contenant un certain nombre d'informations générales sur nos bases de données. Puis ensuite, il existe toutes les données relatives à nos collectes.
+	\item Data est le dossier contenant les bases de données. Il existe par défaut la base de données internal contenant un certain nombre d'informations générales sur nos bases de données. Puis ensuite, il existe toutes les données relatives à nos collectes.
 
 \end{itemize}
 
+
+\section{Fréquence de relevé}
+
+	Une fois la solution mise en place de collecte de données, il faut déterminer quand et comment lancer le script. L'exécution se fait par crontab mais combien de noeuds doit on réserver ? A quelle fréquence? Pour le nombre de noeuds réservés, la solution réserve un taux de disponibilité de la plateforme. Par exemple à un instant T, la plateforme dispose de 300 noeuds dont 200 sont disponibles. Si le taux de réservation du script est 50\% alors on réserve 100 noeuds sur Lille. Ainsi on évite de vouloir réserver plus de noeuds que disponible. Ensuite quel taux choisir ? Idéalement 100\% mais cela peut poser problème puisque la plateforme va délayer notre expérience car trop de noeuds seront indisponibles si elle accepte notre expérience. Ainsi nous avons décider arbitrairement de prendre 70\% de la plateforme sur une minute, ce qui limite qu'on affecte trop la disponibilité. Ensuite la fréquence s'effectue toutes les 30 minutes par soucis de disponibilité puisque si on intensifie ses relevés, trop de noeuds seraient indisponibles pour les autres utilisateurs. Mais aussi nous relevons des mesures physiques, or celles-ci ne vont pas avoir d'énormes variations entre plusieurs demi-heures. Par la suite, avec une vision sur plusieurs semaines, la fréquence de relevé pourra être ajusté pour diminuer la volumétrie ou l'augmenter selon les besoins des chercheurs.
 
 \section{Grafana}
 
 	Après la collecte de données, il nous fallait un outil pour la visualisation des données et son exploitation. C'est pourquoi nous avons choisi Grafana qui est un outil web permettant de facilement intégrer les données InfluxDB via une interface web avec un vue simplifiée. Une vue classique de nos données peut se représenter ainsi : figure \ref{fig:Grafana_example}
 	
+
 \begin{figure*}[!ht]
 	\centering
     \includegraphics[width=1.1\textwidth]{Images/grafana}
