@@ -78,7 +78,7 @@
 
 La plateforme FIT (Future Internet Testing facility) IoT lab, créée pour tester différentes aspects importants pour les thématiques qui entourent l'Internet des objets, est constituée de 6 sites, répartis en France, qui contiennent de nombreux n\oe uds capteurs, et permettent de nombreuses expérimentations.
 
-La problème, très technique, est ici de collecter automatiquement, à intervalles réguliers dans la journée, différentes données sur des puces M3, qui constituent la majorité du parc de la plateforme FIT Lilloise, telles que la luminosité ou la température. Les objectifs pour arriver à une solution sont donc les suivantes:
+Le problème, très technique, est ici de collecter automatiquement, à intervalles réguliers dans la journée, différentes données sur des puces M3, qui constituent la majorité du parc de la plateforme FIT Lilloise, telles que la luminosité ou la température. Les objectifs pour arriver à une solution sont donc les suivantes:
 \begin{enumerate}
    \item Développement et Implémentation d'un firmware pour les n\oe uds m3, permettant de récupérer les données et de les pousser sur lien série ~;
    \item Développement d'un script python qui crée les expériences nécessaires, récupère les données poussées par les n\oe uds, et les pousse dans une base temporelle~;
@@ -125,7 +125,7 @@ Ces n\oe uds sont répartis à l'échelle d'un bâtiment dans chaque site de la plat
 
 \section{Présentation de la problématique}
 
-En se basant sur cette plateforme, les chercheurs de l'Inria, à Lille voudraient avoir à disposition des données temporelles sur leur bâtiment d'étude, qui pourrait dès lors s'apparenter à un bâtiment intelligent. Dès qu'elles seront disponibles, ces données constitueront une base libre qui, nous l'espérons, pourra être exploitée par les chercheurs pour différentes expérimentations. Ceci a donc pour but de faire gagner du temps à la recherche, ainsi qu'à fournir une méthode pour capter de nouvelles données.
+En se basant sur cette plateforme, les chercheurs de l'Inria, à Lille, voudraient avoir à disposition des données temporelles sur leur bâtiment d'étude, qui pourrait dès lors s'apparenter à un bâtiment intelligent. Dès qu'elles seront disponibles, ces données constitueront une base libre qui, nous l'espérons, pourra être exploitée par les chercheurs pour différentes expérimentations. Ceci a donc pour but de faire gagner du temps à la recherche, ainsi qu'à fournir une méthode pour capter de nouvelles données.
 Ces données seront captées par des n\oe uds m3. Ces n\oe uds particuliers constituent une grande majorité du parc Lillois, et nous permettent donc d'obtenir une masse de données importante sur ce site.
 
 Par ailleurs, et grâce à cette masse de données, nous souhaitons étudier une seconde question: Dans une plateforme telle que FIT IoT, on peut se demander quel est l'impact des expériences des autres utilisateurs sur nos propres expérimentations. Nous souhaitons de fait étudier l'impact que peut avoir l'exploitation de la plateforme sur un protocole radio, et ainsi étudier la reproductibilité de ces expériences. 
@@ -142,7 +142,7 @@ Puis une mise en place d'un protocole radio afin de mettre en évidence ou non, l
 
 \section{Travail à réaliser et travail réalisé}
 
-Afin de satisfaire notre objectif principal; la collecte de données automatiques de capteurs m3 ; il nous faut mettre en place plusieurs briques, qu'elles soient logicielles ou d'infrastructure. Dans notre problème, comme chaque partie de la plateforme est exploitée, il nous faut développer une solution pour chaque partie:
+Afin de satisfaire notre objectif principal; la collecte de données automatiques de capteurs m3 ; il nous faut mettre en place plusieurs briques, qu'elles soient logicielles ou d'infrastructure. Dans notre problème, comme chaque partie de la plateforme est exploitée, il nous faut développer une solution pour chacune d'entre elles:
 \begin{enumerate}
    \item Au niveau des n\oe uds, il nous une solution logicielle de captation de données. Une fois captées, ces données doivent nous être renvoyées pour traitement et écriture dans la base de données.
    \item Pour stocker les données captées par cette solution, il nous faut préparer et implémenter une base de données de type temporelle, qui est une solution adaptée à notre problématique liée au format des données: De très nombreuses petites mesures estampillées.
@@ -169,7 +169,7 @@ Le premier objectif est totalement satisfait, à savoir que, la solution de colle
 
 Le second objectif, en revanche, n'aura pas pu être mené a bien dans le temps imparti. En effet, nous avons défini cet objectif que relativement tard dans le projet, et n'y avons que peu réfléchi
 
-De ce fait, bien que nous ayons mené une expérimentation, qui sera présentée dans la suite du rapport, la masse de données que nous avons récuperée est trop faible pour pouvoir établir une réelle conclusion. En effet, après une première partie ou nous pensions avoir trouvé une réelle reproductibilité d'expérience, nous avons observé qu'en augmentant le nombre de n\oe uds sur lesquels nous effectuons nos expériences, et même dans le cas où la plateforme ne subit que très peu de perturbations, la reproductibilité du protocole n'a pas pu être vérifiée.
+De ce fait, bien que nous ayons mené une expérimentation, qui sera présentée dans la suite du rapport, la masse de données que nous avons récuperée est trop faible pour pouvoir établir une réelle conclusion. En effet, après une première partie ou nous pensions avoir trouvé une réelle reproductibilité d'expérience, nous avons observé qu'en augmentant le nombre de n\oe uds sur lesquels nous effectuons nos expériences, et même dans le cas où la plateforme ne subit que très peu de perturbations, la reproductibilité du protocole n'est pas vérifiée. Il nous a de ce fait été impossible de conclure quant à l'impact de l'utilisation de la plateforme.
 
 Le but était de montrer que l'activité de la plateforme, que ce soit au travers des expériences ou de l'activité humaine sur le site de Lille, pouvait avoir un impact assez important sur les expériences menées par les utilisateurs, par exemple avec une expérience de routage. Nous voulions de ce fait utiliser les technologies suivantes:
 \begin{enumerate}
@@ -184,9 +184,9 @@ Le but était de montrer que l'activité de la plateforme, que ce soit au travers 
 Ce rapport contient les différentes étapes du projet, à savoir la collecte de données automatique puis la captation radio et son impact réseau. Dans les parties à suivre, il y aura donc, premièrement, une présentation de la solution mêlée dans un second temps au recherches sur les perturbations radio.
 
 
-Le chapitre~\ref{chap:EtatArt} se concentrera sur les études technologiques et la montée en compétence que nous avons effectuée sur ce début de projet.  L'état de l'art sera donc technique avec la présentation de la plateforme, les firmwares M3 et les bases de données temporelles. Puis ensuite, une partie dédié aux métriques réseaux et impacts sur la qualité des protocoles.
+Le chapitre~\ref{chap:EtatArt} se concentrera sur les études technologiques et la montée en compétence que nous avons effectuée sur ce début de projet.  L'état de l'art sera donc technique avec la présentation de la plateforme, les firmwares M3 et les bases de données temporelles. Ensuite, une partie dédiée aux métriques réseaux et impacts sur la qualité des protocoles sera présentée.
 
-Le chapitre~\ref{chap:Conception} est dédié aux différents choix technologiques, diagrammes et concepts qui forment notre système. Ainsi que l'exploitation du protocole réseau RPL (Routing Protocol for Low-Power and Lossy Networks) qui sera utilisé pour tester nos hypothèses. Il est central car il constitue une base de travail solide sur laquelle se retourner à tout moment lors du travail pour notre groupe.
+Le chapitre~\ref{chap:Conception} est dédié aux différents choix technologiques, diagrammes et concepts qui forment notre système, Ainsi qu'à l'exploitation du protocole réseau RPL (Routing Protocol for Low-Power and Lossy Networks) qui sera utilisé pour tester nos hypothèses. Il est central car il constitue une base de travail solide sur laquelle se retourner à tout moment lors du travail pour notre groupe.
 
 %-------------------------------------------------------------------------------------------------------------
 
@@ -202,8 +202,8 @@ Le chapitre~\ref{chap:Conception} est dédié aux différents choix technologiques,
 
 \subsection{Présentation}
 
-	IoT Lab fait partie du consortium FIT (Future Internet Testing facility) qui réuni plusieurs institutions de recherche et universités sur ce projet de plateforme de tests à grande échelle : FIT IoT Lab, FIT Wireless et FIT Cloud.
-	FIT IoT Lab est une plateforme de service  d'infrastructure IoT. Il existe sur cette plateforme plus de 1500 noeuds capteurs de différents types (M3,A8,turtlebot,...) répartis sur 6 sites : Grenoble, Lille, Lyon, Paris, Saclay et Strasbourg. L'objectif est de fournir aux chercheurs une infrastructure riche qu'ils peuvent ensuite réserver et tester pour leur propres expériences en utilisant ces noeuds.
+	IoT Lab fait partie du consortium FIT (Future Internet Testing facility) qui réunit plusieurs institutions de recherche et universités sur ce projet de plateforme de tests à grande échelle : FIT IoT Lab, FIT Wireless et FIT Cloud.
+	FIT IoT Lab est une plateforme de service  d'infrastructure IoT. Il existe sur cette plateforme plus de 1500 noeuds capteurs de différents types (M3,A8,turtlebot,...) répartis sur 6 sites : Grenoble, Lille, Lyon, Paris, Saclay et Strasbourg. L'objectif est de fournir aux chercheurs une infrastructure riche qu'ils peuvent ensuite réserver et exploiter pour leur propres expériences.
 	
 	
 
@@ -292,7 +292,7 @@ Dans cette section, nous présenterons les tutoriels essentiels de la plateforme 
 
 \section{Firmwares}
 
-Comme expliqué par avant, la plateforme contient un grand nombre de n\oe uds capteurs qui permettent d'effectuer plusieurs expérimentations. Ces n\oe uds ont logiquement besoin d'une base logicielle pour fonctionner, et c'est ici qu'interviennent les firmwares. Il est central dans notre projet de programmer un firmware qui soit efficace et réponde à nos besoins. Pour cela, plusieurs solutions de systèmes d'exploitation disponibles, et présentées sur la plateforme FIT. Il faudra de fait effectuer un choix quant à la solution qui sera employée. Les différents systèmes étudiés peuvent être trouvés sur le site de FIT IoT \footnote{https://www.iot-lab.info/operating-systems/}
+Comme expliqué par avant, la plateforme contient un grand nombre de n\oe uds capteurs qui permettent d'effectuer plusieurs expérimentations. Ces n\oe uds ont logiquement besoin d'une base logicielle pour fonctionner, et c'est ici qu'interviennent les firmwares. Il est central dans notre projet de programmer un firmware qui soit efficace et réponde à nos besoins. Pour cela, plusieurs solutions de systèmes d'exploitation sont disponibles, et présentées sur la plateforme FIT. Il faudra de fait effectuer un choix quant à la solution qui sera employée. Les différents systèmes étudiés peuvent être trouvés sur le site de FIT IoT \footnote{https://www.iot-lab.info/operating-systems/}
 
 \subsection{Contiki}
 Contiki est un système d'exploitation open-source, designé pour l'IoT, particulièrement pour la mise en place de protocoles réseaux (TCP/IP, IPv6, Low-Power protocols), reposant sur le système de proto-threads.
@@ -377,7 +377,7 @@ Afin d'affiner notre choix, nous avons pris en compte le deuxième benchmarking [
     \label{fig:courbes}
 \end{figure}
 Sur ces graphiques (figure \ref{fig:courbes}), on observe le coût en temps de la requête en fonction du nombre d'entrées sur cette dernière.
-Lors de ce benchmarking, on peut observer qu'InfluxDB en rouge) [9] est nettement en avance sur les autres TSDBs. Puisque le temps de réponse de celle-ci est bien inférieur aux différentes requêtes est bien inférieur. Là ou elle est moins performante est sur le "SELECT *" (All data query - c), or dans notre cas, les tables seront très courtes (une à deux données max par tables). C'est pourquoi notre premier choix technique se basera sur cette base de données. Néanmoins nous gardons à l'esprit d'autres possibilités de TSDBs, il sera donc important dans la partie conception de bien prendre en compte une certaine facilité à changer de TSDB si nécessaire. De plus, il n'est pas impossible par la suite de changer vers Prometheus [10] étant une TSDB déjà utilisée pour certains projets Fit IoT Lab.
+Lors de ce benchmarking, on peut observer qu'InfluxDB en rouge) [9] est nettement en avance sur les autres TSDBs. Puisque le temps de réponse de celle-ci est bien inférieur aux différentes requêtes est bien inférieur. Là ou elle est moins performante est sur le "SELECT *" (All data query - c), or dans notre cas, les tables seront très courtes (une à deux données max par tables). C'est pourquoi notre premier choix technique se portera sur cette base de données. Néanmoins nous gardons à l'esprit d'autres possibilités de TSDBs, il sera donc important dans la partie conception de bien prendre en compte une certaine facilité à changer de TSDB si nécessaire. De plus, il n'est pas impossible par la suite de changer vers Prometheus [10] étant une TSDB déjà utilisée pour certains projets Fit IoT Lab.
 
 \section {Automatisation via Linux}
 
@@ -447,11 +447,7 @@ Sur cet état de l'art, nous avons présenté les différents éléments nécessaires à
 		\item La base de données temporelles
 	\end{itemize}
 	
-Nous avons pu aboutir à une première solution en prenant des choix qui nous semble correct. A savoir le choix de développer sur la plateforme FIT via la frontend SSH afin de ne pas à avoir héberger notre script et directement lancer l'automatisation en local, mettre en place un premier firmware via Contiki puisqu'il offre une simplicité de programmation et déjà une bonne base d'exemple de firmwares et mettre en place dans un premier temps une base de données InfluxDB mais garder à l'esprit de bien compartimenter cette partie afin de ne pas avoir de problèmes d'intégration s'il y a une nécessité de migrer vers un autre type de base de données.
-
-
-
-\section{Conclusion}
+Nous avons pu aboutir à une première solution en prenant des choix qui nous semblent corrects. A savoir le choix de développer sur la plateforme FIT via la frontend SSH afin de ne pas à avoir héberger notre script et directement lancer l'automatisation en local, mettre en place un premier firmware via Contiki puisqu'il offre une simplicité de programmation et déjà une bonne base d'exemple de firmwares et mettre en place dans un premier temps une base de données InfluxDB mais garder à l'esprit de bien compartimenter cette partie afin de ne pas avoir de problèmes d'intégration s'il y a une nécessité de migrer vers un autre type de base de données.
 
 
 À l'issue de ce travail de recherche bibliographique, il apparaît que plusieurs propositions peuvent servir de base à la résolution de notre problème.
@@ -469,7 +465,7 @@ Cette partie est dédiée au système dans son ensemble et à la manière dont il a é
 
 \section{Scénario - Diagramme de séquence}
 
-Cette section a pour but d?expliquer le fonctionnement de notre script de collecte de données à la fin du projet pour que la partie majoritaire du projet soit réussie. Nous nous sommes penchés sur deux scénarios différents de diagramme de séquence.
+Cette section a pour but d'expliquer le fonctionnement de notre script de collecte de données à la fin du projet pour que la partie majoritaire du projet soit réussie. Nous nous sommes penchés sur deux scénarios différents de diagramme de séquence.
 
 \subsection{Scénario A}
 Le scénario A (figure \ref{fig:DiagSequenceA}) s'exécute dans la séquence suivante : 
@@ -520,11 +516,11 @@ Les différentes étapes de la solution sont :
 Nous avons eu deux propositions de schéma de base de données afin de savoir comment mieux représenter les données et leurs utilisations. 
 
 \subsection{Tuple de données}
-	La première idée est de faire un tuple de données avec : Noeud, Timestamp, LightValue, PressureValue, RssiValue, RssiChannel. Cela peut paraître à priori une bonne solution contenant toutes les informations d'un noeud à un instant T. Le premier problème est que les données ne sont pas prises au même moment exactement, ce qui signifie que les données RSSI, lumière et pression ne partage pas la même estampille de temps. Sachant que les données seront traitées ensuite par des chercheurs pour entrainer de l'intelligence artificielle, il faut une précision dans les données. De plus, cette façon de conceptualisation revient à un schéma classique de base de données relationnelles. Or dans notre cas, nos données ne sont pas liés exceptés par leur numéro de noeud. Un autre problème qui pourrait arriver dans ce cas là, serait une absence de données sur un instant. Cela peut arriver pour plusieurs raisons: soit le noeud n'a pas été choisi dans l'expérience (ce qui est possible car lors de la soumission, on ne demande qu'un nombre de noeuds et non des noeuds précis) ou alors un problème sur le noeud directement, et ce pour diverses raisons. Nous savons que ceci peut exister puisque certains noeuds sont reconnus pour avoir des problèmes à l'initialisation. 
+	La première idée est de faire un tuple de données avec : Noeud, Timestamp, LightValue, PressureValue, RssiValue, RssiChannel. Cela peut paraître à priori une bonne solution contenant toutes les informations d'un noeud à un instant T. Le premier problème est que les données ne sont pas prises au même moment exactement, ce qui signifie que les données RSSI, lumière et pression ne partage pas la même estampille de temps. Sachant que les données seront traitées ensuite par des chercheurs pour entrainer de l'intelligence artificielle, il faut une précision dans les données. De plus, cette façon de conceptualisation revient à un schéma classique de base de données relationnelles. Or dans notre cas, nos données ne sont pas liées, excepté par leur numéro de noeud. Un autre problème qui pourrait arriver dans ce cas là, serait une absence de données sur un instant. Cela peut arriver pour plusieurs raisons: soit le noeud n'a pas été choisi dans l'expérience (ce qui est possible car lors de la soumission, on ne demande qu'un nombre de noeuds et non des noeuds précis) ou alors un problème sur le noeud directement, et ce pour diverses raisons. Nous savons que ceci peut exister puisque certains noeuds sont reconnus pour avoir des problèmes à l'initialisation. 
 
 
 \subsection{Table par type de données}
-Une solution alternative peut être de représenter la base de données avec une table par type de donnée stockée. Cela permet de garder une estampille correcte avec la valeur de donnée associé. Afin de garder le lien entre les données, à savoir le noeud capté, on utilise un "tag" qui représente l'utilisateur de la ressource. Ainsi, toutes les données captés par un noeud M3-1XX seront marquées par ce même nom. On peut ainsi traiter les données sur ce tag. Le système InfluxQL favorise ce schéma puisqu'il est optimisé pour les requêtes InfluxQL (langage SQL pour InfluxDB).
+Une solution alternative peut être de représenter la base de données avec une table par type de donnée stockée. Cela permet de garder une estampille correcte avec la valeur de donnée associée. Afin de garder le lien entre les données, à savoir le noeud capté, on utilise un "tag" qui représente l'utilisateur de la ressource. Ainsi, toutes les données captés par un noeud M3-1XX seront marquées par ce même nom. On peut ainsi traiter les données sur ce tag. Le système InfluxQL favorise ce schéma puisqu'il est optimisé pour les requêtes InfluxQL (langage SQL pour InfluxDB).
 Le schéma de base de données temporelles final reste simple puisqu'il est composé seulement de 3 tables :
 	\begin{itemize}
 		\item Light, contient les données de lumière en lux
@@ -550,7 +546,7 @@ Comment InfluxDB stocke t-il ses données ? Celui-ci découpe son organisation en 
 
 \section{Fréquence de relevé}
 
-	Une fois la solution mise en place de collecte de données, il faut déterminer quand et comment lancer le script. L'exécution se fait par crontab mais combien de noeuds doit on réserver ? A quelle fréquence? Pour le nombre de noeuds réservés, la solution réserve un taux de disponibilité de la plateforme. Par exemple à un instant T, la plateforme dispose de 300 noeuds dont 200 sont disponibles. Si le taux de réservation du script est 50\% alors on réserve 100 noeuds sur Lille. Ainsi on évite de vouloir réserver plus de noeuds que disponible. Ensuite quel taux choisir ? Idéalement 100\% mais cela peut poser problème puisque la plateforme va délayer notre expérience car trop de noeuds seront indisponibles si elle accepte notre expérience. Ainsi nous avons décider arbitrairement de prendre 70\% de la plateforme sur une minute, ce qui limite qu'on affecte trop la disponibilité. Ensuite la fréquence s'effectue toutes les 30 minutes par soucis de disponibilité puisque si on intensifie ses relevés, trop de noeuds seraient indisponibles pour les autres utilisateurs. Mais aussi nous relevons des mesures physiques, or celles-ci ne vont pas avoir d'énormes variations entre plusieurs demi-heures. Par la suite, avec une vision sur plusieurs semaines, la fréquence de relevé pourra être ajusté pour diminuer la volumétrie ou l'augmenter selon les besoins des chercheurs.
+	Une fois la solution de collecte de données	 mise en place, il faut déterminer quand et comment lancer le script. L'exécution se fait par crontab mais combien de noeuds doit on réserver ? A quelle fréquence? Pour le nombre de noeuds réservés, la solution réserve un taux de disponibilité de la plateforme. Par exemple à un instant T, la plateforme dispose de 300 noeuds dont 200 sont disponibles. Si le taux de réservation du script est 50\% alors on réserve 100 noeuds sur Lille. Ainsi on évite de vouloir réserver plus de noeuds que disponible. Ensuite quel taux choisir ? Idéalement 100\% mais cela peut poser problème puisque la plateforme va délayer notre expérience car trop de noeuds seront indisponibles si elle accepte notre expérience. Ainsi nous avons décider arbitrairement de prendre 70\% de la plateforme sur une minute, ce qui limite qu'on affecte trop la disponibilité. Ensuite la fréquence s'effectue toutes les 30 minutes par soucis de disponibilité puisque si on intensifie ses relevés, trop de noeuds seraient indisponibles pour les autres utilisateurs. Mais aussi nous relevons des mesures physiques, or celles-ci ne vont pas avoir d'énormes variations entre plusieurs demi-heures. Par la suite, avec une vision sur plusieurs semaines, la fréquence de relevé pourra être ajusté pour diminuer la volumétrie ou l'augmenter selon les besoins des chercheurs.
 
 \section{Grafana}
 
@@ -592,13 +588,6 @@ Comment InfluxDB stocke t-il ses données ? Celui-ci découpe son organisation en 
 
 \chapter{Expérimentations et résultats}
 \label{chap:Experimentations}
-
-S'agissant d'un travail de recherche \emph{et} de \emph{développement}, une production de code source est très certainement présente.
-Auquel cas, le chapitre va commencer par une section sur le produit développé.
-
-\begin{structuration}
-Soulignons que, comme dans le chapitre précédent, si le volume de ce chapitre devient très important, il est préférable de le transformer en partie de rapport, les sections suivantes devenant des chapitres, et ainsi de suite pour les parties hiérarchiquement inférieures.
-\end{structuration}
 
 \section{Script de collection de données}
 
@@ -1347,41 +1336,6 @@ Dans le cas contraire, une commande permet de le générer automatiquement avec le
 
 \chapter{Auto-contrôle et auto-évaluation}
 
-Cette annexe est \emph{obligatoire}.
-
-La figure~\ref{fig:AutoEvaluationTravailIntermediaire} permet d'énumérer un certain nombre de points importants dans les trois composantes du travail~:
-\begin{enumerate}
-   \item rapport~;
-   \item présentation orale~;
-   \item travail de fond~;
-\end{enumerate}
-ainsi que d'évaluer notre niveau de satisfaction à l'issue de la phase~I, composée de trois étapes~:
-\begin{enumerate}
-   \item étude préalable~;
-   \item étude bibliographique~;
-   \item conception générale.
-\end{enumerate}
-
-Les points de satisfaction ou d'insatisfaction peuvent être approfondis.
-
-\begin{figure*}
-   \centering
-      \ifscreen % macro TeX (issue de la classe report-rd-info.cls) permettant d'ajuster le contenu en fonction du l'orientation du document (<<~screen~>> ou pas)
-         \rotatebox{90}{\includegraphics[width=0.9\textheight]{Images/Grille-Evaluation-PRD1}}
-      \else
-         \includegraphics[width=0.9\textwidth]{Images/Grille-Evaluation-PRD1}
-      \fi
-   \caption{Points à contrôler à l'issue de la phase I}
-   \label{fig:AutoEvaluationTravailIntermediaire}
-\end{figure*}
-
-La figure~\ref{fig:AutoEvaluationTravailFinal} permet d'énumérer un certain nombre de points importants dans les trois composantes du travail ainsi que d'évaluer notre niveau de satisfaction à l'issue de la phase~II, constituée de~:
-\begin{enumerate}
-   \item la conception détaillée~;
-   \item la réalisation~;
-   \item la recette.
-\end{enumerate}
-
 \begin{figure*}
    \centering
       \ifscreen
@@ -1394,6 +1348,7 @@ La figure~\ref{fig:AutoEvaluationTravailFinal} permet d'énumérer un certain nomb
 \end{figure*}
 
 
+\chapter{Bibliographie}
 \bibliography{biblio}
 [1] Getting started with IoT-LAB : the tutorial for beginners -  https://www.iot-lab.info/tutorials/getting-started-tutorial/
 \newline
