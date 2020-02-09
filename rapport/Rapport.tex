@@ -295,7 +295,7 @@ Dans cette section, nous présenterons les tutoriels essentiels de la plateforme 
 Comme expliqué par avant, la plateforme contient un grand nombre de n\oe uds capteurs qui permettent d'effectuer plusieurs expérimentations. Ces n\oe uds ont logiquement besoin d'une base logicielle pour fonctionner, et c'est ici qu'interviennent les firmwares. Il est central dans notre projet de programmer un firmware qui soit efficace et réponde à nos besoins. Pour cela, plusieurs solutions de systèmes d'exploitation disponibles, et présentées sur la plateforme FIT. Il faudra de fait effectuer un choix quant à la solution qui sera employée. Les différents systèmes étudiés peuvent être trouvés sur le site de FIT IoT \footnote{https://www.iot-lab.info/operating-systems/}
 
 \subsection{Contiki}
-Contiki est un système d'exploitation open-source, designé pour l'IoT, particulièrement pour la mise en place de protocoles réseaux (TCP/IP, IPv6, Low-Power protocols), basé sur le système de proto-threads.
+Contiki est un système d'exploitation open-source, designé pour l'IoT, particulièrement pour la mise en place de protocoles réseaux (TCP/IP, IPv6, Low-Power protocols), reposant sur le système de proto-threads.
 \subsubsection{Avantages}
 Si nous nous sommes dans un premier temps engoufrés dans la solution Contiki, c'est que pour une première prise en main, la programmation semblait relativement simple.
 En effet, la plateforme FIT fournit du code exemple pour chaque système, et Contiki avait la base d'exemples la plus variée. De fait, l'aggragation de deux exemples nous a permis d'arriver à une première solution plutôt acceptable.
@@ -321,10 +321,10 @@ De prime abord, le code permettant de programmer des firmwares grâce à RIOT semb
 \subsubsection{Ressources d'apprentissage}
 Pour la plateforme RIOT, les mêmes tutoriels existent que pour Contiki [5].
 
-Par ailleurs, des exemples permettent aussi de comprendre le fonctionnement global de la plateforme et d'en extraire les principes de base. Malgré cela, il n'existe pas d'exemple traitant directement avec les capteurs, et il nous faudrait donc aller chercher plus en profondeur dans la documentation pour trouver des solutions à ce niveau.
+Par ailleurs, des exemples permettent aussi de comprendre le fonctionnement global de la plateforme et d'en extraire les principes de base. Malgré cela, il n'existe pas d'exemple traitant directement avec les capteurs, et il nous faut donc aller chercher plus en profondeur dans la documentation pour trouver des solutions à ce niveau.
 
 \subsection{Analyse}
-Étant donné le peu d'expertise que nous possedons dans le domaine, nous ne pouvons pas donner un avis définitif quant au système d'exploitation à utiliser. En effet  chacune des solutions nous aurait permis à terme d'arriver à une solution très satisfaisante. En effet, le problème de base, au niveau du firmware, est relativement élémentaire et ne demande pas de programmation très compliquée.
+Étant donné le peu d'expertise que nous possédons dans le domaine, nous ne pouvons pas montrer définitivement qu'une solution est meilleure qu'une autre. En effet chacune d'entre elles nous permet à terme d'arriver à une solution très satisfaisante. En effet, le problème de base, au niveau du firmware, est relativement élémentaire et ne demande pas de programmation très compliquée.
 
 Contiki, de ce fait, nous a semblé être une solution idéale pour avancer rapidement dans le problème et le résoudre efficacement.
 
@@ -390,11 +390,11 @@ Lors de ce benchmarking, on peut observer qu'InfluxDB en rouge) [9] est nettemen
 	Systemd est un système d'initialisation et un daemon linux. Il permet aussi d'automatiser les tâches sous la forme de services. Ainsi on peut lancer, arrêter, relancer le service si besoin. Pour la configuration, on utilise deux fichiers pour configurer respectivement : le temps auquel la tâche va s'exécuter et la tâche en elle même avec son environnement.
 	
 	\subsection{Comparaison}
-	Systemd et cron sont deux solutions possibles pour notre script python. L'avantage de systemd est le fait qu'il soit plus complet et que plusieurs tâches peuvent être aisément exécutées et débuggées en même temps. Néamoins, il introduit plus de complexité avec un système de fichiers là où crontab ne nécessite qu'une ligne. De plus crontab à un système de mail qui nous peut nous alerter si une tâche ne s'est pas effectué correctement. Ainsi dans notre cas où nous n'avons qu'une tâche simple à effectuer, il semble approprié de déployer crontab plutôt que systemd. Néanmoins, si la solution venait à évoluer par la suite pour avoir plusieurs relevés différents avec d'autres scripts, il serait recommandé d'utiliser systemd. 
+	Systemd et cron sont deux solutions possibles pour notre script python. L'avantage de systemd est le fait qu'il soit plus complet et que plusieurs tâches peuvent être aisément exécutées et débuggées en même temps. Néanmoins, il introduit plus de complexité avec son système de fichiers, là où crontab ne nécessite qu'une ligne dans un script. Par ailleurs, crontab à un système de mail qui peut nous alerter si une tâche ne s'est pas effectuée correctement. Ainsi, étant donné que nous n'avons qu'une tâche à effectuer, il semble approprié de déployer crontab plutôt que systemd. Néanmoins, si par la suite, dans les évolutions futures de la solution, il était nécessaire d'avoir des scripts différents pour obtenir des relevés différents, nous recommanderions alors d'utiliser systemd. 
 	
 \section{Protocole RPL}
 
-RPL (Routing protocol for Low-power and Lossy networks)), est un protocole de routage qui est adapté à l'IoT, défini dans la RFC 6550 [11]. Basé sur un système d'arbre de routage, il se base sur deux types de n\oe uds: Dans le réseau, un client est désigné comme étant routeur de bordure. Ce routeur aura pour tâche de renvoyer les paquets remontant vers lui vers la branche qu'il faut. Les autres clients seront alors de simples clients qui renverront leurs paquets vers leur père dans la hiérarchie de l'arbre.
+RPL (Routing protocol for Low-power and Lossy networks)), est un protocole de routage qui est adapté à l'IoT, défini dans la RFC 6550 [11]. Basé sur un système d'arbre de routage, ce protocole exploite deux types de n\oe uds: Dans le réseau, un client est désigné comme étant routeur de bordure. Ce routeur aura pour tâche de renvoyer les paquets remontant vers lui vers la branche qu'il faut. Les autres clients seront alors de simples clients qui renverront leurs paquets vers leur père dans la hiérarchie de l'arbre.
 
 Nous nous basons sur une version basique de RPL, mais il existe des améliorations à ce protocole qui ont été proposées. Nous pouvons par exemple évoquer les améliorations apportées par M. Brandon FOUBERT, que l'on peut retrouver dans l'article suivant [12], dont il a présenté les principes et les résultats lors des journées RSD organisées à Nantes, auxquelles nous avons pu assister dans le cadre de la formation.
 
@@ -404,7 +404,7 @@ RPL est un protocole qui remplit toutes ses caractéristiques. Étant déjà impléme
 
 \section{Métriques réseau sur le bruit et qualité}
 
-En termes de réseau, il nous fallait une métrique qui nous permettrait d'évaluer la qualité du réseau, ainsi que le bruit ambiant. Nous avons découvert trois métriques différentes, qui auraient pu être acceptables dans notre sujet et qui permettent de faire ces deux choses. Il existe probablement d'autres indicateurs permettant de récupérer ces informations, mais nous avons préféré nous concentrer sur les trois suivantes:
+Concernant la partie réseau, il nous fallait une métrique qui nous permettrait d'évaluer la qualité du réseau, ainsi que le bruit ambiant. Nous avons découvert trois métriques différentes, qui pourraient être acceptables dans notre sujet et qui permettent de faire ces deux choses. Il existe probablement d'autres indicateurs permettant de récupérer ces informations, mais nous avons préféré nous concentrer sur les trois suivantes:
 
 \begin{itemize}
 		\item Le LQI: Link Quality Indicator
@@ -434,7 +434,7 @@ Le RSSI est une indication relative de la puissance reçue sur un canal, exprimée
 \subsection{Conclusion et choix de métrique}
 Notre choix s'est de ce fait finalement porté sur le RSSI, et ce pour plusieurs raisons:
 L'implémentation et sa mise en place dans les expériences FIT IoT lab est évidente et rapide. Le besoin de cette métrique étant arrivé relativement tard dans le projet, nous n'aurions pas eu le temps de mettre en place une autre métrique. De ce fait, ce choix s'est naturellement fait directement.
-Malgré cela, c'est aussi la valeur qui correspond le plus à notre problématique, et qui nous permet le mieux de trouver une réponse. Bien que les autres métriques nous auraient aussi permis de conclure, nous pensons avoir fait le choix idéal avec cette métrique.
+Malgré cela, c'est aussi la valeur qui correspond le plus à notre problématique, et qui nous permet le mieux de trouver une réponse. Bien que les autres métriques nous auraient aussi permis de conclure, nous pensons avoir fait le choix idéal avec cette celle-ci.
 
 
 \section{Conclusion}
@@ -520,7 +520,7 @@ Les différentes étapes de la solution sont :
 Nous avons eu deux propositions de schéma de base de données afin de savoir comment mieux représenter les données et leurs utilisations. 
 
 \subsection{Tuple de données}
-	La première idée est de faire un tuple de données avec : Noeud, Timestamp, LightValue, PressureValue, RssiValue, RssiChannel. Cela peut paraître à priori une bonne solution contenant toutes les informations d'un noeud à un instant T. Le premier problème est que les données ne sont pas prises au même moment exactement, ce qui signifie que les données RSSI, lumière et pression ne partage pas la même estampille de temps. Sachant que les données seront traitées ensuite par des chercheurs pour entrainer de l'intelligence artificielle, il faut une précision dans les données. De plus, cette façon de conceptualisation revient à un schéma classique de base de données relationnelles. Or dans notre cas, nos données ne sont pas liés exceptés par leur numéro de noeud. Un autre problème qui pourrait arriver dans ce cas là, est une absence de données sur un instant. Cela peut arriver pour plusieurs raisons, soit le noeud n'a pas été choisi dans l'expérience (ce qui est possible car lors de la soumission, on ne demande qu'un nombre de noeuds et non des noeuds précis) ou alors un problème directement sur le noeud pour diverses raisons. Nous savons que ceci peut exister puisque certains noeuds sont reconnus pour avoir des problèmes à l'initialisation. 
+	La première idée est de faire un tuple de données avec : Noeud, Timestamp, LightValue, PressureValue, RssiValue, RssiChannel. Cela peut paraître à priori une bonne solution contenant toutes les informations d'un noeud à un instant T. Le premier problème est que les données ne sont pas prises au même moment exactement, ce qui signifie que les données RSSI, lumière et pression ne partage pas la même estampille de temps. Sachant que les données seront traitées ensuite par des chercheurs pour entrainer de l'intelligence artificielle, il faut une précision dans les données. De plus, cette façon de conceptualisation revient à un schéma classique de base de données relationnelles. Or dans notre cas, nos données ne sont pas liés exceptés par leur numéro de noeud. Un autre problème qui pourrait arriver dans ce cas là, serait une absence de données sur un instant. Cela peut arriver pour plusieurs raisons: soit le noeud n'a pas été choisi dans l'expérience (ce qui est possible car lors de la soumission, on ne demande qu'un nombre de noeuds et non des noeuds précis) ou alors un problème sur le noeud directement, et ce pour diverses raisons. Nous savons que ceci peut exister puisque certains noeuds sont reconnus pour avoir des problèmes à l'initialisation. 
 
 
 \subsection{Table par type de données}
@@ -644,7 +644,7 @@ La pression est en mBar. On peut observer que la pression atmosphérique est glob
     \caption{Grafana - captation rssi 29-31/01/2020}
     \label{fig:rssi}
 \end{figure}
-Le RSSI est complexe à mesurer puisque, comme dit précédemment, la fréquence de mesure influe sur ce qu'on va obtenir. Mais il est impossible de mettre une fréquence trop élevé comme 1 ms puisque cela augmenterait considérablement la taille des données. L'astuce utilisée est de mettre une fréquence assez faible (environ 10 ms) et de supprimer les fréquences à -91dbm lorsqu'il n'y a pas d'activité radio. C'est à dire que dès lors qu'il y a un changement de RSSI, celui ci va enregistrer son entrée mais aussi l'entrée précédente et future. Ainsi dès que deux valeurs consécutives de RSSI sont à -91dBm (équivaut à aucune activité radio particulière), on efface la donnée pour limiter un nombre très important de points non intéressant.
+Le RSSI est complexe à mesurer puisque, comme dit précédemment, la fréquence de mesure influe sur ce qu'on va obtenir. Mais il est impossible de mettre une fréquence trop élevée comme 1 ms puisque cela augmenterait considérablement la taille des données. L'astuce utilisée est de mettre une fréquence assez faible (environ 10 ms) et de supprimer les fréquences à -91dbm lorsqu'il n'y a pas d'activité radio. C'est à dire que dès lors qu'il y a un changement de RSSI, celui ci va enregistrer son entrée mais aussi l'entrée précédente et future. Ainsi dès que deux valeurs consécutives de RSSI sont à -91dBm (équivaut à aucune activité radio particulière), on efface la donnée pour limiter un nombre très important de points non intéressant.
 
 \begin{figure}[htp]
     \includegraphics[width=0.50\textwidth]{Images/grafana_rssi2}
@@ -684,7 +684,9 @@ La difficulté vient avant tout du fait que cette expérience n'est qu'assez peu r
 
 \subsection{Résultats}
 
-[Cette partie sera remplie dès que j'aurai pu obtenir assez de résultats pour émettre une conclusion quant à notre travail. Jusqu'ici, et avec les tests que j'ai pu effectuer ce mardi, il semblerait qu'augmenter le nombre de n\oe uds change fortement la reproductibilité de l'expérience. Je suis en collection de données à l'instant même]
+Malheureusement, et étant donné le court temps que nous avons eu pour effectuer ces expériences, les données récoltées ne nous ont pas permis de conclure. En effet, si pour un petit nombre de n\oe uds, RPL se comporte très bien, ce n'est pas le cas pour un nombre plus grand de cartes. Plusieurs essais à 30 n\oe uds, à des periodes durant lesquelles la plateforme Lilloise n'était pas utilisée, RPL n'a jamais réussi à connecter les 30 n\oe uds dans un seul arbre. Le maximum de connexions que nous avons obtenu était 14, ce qui est trop faible pour estimer cette expérience comme une réussite. Toutes les autres tentatives se sont soldées par des échecs avec des arbres d'une taille de 8 à 10 n\oe uds.
+
+Avec plus de temps nous aurions pu nous pencher plus en avant sur les raisons de ces échecs, qui existent forcément puisque plusieurs personnes ont déjà utilisé RPL sur FIT IoT lab sans que cela pose de soucis. 
 
 
 \chapter{Planification}
@@ -698,7 +700,7 @@ Cette partie inclut des graphiques relatifs à notre travail. Nous avons découpés
 	\item Contact : les réunions et appels
 \end{itemize}
 
-Dans l'ensemble, l'estimation de nos tâche ont étés proches de la réalité mais nous avons globalement sous-estimé les heures nécessaires pour réaliser notre travail. Nous avons donc dû augmenter nos horaires sur certaines semaines plus libres que d'autres. Cela nous a permis de nous reconcentrer sur des petites tâches comme conseillé par Julien Vandaele pour obtenir une démo pour la première période (7 octobre 2019 - 01 décembre 2019).
+Dans l'ensemble, l'estimation de nos tâches ont étés proches de la réalité mais nous avons globalement sous-estimé les heures nécessaires pour réaliser notre travail. Nous avons donc dû augmenter nos horaires sur certaines semaines plus libres que d'autres. Cela nous a permis de nous reconcentrer sur des petites tâches comme conseillé par Julien Vandaele pour obtenir une démo pour la première période (7 octobre 2019 - 01 décembre 2019).
 
 
 \newpage
