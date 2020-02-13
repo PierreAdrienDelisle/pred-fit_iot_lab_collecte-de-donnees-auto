@@ -31,7 +31,9 @@ The central part of the project, which pretty much controls the whole data colle
 - Gather all the data from the nodes
 - Compute them and push them in the TSDB
 
-You can also run this script at any time you want using the following:
+You can also run this script at any time you want using the following options:
+ratio: Reserve a certain percentage of the testbed nodes - Ex: If 100 nodes are available, A value of 70 will reserve 70 nodes for your data collection
+site: Specify on which site you want to gather the data - Example: lille
 
 ### CRON:
 
