@@ -146,10 +146,10 @@ Afin de satisfaire notre objectif principal; la collecte de données automatiques
 \begin{enumerate}
    \item Au niveau des n\oe uds, il nous une solution logicielle de captation de données. Une fois captées, ces données doivent nous être renvoyées pour traitement et écriture dans la base de données.
    \item Pour stocker les données captées par cette solution, il nous faut préparer et implémenter une base de données de type temporelle, qui est une solution adaptée à notre problématique liée au format des données: De très nombreuses petites mesures estampillées.
-   \item Enfin, il nous faut un applicatif qui se place entre ses deux solutions et qui permette de faire la jonction entre elles. Ici, ce serait un script qui contrôlerait tout, de la réservation des noeuds, à l'exploitation des données et leur envoi dans la base.
+   \item Enfin, il nous faut un applicatif, qui se place entre ses deux solutions, et qui permette de faire la jonction entre elles. Ici, ce serait un script qui contrôlerait tout, de la réservation des n\oe uds, à l'exploitation des données et leur envoi dans la base.
 \end{enumerate}
    
-Notre second objectif, qui est donc d'observer l'impact des perturbations radio sur les expériences de la plateforme FIT IoT lab, nécessitera aussi plusieurs briques qui permetteront de conclure
+Notre second objectif, qui est donc d'observer l'impact des perturbations radio sur les expériences de la plateforme FIT IoT lab, nécessitera aussi plusieurs briques qui permettront de conclure
 \begin{enumerate}
    \item Il nous faut un protocole radio à étudier, afin de déterminer les effets de ces perturbations;
    \item Il nous faut surveiller ce protocole, récupérer plusieurs métriques quant à son fonctionnement, afin de déterminer si oui ou non il y a de réelles perturbations.
@@ -203,7 +203,7 @@ Le chapitre~\ref{chap:Conception} est dédié aux différents choix technologiques,
 \subsection{Présentation}
 
 	IoT Lab fait partie du consortium FIT (Future Internet Testing facility) qui réunit plusieurs institutions de recherche et universités sur ce projet de plateforme de tests à grande échelle : FIT IoT Lab, FIT Wireless et FIT Cloud.
-	FIT IoT Lab est une plateforme de service  d'infrastructure IoT. Il existe sur cette plateforme plus de 1500 noeuds capteurs de différents types (M3,A8,turtlebot,...) répartis sur 6 sites : Grenoble, Lille, Lyon, Paris, Saclay et Strasbourg. L'objectif est de fournir aux chercheurs une infrastructure riche qu'ils peuvent ensuite réserver et exploiter pour leur propres expériences.
+	FIT IoT Lab est une plateforme de service  d'infrastructure IoT. Il existe sur cette plateforme plus de 1500 n\oe uds capteurs de différents types (M3,A8,turtlebot,...) répartis sur 6 sites : Grenoble, Lille, Lyon, Paris, Saclay et Strasbourg. L'objectif est de fournir aux chercheurs une infrastructure riche qu'ils peuvent ensuite réserver et exploiter pour leur propres expériences.
 	
 	
 
@@ -212,7 +212,7 @@ La plateforme est décomposée en plusieurs parties (figure \ref{fig:graphArchi}):
 \begin{itemize}
 	\item Site web - FIT IoT Lab (Webportal) 
 	
-	Il permet d'accéder au banc d'essai en ligne, réserver des noeuds capteurs pour une expérience avec un firmware dédié et une durée. Il contient aussi les tutoriels permettant de prendre en main la plateforme. Celui-ci est un client de l'API REST.
+	Il permet d'accéder au banc d'essai en ligne, réserver des n\oe uds capteurs pour une expérience avec un firmware dédié et une durée. Il contient aussi les tutoriels permettant de prendre en main la plateforme. Celui-ci est un client de l'API REST.
 	
 	\item L'API REST 
 	
@@ -220,15 +220,15 @@ La plateforme est décomposée en plusieurs parties (figure \ref{fig:graphArchi}):
 	
 	\item Frontend SSH
 	
-	La frontend SSH est un serveur distant auquel chaque utilisateur de FIT IoT Lab peut se connecter via son compte sur un site particulier, dans le cadre de notre étude Lille. Elle est utile pour lancer directement des expériences, les gérer et prendre des informations diverses et variées. Cette frontend SSH s'appuie sur l'API REST pour fonctionner mais elle permet d'utiliser des scripts en local sur cet ordinateur distant afin de réaliser des tâches plus complexes comme le "serial aggregator" qui va agréger toutes les entrées des liens séries de nos noeuds. Les scripts sont écrits généralement en Python. De plus, cet accès permet par la suite de se connecter directement aux noeuds d'une expérience qu'on aurait lancé pour observer son comportement en détails.
+	La frontend SSH est un serveur distant auquel chaque utilisateur de FIT IoT Lab peut se connecter via son compte sur un site particulier, dans le cadre de notre étude Lille. Elle est utile pour lancer directement des expériences, les gérer et prendre des informations diverses et variées. Cette frontend SSH s'appuie sur l'API REST pour fonctionner mais elle permet d'utiliser des scripts en local sur cet ordinateur distant afin de réaliser des tâches plus complexes comme le "serial aggregator" qui va agréger toutes les entrées des liens séries de nos n\oe uds. Les scripts sont écrits généralement en Python. De plus, cet accès permet par la suite de se connecter directement aux n\oe uds d'une expérience qu'on aurait lancé pour observer son comportement en détails.
 	
-	\item Noeuds capteurs
+	\item n\oe uds capteurs
 	
-	Il existe plusieurs types de noeuds : A8, M3, Firefly, Lora, Arduino, WSN430 et les turtlebots qui sont des unités mobiles. Chaque noeud à une documentation qui lui est propre. Cela permet une grande diversité dans l'expérimentation. Sur ces noeuds il faut ajouter un firmware pour obtenir le comportement par défaut attendu de chacun d'eux, le développement firmware s'effectue en C.
+	Il existe plusieurs types de n\oe uds : A8, M3, Firefly, Lora, Arduino, WSN430 et les turtlebots qui sont des unités mobiles. Chaque n\oe ud à une documentation qui lui est propre. Cela permet une grande diversité dans l'expérimentation. Sur ces n\oe uds il faut ajouter un firmware pour obtenir le comportement par défaut attendu de chacun d'eux, le développement firmware s'effectue en C.
 	
-	\item Noeuds M3 (figure \ref{fig:carteM3})
+	\item n\oe uds M3 (figure \ref{fig:carteM3})
 	
-	Il est essentiel de parler des capacités des noeuds M3 puisqu'ils seront notre objet d'étude sur les différentes problématiques traitées. 
+	Il est essentiel de parler des capacités des n\oe uds M3 puisqu'ils seront notre objet d'étude sur les différentes problématiques traitées. 
 	La carte contient plusieurs capteurs de mesures ambiantes : lumière, pression, gyroscope, accéléromètre.
 	Pour les communications radio, la carte utilise la norme 802.15.4 PHY 2.4 Ghz. 
 	La carte peut s'utiliser avec les différents OS (Operating System) suivants : Contiki, RIOT et FreeRTOS.
@@ -242,20 +242,20 @@ La plateforme est décomposée en plusieurs parties (figure \ref{fig:graphArchi}):
 	
 	\end{itemize}
 
-	Un noeud M3 est composé (figure \ref{fig:noeudM3}) :
+	Un n\oe ud M3 est composé (figure \ref{fig:n\oe udM3}) :
 \begin{itemize}
 	\item De la carte M3 (Open Node) qui va être manipulé par l'utilisateur qui va avoir un accès total dessus (mémoire, OS et firmware utilisé).
 	\item Une Gateway qui permet la connexion à cette carte et accès à son port série.
-	\item Un noeud de contrôle (Control Node) qui va être le moyen d'envoyer ses instructions passives ou actives à la carte via la gateway et récupérer les données collectées de l'open-node.
+	\item Un n\oe ud de contrôle (Control Node) qui va être le moyen d'envoyer ses instructions passives ou actives à la carte via la gateway et récupérer les données collectées de l'open-node.
 \end{itemize}
 
 	\begin{figure}[h]
     \includegraphics[width=0.5\textwidth]{Images/what-is-a-node}
-    \caption{Noeud M3}
-    \label{fig:noeudM3}
+    \caption{n\oe ud M3}
+    \label{fig:n\oe udM3}
 	\end{figure}	
 	
-Dans la suite, nous discuterons indistinctement de la carte m3 et du noeud m3.
+Dans la suite, nous discuterons indistinctement de la carte m3 et du n\oe ud m3.
 
 	
 \begin{figure}[hp]
@@ -271,19 +271,19 @@ Dans cette section, nous présenterons les tutoriels essentiels de la plateforme 
 	\begin{itemize}
 		\item Getting started: the tutorial for beginners  [1]
 		
-		Ce tutoriel vise à faire une première soumission d'expérience via la plateforme web : réserver des noeuds, ajouter un firmware et y accéder directement via SSH sur le banc d'essai. Cela nous a permis entre autre de découvrir la plateforme dans son ensemble et comprendre le but visé de celle-ci.
+		Ce tutoriel vise à faire une première soumission d'expérience via la plateforme web : réserver des n\oe uds, ajouter un firmware et y accéder directement via SSH sur le banc d'essai. Cela nous a permis entre autre de découvrir la plateforme dans son ensemble et comprendre le but visé de celle-ci.
 			
 		\item SSH access [2]
 		
-		Cette partie permet d'obtenir un accès  SSH sur la frontend en faisant un échange de clé RSA via le site web. Nous avons donc pu grâce à ceci configurer un accès privilégié à notre compte sur la frontend SSH, d'ici nous avons pu déployer notre script et accéder aux noeuds d'une expérience en SSH.
+		Cette partie permet d'obtenir un accès  SSH sur la frontend en faisant un échange de clé RSA via le site web. Nous avons donc pu grâce à ceci configurer un accès privilégié à notre compte sur la frontend SSH, d'ici nous avons pu déployer notre script et accéder aux n\oe uds d'une expérience en SSH.
 		
 		\item Experiment CLI Client [3]
 		
-		Ce tutoriel fait partie d'un ensemble de tutoriels à propos des "CLI tools" qui permettent de faire des appels à l'API REST en soumettant des expériences, en flashant les firmwares des noeuds etc... Celui-ci permet d'apprendre la partie "experiment" qui concerne la soumission d'expérience ainsi que de son suivi. Cela nous permet donc d'apprendre la plus grande partie des commandes relatives aux CLI Tools et savoir sur quoi s'appuyer pour notre script comme la soumission d'expérience ou encore récupérer l'état de la plateforme afin de savoir la disponibilité de celle-ci.
+		Ce tutoriel fait partie d'un ensemble de tutoriels à propos des "CLI tools" qui permettent de faire des appels à l'API REST en soumettant des expériences, en flashant les firmwares des n\oe uds etc... Celui-ci permet d'apprendre la partie "experiment" qui concerne la soumission d'expérience ainsi que les diverses méthodes qui permettent d'effectuer un suivi de cette expérience.. Cela nous permet donc d'apprendre la plus grande partie des commandes relatives aux CLI Tools et savoir sur quoi s'appuyer pour notre script comme la soumission d'expérience ou encore récupérer l'état de la plateforme afin de savoir la disponibilité de celle-ci.
 		
 		\item Nodes Serial Link Aggregation [4]
 		
-		Une présentation du script "serial aggregator" qui permet d'agréger tous les liens séries relatifs à une expérience. Il permet aussi d'envoyer des messages à tous les liens qu'il agrège. Cette partie est essentielle pour notre projet puisque cet outil permettra d'agréger les données de tous nos noeuds M3 lors des expériences. 
+		Une présentation du script "serial aggregator" qui permet d'agréger tous les liens séries relatifs à une expérience. Il permet aussi d'envoyer des messages à tous les liens qu'il agrège. Cette partie est essentielle pour notre projet puisque cet outil permettra d'agréger les données de tous nos n\oe uds M3 lors des expériences. 
 		
 		
 		
@@ -317,7 +317,7 @@ De même qu'avec Contiki, il est possible d'étudier de nombreux protocoles réseau
 \subsubsection{Avantages}
 RIOT vient tout comme Contiki avec une bonne base d'exemples et de tutoriels fournis par FIT IoT pour prendre facilement en main la plateforme. Par ailleurs, RIOT est plus régulièrement mis à jour et maintenu par sa communauté que Contiki.
 \subsubsection{Inconvénients}
-De prime abord, le code permettant de programmer des firmwares grâce à RIOT semble relativement compliqué. C'est un système qui est plus obscur à comprendre de prime abord, et qui demande donc plus d'investissement pour être maîtrisé
+De prime abord, le code permettant de programmer des firmwares grâce à RIOT semble relativement compliqué. C'est un système qui est plus obscur à comprendre de prime abord, et qui demande donc plus d'investissement pour être maîtrisé.
 \subsubsection{Ressources d'apprentissage}
 Pour la plateforme RIOT, les mêmes tutoriels existent que pour Contiki [5].
 
@@ -333,13 +333,15 @@ Contiki, de ce fait, nous a semblé être une solution idéale pour avancer rapidem
 
 \subsection{Présentation}
 
-Une fois la collecte de données automatisée, nous aurons des données horodatées mais il reste néanmoins la question d'où stocker ces données.
+Une fois la collecte de données automatisée, nous aurons des données horodatées. Reste dès lors la question du stockage de ces données.
 Afin de mener le projet au bout, nous aurons besoin d'une base de données temporelle. En effet, celle-ci est indispensable pour stocker des données horodatées, non-relationnelles (mesures indépendantes les unes des autres), avec peu d'attributs et sur un grand volume.
 
 
 \subsection{Analyse}
 
-Tout d'abord, quelles sont les caractéristiques propres à une base de données temporelle? Les Time Series Databases (notées TSDB) ont besoin d'un horodatage sur les données avec une proximité physique si l'horodatage est proche, les données sont à proximité afin de traiter celles-ci plus efficacement. Ensuite, elles se doivent d'exécuter des "range queries" rapidement, c'est à dire des requêtes rapportant toutes les données inférieures ou supérieures à une condition (ici la condition la plus utilisée sera le temps). Les TSDB se doivent d'obtenir une rapidité d'écriture élevée sur la base puisqu'elle sera remplie fréquemment, elles doivent donc rester le plus possible disponible afin d'éviter de perdre des données. En plus de ces aspects techniques, la TSDB choisie devra avoir une communauté active pour considérer qu'elle est fiable et qu'il y a de la documentation autour ou de l'aide communautaire pour maintenir la solution dans le temps.
+Tout d'abord, quelles sont les caractéristiques propres à une base de données temporelle? Les Time Series Databases (notées TSDB) ont besoin d'un horodatage sur les données, afin de pouvoir les stocker. En effet, si l'horodatage est proche, les données sont écrites à proximité sur la solution de stockage afin de traiter celles-ci plus efficacement.
+
+Ensuite, elles se doivent d'exécuter des "range queries" rapidement, c'est à dire des requêtes rapportant toutes les données inférieures ou supérieures à une condition (ici la condition la plus utilisée sera le temps). Les TSDB se doivent d'obtenir une rapidité d'écriture élevée sur la base puisqu'elle sera remplie fréquemment, elles doivent donc rester le plus possible disponible afin d'éviter de perdre des données. En plus de ces aspects techniques, la TSDB choisie devra avoir une communauté active pour considérer qu'elle est fiable et qu'il y a de la documentation autour ou de l'aide communautaire pour maintenir la solution dans le temps.
 Pour évaluer ces différents points, nous nous sommes référés à deux benchmarking fait en 2017 [6] et en 2019 [7].
 \newline
 Dans le premier benchmarking [6], il se concentre sur un aspect 'features' des bases de données, à savoir qu'elles caractéristiques ont-elles. Celui-ci pointe plusieurs aspects à savoir :
@@ -364,7 +366,7 @@ Pour recentrer les recherches sur la solution à choisir nous avons donc pris en 
 
 Celles qui ressortent sont InfluxDB, KDB+ et Prometheus. InfluxDB étant loin devant les autres TSDBs.
 \begin{itemize}
-	\item InfluxDB est une TSDB open-source qui a été conçue pour stocker et superviser ses données événementielles, en temps réel et est orientée IoT avec beaucoup de possibilités de visualisation.
+	\item InfluxDB est une TSDB open-source qui a été conçue pour stocker et superviser ses données événementielles, en temps réel. C'est une base de données orientée IoT, qui dispose de beaucoup de possibilités de visualisation.
 	\item KDB+ est orienté aussi IoT et accentue son avantage sur la rapidité d'entrées / sorties de sa solution permettant de s'adapter aux besoins de grandes infrastructures industrielles.
 	\item  Prometheus est open-source et propose des outils de visualisation et des requêtes simplifiées afin d'accéder aux données et un système d'alertes avancé.
 \end{itemize}
@@ -377,20 +379,20 @@ Afin d'affiner notre choix, nous avons pris en compte le deuxième benchmarking [
     \label{fig:courbes}
 \end{figure}
 Sur ces graphiques (figure \ref{fig:courbes}), on observe le coût en temps de la requête en fonction du nombre d'entrées sur cette dernière.
-Lors de ce benchmarking, on peut observer qu'InfluxDB en rouge) [9] est nettement en avance sur les autres TSDBs. Puisque le temps de réponse de celle-ci est bien inférieur aux différentes requêtes est bien inférieur. Là ou elle est moins performante est sur le "SELECT *" (All data query - c), or dans notre cas, les tables seront très courtes (une à deux données max par tables). C'est pourquoi notre premier choix technique se portera sur cette base de données. Néanmoins nous gardons à l'esprit d'autres possibilités de TSDBs, il sera donc important dans la partie conception de bien prendre en compte une certaine facilité à changer de TSDB si nécessaire. De plus, il n'est pas impossible par la suite de changer vers Prometheus [10] étant une TSDB déjà utilisée pour certains projets Fit IoT Lab.
+Lors de ce benchmarking, on peut observer qu'InfluxDB en rouge) [9] est nettement en avance sur les autres TSDBs. En effet,le temps de réponse de celle-ci, pour les différentes requètes, est bien inférieur aux autres bases de données. Là ou elle est moins performante est sur le "SELECT *" (All data query - c), or dans notre cas, les tables seront très courtes (une à deux données max par tables). C'est pourquoi notre premier choix technique se portera sur cette base de données. Néanmoins nous gardons à l'esprit d'autres possibilités de TSDBs, il sera donc important dans la partie conception de bien prendre en compte une certaine facilité à changer de TSDB si nécessaire. De plus, il n'est pas impossible par la suite de changer vers Prometheus [10] étant une TSDB déjà utilisée pour certains projets Fit IoT Lab.
 
 \section {Automatisation via Linux}
 
-	Cette partie vise à déterminer quelles solutions existent sous Linux pour réaliser une tâche automatique comme l'exécution d'un script python qui est notre objectif
+	Cette partie vise à déterminer quelles solutions existent sous Linux pour réaliser une tâche automatique comme l'exécution d'un script python qui est notre objectif.
 	
 	\subsection{Cron}
-	Cron ou crontab est un daemon linux qui dérive de "chrono table" en anglais. Celui-ci permet de lancer une tâche en arrière plan via un système simple. Pour exécuter une tâche crontab, il suffit d'éditer un fichier via la commande "crontab -e" et y mettre : un motif d'exécution horaire et notre commande. Par exemple, la ligne suivante : "0 */2 * * * python exemple.py" signifie qu'on exécute le script exemple.py toutes les 2 heures.
+	Cron ou crontab est un daemon linux qui dérive de "chrono table" en anglais. Celui-ci permet de lancer une tâche en arrière plan via un système simple. Pour exécuter une tâche crontab, il suffit d'éditer un fichier via la commande "crontab -e" et y mettre : un motif d'exécution horaire et notre commande. Par exemple, la ligne suivante : "0 */2 * * * python exemple.py" signifie que l'on demande à Cron d'exécuter le script exemple.py toutes les 2 heures.
 	
 	\subsection{Systemd}
 	Systemd est un système d'initialisation et un daemon linux. Il permet aussi d'automatiser les tâches sous la forme de services. Ainsi on peut lancer, arrêter, relancer le service si besoin. Pour la configuration, on utilise deux fichiers pour configurer respectivement : le temps auquel la tâche va s'exécuter et la tâche en elle même avec son environnement.
 	
 	\subsection{Comparaison}
-	Systemd et cron sont deux solutions possibles pour notre script python. L'avantage de systemd est le fait qu'il soit plus complet et que plusieurs tâches peuvent être aisément exécutées et débuggées en même temps. Néanmoins, il introduit plus de complexité avec son système de fichiers, là où crontab ne nécessite qu'une ligne dans un script. Par ailleurs, crontab à un système de mail qui peut nous alerter si une tâche ne s'est pas effectuée correctement. Ainsi, étant donné que nous n'avons qu'une tâche à effectuer, il semble approprié de déployer crontab plutôt que systemd. Néanmoins, si par la suite, dans les évolutions futures de la solution, il était nécessaire d'avoir des scripts différents pour obtenir des relevés différents, nous recommanderions alors d'utiliser systemd. 
+	Systemd et cron sont deux solutions possibles pour notre script python. L'avantage de systemd est sa complétude, et que la possibilité d'aisément exécuter et débogger plusieurs tâches en même temps. Néanmoins, il introduit plus de complexité avec son système de fichiers, là où crontab ne nécessite qu'une ligne dans un script. Par ailleurs, crontab à un système de mail qui peut nous alerter si une tâche ne s'est pas effectuée correctement. Ainsi, étant donné que nous n'avons qu'une tâche à effectuer, il semble approprié de déployer crontab plutôt que systemd. Néanmoins, si par la suite, dans les évolutions futures de la solution, il était nécessaire d'avoir des scripts différents pour obtenir des relevés différents, nous recommanderions alors d'utiliser systemd. 
 	
 \section{Protocole RPL}
 
@@ -398,9 +400,9 @@ RPL (Routing protocol for Low-power and Lossy networks)), est un protocole de ro
 
 Nous nous basons sur une version basique de RPL, mais il existe des améliorations à ce protocole qui ont été proposées. Nous pouvons par exemple évoquer les améliorations apportées par M. Brandon FOUBERT, que l'on peut retrouver dans l'article suivant [12], dont il a présenté les principes et les résultats lors des journées RSD organisées à Nantes, auxquelles nous avons pu assister dans le cadre de la formation.
 
-Dans notre optique d'analyser l'influence de l'activité humaine dans une plateforme telle que celle de FIT, nous avions besoin d'un protocole de routage léger qui soit facilement implémentable, étant donné le peu de temps qu'il nous restait pour travailler dessus. Par ailleurs, il devait être adapté aux réseaux mobiles, et avoir de potentielles problèmes.
+Dans notre optique d'analyser l'influence de l'activité dans une plateforme telle que celle de FIT, nous avions besoin d'un protocole de routage léger qui soit facilement implémentable, étant donné le peu de temps qu'il nous restait pour travailler dessus. Par ailleurs, il devait être adapté aux réseaux mobiles, et avoir de potentiels problèmes.
 
-RPL est un protocole qui remplit toutes ses caractéristiques. Étant déjà implémenté dans Contiki, sous FIT IoT lab , nous n'avons quasiment pas de temps de développement à prendre en compte. Par ailleurs, RPL est très sensible à des pertes de paquets, ce qui nous permet d'exploiter une solution qui puisse avoir des soucis en cas de bruit sur la plateforme.
+RPL est un protocole qui remplit toutes ces caractéristiques. Étant déjà implémenté dans Contiki, sous FIT IoT lab , nous n'avons quasiment pas de temps de développement à prendre en compte. Par ailleurs, RPL est très sensible à la perte de paquets, ce qui nous permet d'exploiter une solution qui puisse avoir des soucis en cas de bruit sur la plateforme.
 
 \section{Métriques réseau sur le bruit et qualité}
 
@@ -419,28 +421,28 @@ Sur cette notion se base deux des prochaines métriques, et il nous faut donc suc
 
 \subsection{LQI: Link Quality Indicator}
 
-Le LQI est un indicateur de qualité de lien. En se basant sur le R-ED ou sur une estimation du rapport signal / bruit, l'implémentation décidée par les constructeurs renvoie une valeur entre 0 et 255. Cette valeur est alors une estimation de la qualité ou de la force du lien entre deux noeuds, pour un paquet donné. Une valeur de 0 correspond à un lien inutilisable, là ou une valeur de 255 indique un lien parfait. Cette valeur est définie dans la RFC 802.15.4 [13] [14]
+Le LQI est un indicateur de qualité de lien. En se basant sur le R-ED ou sur une estimation du rapport signal / bruit, l'implémentation décidée par les constructeurs renvoie une valeur entre 0 et 255. Cette valeur est alors une estimation de la qualité ou de la force du lien entre deux n\oe uds, pour un paquet donné. Une valeur de 0 correspond à un lien inutilisable, là ou une valeur de 255 indique un lien parfait. Cette valeur est définie dans la RFC 802.15.4 [13] [14]
 
 \subsection{ETX: Expected transmission count}
 
-L'ETX est une métrique permettant de déterminer la qualité d'un chemin entre deux noeuds, dans un réseau sans-fil.
-Le calcul est relativement simple, c'est le nombre d'envois de paquets nécessaire pour recevoir un certain nombre de paquets sans aucune erreur. Par exemple, si l'on veut transmettre 1000 paquets, et qu'il nous faut 2000 transmissions pour tout transmettre sans erreur, alors la valeur de l'ETX est 2000/1000 soit 2. Ainsi un ETX de 1 signifie que l'on a un chemin qui ne pose jamais souci, et cette valeur peut monter jusqu'à l'infini, si par exemple le chemin est rompu. Cette valeur est définie dans l'article suivant [15]
+L'ETX est une métrique permettant de déterminer la qualité d'un chemin entre deux n\oe uds, dans un réseau sans-fil.
+Le calcul est relativement simple: c'est le nombre d'envois de paquets nécessaire pour recevoir un certain nombre de paquets sans aucune erreur. Par exemple, si l'on veut transmettre 1000 paquets, et qu'il nous faut 2000 transmissions pour tout transmettre sans erreur, alors la valeur de l'ETX est 2000/1000 soit 2. Ainsi un ETX de 1 signifie que l'on a un chemin qui ne pose jamais souci, et cette valeur peut monter jusqu'à l'infini, si par exemple le chemin est rompu. Cette valeur est définie dans l'article suivant [15]
 
 
 \subsection{RSSI: Received Signal Strength Indication}
 
-Le RSSI est une indication relative de la puissance reçue sur un canal, exprimée en dBm. Cette valeur permet de calculer le bruit ambiant sur un noeud, et ainsi de déterminer l'activité radio ambiante à un moment donné. Cette valeur est relativement simple à récupérer dans FIT, en ajoutant un profil de monitoring à une expérience. Encore une fois ici, il n'existe pas de norme précisant la manière de calculer le RSSI, et l'implémentation est laissée libre au constructeur.
+Le RSSI est une indication relative de la puissance reçue sur un canal, exprimée en dBm. Cette valeur permet de calculer le bruit ambiant sur un n\oe ud, et ainsi de déterminer l'activité radio ambiante à un moment donné. Cette valeur est relativement simple à récupérer dans FIT, en ajoutant un profil de monitoring à une expérience. Encore une fois ici, il n'existe pas de norme précisant la manière de calculer le RSSI, et l'implémentation est laissée libre au constructeur.
 
 \subsection{Conclusion et choix de métrique}
 Notre choix s'est de ce fait finalement porté sur le RSSI, et ce pour plusieurs raisons:
-L'implémentation et sa mise en place dans les expériences FIT IoT lab est évidente et rapide. Le besoin de cette métrique étant arrivé relativement tard dans le projet, nous n'aurions pas eu le temps de mettre en place une autre métrique. De ce fait, ce choix s'est naturellement fait directement.
+L'implémentation et sa mise en place dans les expériences FIT IoT lab est évidente et rapide. Le besoin de cette métrique étant arrivé relativement tard dans le projet, nous n'aurions pas eu le temps de mettre en place une autre métrique. De ce fait, ce choix s'est fait naturellement.
 Malgré cela, c'est aussi la valeur qui correspond le plus à notre problématique, et qui nous permet le mieux de trouver une réponse. Bien que les autres métriques nous auraient aussi permis de conclure, nous pensons avoir fait le choix idéal avec cette celle-ci.
 
 
 \section{Conclusion}
 
 
-Sur cet état de l'art, nous avons présenté les différents éléments nécessaires à l'implémentation de notre solution à savoir :
+Dans cet état de l'art, nous avons présenté les différents éléments nécessaires à l'implémentation de notre solution à savoir :
 	\begin{itemize}
 		\item La plateforme FIT IoT Lab
 		\item Les firmwares M3
@@ -472,42 +474,42 @@ Le scénario A (figure \ref{fig:DiagSequenceA}) s'exécute dans la séquence suivan
 \begin{enumerate}
 \item{Le script s'exécute automatiquement à une certaine heure de la journée, vérifie la disponibilité des n\oe uds et réserve un maximum d'entre eux}
 \item{Une fois les n\oe uds réservés grâce à l'API REST, ils sont flashés avec le bon firmware et commencent leur capture de données}
-\item{Puis on accède directement à un noeud pour faire une demande de données via une entrée prédéfinie. On ré-exécute ceci pour chaque noeud soit séquentiellement, soit via des threads}
+\item{Puis on accède directement à un n\oe ud pour faire une demande de données via une entrée prédéfinie. On ré-exécute ceci pour chaque n\oe ud soit séquentiellement, soit via des threads}
 \item{Une fois traitées, ces données sont formatées et envoyées vers la Base de données temporelles pour écriture et stockage}
 \end{enumerate}
 
 \subsection{Scénario B}
-Le scénario B ressemble au scénario A mais il utilise le serial aggregator. Comme décrit dans la partie état de l'art, le serial aggregator permet d'agréger toutes les données reçues par les noeuds M3 en un seul point. Le début et fin du scénario sont donc les mêmes.
+Le scénario B ressemble au scénario A mais il utilise le serial aggregator. Comme décrit dans la partie état de l'art, le serial aggregator permet d'agréger toutes les données reçues par les n\oe uds M3 en un seul point. Le début et fin du scénario sont donc les mêmes.
 Ainsi, la différence décrite dans le diagramme en figure \ref{fig:DiagSequenceB} ) est la suivante:
 
 \begin{enumerate}
-\item{Initialisation du script comme précedemment avec flash des noeuds.}
+\item{Initialisation du script comme précedemment avec flash des n\oe uds.}
 \item{Dès lors, le Serial aggregator commence à écouter les n\oe uds et récupère les données qui lui sont envoyées par lien série. Une fois qu'il a tout reçu, il renvoie ces données au script Python qui les traite.}
 \item{Récupération et mise en forme dans la base de données.}
 \end{enumerate}
 
 \subsection{Choix}
-Le scénario A permet d'avoir un meilleur contrôle sur la captation puisqu'on va directement accéder aux noeuds néanmoins il nécessite une grande synchronisation et beaucoup de connexions en même temps à leurs interface. C'est pourquoi la deuxième approche avec le serial aggregator est préférée dans notre cas. Cela permet une implémentation plus aisée en utilisant les outils déjà développés mais aussi un seul point de sortie pour toutes les données. Le script python va donc être simplifié et plus lisible.
+Le scénario A permet d'avoir un meilleur contrôle sur la captation puisqu'on va directement accéder aux n\oe uds néanmoins il nécessite une grande synchronisation et beaucoup de connexions en même temps à leurs interfaces. C'est pourquoi la deuxième approche avec le serial aggregator est préférée dans notre cas. Cela permet une implémentation plus aisée en utilisant les outils déjà développés mais aussi un seul point de sortie pour toutes les données. Le script python va donc être simplifié et plus lisible.
 
 
 \section{Ensemble du système - Diagramme d'architecture }
-Ce diagramme d'architecture (Figure \ref{fig:DiagArchi} ) représente où sont placés les différentes parties prenantes pour l'exécution de la collecte automatique des données. Ainsi que d'un ordre partiel pour comprendre le mécanisme global.
-La solution nécessite 2 sites pour fonctionner : Grenoble là où l'API REST est localisé et Lille pour les noeuds M3.
+Ce diagramme d'architecture (Figure \ref{fig:DiagArchi} ) représente où sont placés les différentes parties prenantes pour l'exécution de la collecte automatique des données. Ainsi qu'un ordre partiel pour comprendre le mécanisme global.
+La solution nécessite 2 sites pour fonctionner : Grenoble, où l'API REST est localisée et Lille pour les n\oe uds M3.
 Sur Lille, trois composants sont nécessaires :
 	\begin{itemize}
 		\item Frontend SSH contenant un compte configuré avec le script DataCollector dessus et le crontab en arrière plan pour l'automatisation.
-		\item Testbed de Lille, c'est à dire le bâtiment de Lille contenant tous les noeuds M3.
+		\item Testbed de Lille, c'est à dire le bâtiment de Lille contenant tous les n\oe uds M3.
 		\item Seveur Inria, un emplacement pour héberger la base de données.
 	\end{itemize}
 	
 Les différentes étapes de la solution sont :
 \begin{itemize}
 	\item 1 - Exécution automatique, par le deamon Cron du script DataCollector. Crontab permet de paramétrer une ligne de commande à lancer toutes les X minutes où un schéma horaire particulier. On peut aussi utiliser systemd qui est un autre deamon réalisant la même tâche.
-	\item 2 - Exécution de CLI Tools. Le script va faire une succession d'appels à l'API REST pour avoir plusieurs information. Premièrement, prendre l'état du Testbed (combien de noeuds sont disponibles sur la plateforme), puis de lancer l'expérience en fonction avec notre firmware et un profil de monitoring radio. Enfin, attendre que l'expérience lancée soit prête pour démarrer l'étape 5.
-	\item 3 - Programmation des noeuds. L'API REST va réserver les noeuds et donner le firmware associé à l'expérience.
-	\item 4 - Flash des noeuds. On associe les noeuds à leur firmware, ils vont donc relever 5 données et les envoyer ensuite sur leurs liens séries.
-	\item 5 - Lancement Serial Aggregator. Une fois l'expérience prête, on lance le script serial aggregator qui va écouter les liens séries de tous les noeuds d'une expérience.
-	\item 6 - Ecoute des liens séries. L'expérience ne dure qu'une minute pour éviter de monopoliser la plateforme FIT de Lille. Au bout de la minute, les connections se ferment à tous les noeuds, ce qui arrête le serial aggregator qui va rassembler toutes les données.
+	\item 2 - Exécution de CLI Tools. Le script va faire une succession d'appels à l'API REST pour avoir plusieurs informations. Premièrement, prendre l'état du Testbed (combien de n\oe uds sont disponibles sur la plateforme), puis de lancer l'expérience en fonction avec notre firmware et un profil de monitoring radio. Enfin, attendre que l'expérience lancée soit prête pour démarrer l'étape 5.
+	\item 3 - Programmation des n\oe uds. L'API REST va réserver les n\oe uds et donner le firmware associé à l'expérience.
+	\item 4 - Flash des n\oe uds. On associe les n\oe uds à leur firmware, ils vont donc relever 5 données et les envoyer ensuite sur leurs liens série.
+	\item 5 - Lancement Serial Aggregator. Une fois l'expérience prête, on lance le script serial aggregator qui va écouter les liens série de tous les n\oe uds d'une expérience.
+	\item 6 - Écoute des liens série. L'expérience ne dure qu'une minute pour éviter de monopoliser la plateforme FIT de Lille. Au bout de la minute, les connections se ferment à tous les n\oe uds, ce qui arrête le serial aggregator qui va rassembler toutes les données.
 	\item 7 - Ecriture dans la BDD. Le script DataCollector récupère la sortie du serial aggregator et prépare son format pour pousser ses données dans InfluxDB en JSON.
 \end{itemize}
 
@@ -516,11 +518,11 @@ Les différentes étapes de la solution sont :
 Nous avons eu deux propositions de schéma de base de données afin de savoir comment mieux représenter les données et leurs utilisations. 
 
 \subsection{Tuple de données}
-	La première idée est de faire un tuple de données avec : Noeud, Timestamp, LightValue, PressureValue, RssiValue, RssiChannel. Cela peut paraître à priori une bonne solution contenant toutes les informations d'un noeud à un instant T. Le premier problème est que les données ne sont pas prises au même moment exactement, ce qui signifie que les données RSSI, lumière et pression ne partage pas la même estampille de temps. Sachant que les données seront traitées ensuite par des chercheurs pour entrainer de l'intelligence artificielle, il faut une précision dans les données. De plus, cette façon de conceptualisation revient à un schéma classique de base de données relationnelles. Or dans notre cas, nos données ne sont pas liées, excepté par leur numéro de noeud. Un autre problème qui pourrait arriver dans ce cas là, serait une absence de données sur un instant. Cela peut arriver pour plusieurs raisons: soit le noeud n'a pas été choisi dans l'expérience (ce qui est possible car lors de la soumission, on ne demande qu'un nombre de noeuds et non des noeuds précis) ou alors un problème sur le noeud directement, et ce pour diverses raisons. Nous savons que ceci peut exister puisque certains noeuds sont reconnus pour avoir des problèmes à l'initialisation. 
+	La première idée est de faire un tuple de données avec : n\oe ud, Timestamp, LightValue, PressureValue, RssiValue, RssiChannel. Cela peut paraître à priori une bonne solution contenant toutes les informations d'un n\oe ud à un instant T. Le premier problème est que les données ne sont pas prises au même moment exactement, ce qui signifie que les données RSSI, lumière et pression ne partage pas la même estampille de temps. Sachant que les données seront traitées ensuite par des chercheurs pour entrainer de l'intelligence artificielle, il faut une précision dans les données. De plus, cette façon de conceptualiser revient à un schéma classique de base de données relationnelles. Or dans notre cas, nos données ne sont pas liées, excepté par leur numéro de n\oe ud. Un autre problème qui pourrait arriver dans ce cas là, serait une absence de données sur un instant. Cela peut arriver pour plusieurs raisons: soit le n\oe ud n'a pas été choisi dans l'expérience (ce qui est possible car lors de la soumission, on ne demande qu'un nombre de n\oe uds et non des n\oe uds précis) ou alors un problème sur le n\oe ud directement, et ce pour diverses raisons. Nous savons que ceci peut exister puisque certains n\oe uds sont reconnus pour avoir des problèmes à l'initialisation. 
 
 
 \subsection{Table par type de données}
-Une solution alternative peut être de représenter la base de données avec une table par type de donnée stockée. Cela permet de garder une estampille correcte avec la valeur de donnée associée. Afin de garder le lien entre les données, à savoir le noeud capté, on utilise un "tag" qui représente l'utilisateur de la ressource. Ainsi, toutes les données captés par un noeud M3-1XX seront marquées par ce même nom. On peut ainsi traiter les données sur ce tag. Le système InfluxQL favorise ce schéma puisqu'il est optimisé pour les requêtes InfluxQL (langage SQL pour InfluxDB).
+Une solution alternative peut être de représenter la base de données avec une table par type de donnée stockée. Cela permet de garder une estampille correcte avec la valeur de donnée associée. Afin de garder le lien entre les données, à savoir le n\oe ud capté, on utilise un "tag" qui représente l'utilisateur de la ressource. Ainsi, toutes les données captés par un n\oe ud M3-1XX seront marquées par ce même nom. On peut ainsi traiter les données sur ce tag. Le système InfluxQL favorise ce schéma puisqu'il est optimisé pour les requêtes InfluxQL (langage SQL pour InfluxDB).
 Le schéma de base de données temporelles final reste simple puisqu'il est composé seulement de 3 tables :
 	\begin{itemize}
 		\item Light, contient les données de lumière en lux
@@ -537,7 +539,7 @@ Le schéma de base de données temporelles final reste simple puisqu'il est compos
 \subsection{Stockage}
 Comment InfluxDB stocke t-il ses données ? Celui-ci découpe son organisation en 3 dossiers : 
 \begin{itemize}
-	\item Meta contient un certains nombre de paramètres et informations utiles : les users, databases existantes, retention policies, shards, and continuous queries. Les retentions policies sont un moyen de définir le recyclage de la base de données, c'est à dire à quelle moment va t-elle supprimer des données ou archiver. Les shards sont la vision d'InfluxDB sur les données, elle groupe les données selon des shards (en général par proximité temporelle) et va les stocker, supprimer, traiter au même endroit. Les continous queries sont un outil permettant de faire des requêtes en continue sur la base.
+	\item Meta contient un certain nombre de paramètres et informations utiles : les users, databases existantes, retention policies, shards, et continuous queries. Les retentions policies sont un moyen de définir le recyclage de la base de données, c'est à dire à quelle moment va t-elle supprimer des données ou archiver. Les shards sont la vision d'InfluxDB sur les données, elle groupe les données selon des shards (en général par proximité temporelle) et va les stocker, les supprimer et les traiter au même endroit. Les continous queries sont un outil permettant de faire des requêtes en continu sur la base.
 	\item WAL (Write Ahead Log) est un dossier de cache pour les bases de données.
 	\item Data est le dossier contenant les bases de données. Il existe par défaut la base de données internal contenant un certain nombre d'informations générales sur nos bases de données. Puis ensuite, il existe toutes les données relatives à nos collectes.
 
@@ -546,7 +548,7 @@ Comment InfluxDB stocke t-il ses données ? Celui-ci découpe son organisation en 
 
 \section{Fréquence de relevé}
 
-	Une fois la solution de collecte de données	 mise en place, il faut déterminer quand et comment lancer le script. L'exécution se fait par crontab mais combien de noeuds doit on réserver ? A quelle fréquence? Pour le nombre de noeuds réservés, la solution réserve un taux de disponibilité de la plateforme. Par exemple à un instant T, la plateforme dispose de 300 noeuds dont 200 sont disponibles. Si le taux de réservation du script est 50\% alors on réserve 100 noeuds sur Lille. Ainsi on évite de vouloir réserver plus de noeuds que disponible. Ensuite quel taux choisir ? Idéalement 100\% mais cela peut poser problème puisque la plateforme va délayer notre expérience car trop de noeuds seront indisponibles si elle accepte notre expérience. Ainsi nous avons décider arbitrairement de prendre 70\% de la plateforme sur une minute, ce qui limite qu'on affecte trop la disponibilité. Ensuite la fréquence s'effectue toutes les 30 minutes par soucis de disponibilité puisque si on intensifie ses relevés, trop de noeuds seraient indisponibles pour les autres utilisateurs. Mais aussi nous relevons des mesures physiques, or celles-ci ne vont pas avoir d'énormes variations entre plusieurs demi-heures. Par la suite, avec une vision sur plusieurs semaines, la fréquence de relevé pourra être ajusté pour diminuer la volumétrie ou l'augmenter selon les besoins des chercheurs.
+	Une fois la solution de collecte de données	 mise en place, il faut déterminer quand et comment lancer le script. L'exécution se fait par crontab mais combien de n\oe uds doit on réserver ? A quelle fréquence? Pour le nombre de n\oe uds réservés, la solution réserve un taux de disponibilité de la plateforme. Par exemple à un instant T, la plateforme dispose de 300 n\oe uds dont 200 sont disponibles. Si le taux de réservation du script est 50\% alors on réserve 100 n\oe uds sur Lille. Ainsi on évite de vouloir réserver plus de n\oe uds que disponible. Ensuite quel taux choisir ? Idéalement 100\% mais cela peut poser problème puisque la plateforme va délayer notre expérience car trop de n\oe uds seront indisponibles si elle accepte notre expérience. Ainsi nous avons décider arbitrairement de prendre 70\% de la plateforme sur une minute, ce qui nous empêche de trop affecter  la disponibilité. Ensuite la fréquence s'effectue toutes les 30 minutes par soucis de disponibilité puisque si on intensifie ses relevés, trop de n\oe uds seraient indisponibles pour les autres utilisateurs. Par ailleurs, nous relevons des mesures physiques, or celles-ci ne vont pas varier grandement en une demi-heure. Par la suite, avec une vision sur plusieurs semaines, la fréquence de relevé pourra être ajustée pour diminuer la volumétrie ou l'augmenter selon les besoins des chercheurs.
 
 \section{Grafana}
 
@@ -597,7 +599,7 @@ Comment InfluxDB stocke t-il ses données ? Celui-ci découpe son organisation en 
 \subsection{Expérimentations}
 
 Nous avons fait plusieurs expériences pour mesurer le RSSI qui posait certains problèmes d'irrégularités \ref{fig:bugRSSI} .
-Dans un premier temps, nous nous sommes penchés sur comment le RSSI était pris dans nos mesures. Il s'avère qu'une mauvaise valeur était retournée mais il restait une chose étrange à savoir que les canaux était tous passifs (-91 dBm constant) excepté le premier. Dans cette démarche nous avons essayé de savoir si notre code était encore en défaut ou si l'utilisation d'un "monitor profile" (outil fourni par FIT pour capter les canaux radios) posait un problème d'implémentation.
+Dans un premier temps, nous nous sommes penchés sur la manière dont était capturée la valeur de RSSI dans nos mesures. Il s'avère qu'une mauvaise valeur était retournée. Malgré tout, il restait une chose étrange: La captation de données nous renvoyait des canaux passifs (-91 dBm constant) excepté le premier (Canal 11). Dans cette démarche nous avons essayé de savoir si notre code était encore en défaut ou si l'utilisation d'un "monitor profile" (outil fourni par FIT pour capter les canaux radios) posait un problème d'implémentation.
 Il s'avère que notre problème n'était pas dans ces 2 propositions mais venait de la fréquence de relevé d'expérimentation. En effet, la communication radio étant de l'ordre d'une dizaine de micro-secondes et notre période de 4s, il y avait un problème d'échelle. C'est pourquoi en intensifiant les relevés en dizaine de millisecondes, on retrouve des valeurs fluctuant sur tous les canaux.
 
 \begin{figure}[htp]
@@ -625,7 +627,7 @@ Via Grafana, on peut visualiser nos différentes données à savoir :
     \caption {Grafana - captation pression 29-31/01/2020}
     \label{fig:pression}
 \end{figure}
-La pression est en mBar. On peut observer que la pression atmosphérique est globalement la même pour tous les noeuds mais qu'il reste des variations. De plus on observe des lignes ne respectant pas la tendance globle qui sont dues à une absence de données de ses capteurs pendant le relevé, par exemple à cause d'une autre réservation de quelqu'un.
+La pression est en mBar. On peut observer que la pression atmosphérique est globalement la même pour tous les n\oe uds mais qu'il reste des variations. De plus on observe des lignes ne respectant pas la tendance globle qui sont dues à une absence de données de ses capteurs pendant le relevé, par exemple à cause d'une autre réservation de quelqu'un.
 
 \item RSSI:  figure \ref{fig:rssi}.
 \begin{figure}[htp]
@@ -633,7 +635,7 @@ La pression est en mBar. On peut observer que la pression atmosphérique est glob
     \caption{Grafana - captation rssi 29-31/01/2020}
     \label{fig:rssi}
 \end{figure}
-Le RSSI est complexe à mesurer puisque, comme dit précédemment, la fréquence de mesure influe sur ce qu'on va obtenir. Mais il est impossible de mettre une fréquence trop élevée comme 1 ms puisque cela augmenterait considérablement la taille des données. L'astuce utilisée est de mettre une fréquence assez faible (environ 10 ms) et de supprimer les fréquences à -91dbm lorsqu'il n'y a pas d'activité radio. C'est à dire que dès lors qu'il y a un changement de RSSI, celui ci va enregistrer son entrée mais aussi l'entrée précédente et future. Ainsi dès que deux valeurs consécutives de RSSI sont à -91dBm (équivaut à aucune activité radio particulière), on efface la donnée pour limiter un nombre très important de points non intéressant.
+Le RSSI est complexe à mesurer puisque, comme dit précédemment, la fréquence de mesure influe sur ce qu'on va obtenir. Mais il est impossible de mettre une fréquence trop élevée comme 1 ms puisque cela augmenterait considérablement la taille des données. L'astuce utilisée est de mettre une fréquence assez faible (environ 10 ms) et de supprimer les fréquences à -91dbm lorsqu'il n'y a pas d'activité radio. C'est à dire que dès lors qu'il y a un changement de RSSI, celui ci va enregistrer son entrée mais aussi l'entrée précédente et future. Ainsi dès que deux valeurs consécutives de RSSI sont à -91dBm (équivaut à aucune activité radio particulière), on efface la donnée, afin d'éviter de stocker un nombre très important de points non intéressants pour l'étude. Par extrapolation, il sera aisé de retrouver ces valeurs.
 
 \begin{figure}[htp]
     \includegraphics[width=0.50\textwidth]{Images/grafana_rssi2}
@@ -641,11 +643,11 @@ Le RSSI est complexe à mesurer puisque, comme dit précédemment, la fréquence de 
     \label{fig:rssi}
 \end{figure}
 
-Une vue par noeud \ref{fig:rssiM3} est mise aussi en place pour pouvoir mieux visualiser les valeurs de RSSI étant très rapprochées sur une petite période.
+Une vue par n\oe ud \ref{fig:rssiM3} est mise aussi en place pour pouvoir mieux visualiser les valeurs de RSSI étant très rapprochées sur une petite période.
 
 \begin{figure}[htp]
     \includegraphics[width=0.50\textwidth]{Images/grafana_rssi3}
-    \caption{Grafana - captation rssi channel 11, noeud m3-104, 08/02/2020-14:00:26 à 14:00:32}
+    \caption{Grafana - captation rssi channel 11, n\oe ud m3-104, 08/02/2020-14:00:26 à 14:00:32}
     \label{fig:rssiM3}
 \end{figure}
 
@@ -665,9 +667,9 @@ Le plus important a donc été la manière de penser cette expérience et de la desi
 
 \subsection{Expérimentations}
 
-Nous utilisons donc le système d'expériences de FIT IoT Lab pour réserver 30 n\oe uds m3 sur la plateforme. Ces n\oe uds se doivent d'être assez proches afin que RPL puisse en router un maximum dans un arbre de routage. Dans ses 30 n\oe uds, on en sélectionne un (Si possible toujours le même), qui sera alors le routeur de bordure, c'est à dire la racine de l'arbre défini par RPL. Les autres n\oe uds sont de simples clients qui sont chargés de générer du trafic en temps normal (Ici, ils ne font que se router)
+Nous utilisons donc le système d'expériences de FIT IoT Lab pour réserver 30 n\oe uds m3 sur la plateforme. Ces n\oe uds se doivent d'être assez proches afin que RPL puisse en router un maximum dans un arbre de routage. Dans ces 30 n\oe uds, on en sélectionne un (Si possible toujours le même), qui sera alors le routeur de bordure, c'est à dire la racine de l'arbre défini par RPL. Les autres n\oe uds sont de simples clients qui sont chargés de générer du trafic en temps normal (Ici, ils ne font que se router)
 
-Dès que l'expérience est démarrée, nous affectons un préfixe IPv6 aux n\oe uds que nous avons réservés grâce à la frontale SSH. Sur cette même frontale, nous vérifions alors le bon établissement de l'arbre de routage RPL. Dès que la solution a convergé, on note le temps que l'expérience a pris et on recommence.
+Dès que l'expérience est démarrée, nous affectons un préfixe IPv6 aux n\oe uds que nous avons réservé grâce à la frontale SSH. Sur cette même frontale, nous vérifions alors le bon établissement de l'arbre de routage RPL. Dès que la solution a convergé, on note le temps que l'expérience a pris et on recommence.
 
 La difficulté vient avant tout du fait que cette expérience n'est qu'assez peu reproductible. En effet, à chaque fois que l'on recommence, la topologie de l'arbre est différente, certains n\oe uds ne rentrent pas dans l'arbre etc..
 
@@ -675,21 +677,21 @@ La difficulté vient avant tout du fait que cette expérience n'est qu'assez peu r
 
 Malheureusement, et étant donné le court temps que nous avons eu pour effectuer ces expériences, les données récoltées ne nous ont pas permis de conclure. En effet, si pour un petit nombre de n\oe uds, RPL se comporte très bien, ce n'est pas le cas pour un nombre plus grand de cartes. Plusieurs essais à 30 n\oe uds, à des periodes durant lesquelles la plateforme Lilloise n'était pas utilisée, RPL n'a jamais réussi à connecter les 30 n\oe uds dans un seul arbre. Le maximum de connexions que nous avons obtenu était 14, ce qui est trop faible pour estimer cette expérience comme une réussite. Toutes les autres tentatives se sont soldées par des échecs avec des arbres d'une taille de 8 à 10 n\oe uds.
 
-Avec plus de temps nous aurions pu nous pencher plus en avant sur les raisons de ces échecs, qui existent forcément puisque plusieurs personnes ont déjà utilisé RPL sur FIT IoT lab sans que cela pose de soucis. 
+Avec plus de temps nous aurions pu nous pencher sur les raisons de ces échecs, qui existent forcément puisque plusieurs personnes ont déjà utilisé RPL sur FIT IoT lab sans que cela pose de soucis. 
 
 
 \chapter{Planification}
 
-Cette partie inclut des graphiques relatifs à notre travail. Nous avons découpés nos tâches en 5 catégories :
+Cette partie inclut des graphiques relatifs à notre travail. Nous avons découpé nos tâches en 5 catégories :
 \begin{itemize}
 	\item Tutoriel FIT IoT Lab
 	\item Recherches bibliographiques
 	\item Développement Firmware/Python
-	\item Rédaction de rapport, bilan de réunions,...
+	\item Rédaction de rapport, bilan de réunion, ...
 	\item Contact : les réunions et appels
 \end{itemize}
 
-Dans l'ensemble, l'estimation de nos tâches ont étés proches de la réalité mais nous avons globalement sous-estimé les heures nécessaires pour réaliser notre travail. Nous avons donc dû augmenter nos horaires sur certaines semaines plus libres que d'autres. Cela nous a permis de nous reconcentrer sur des petites tâches comme conseillé par Julien Vandaele pour obtenir une démo pour la première période (7 octobre 2019 - 01 décembre 2019).
+Dans l'ensemble, l'estimation de nos tâches ont été proches de la réalité mais nous avons globalement sous-estimé les heures nécessaires pour réaliser notre travail. Nous avons donc dû augmenter nos horaires sur certaines semaines plus libres que d'autres. Cela nous a permis de nous reconcentrer sur des petites tâches comme conseillé par Julien Vandaele pour obtenir une démo pour la première période (7 octobre 2019 - 01 décembre 2019).
 
 
 \newpage
@@ -894,7 +896,7 @@ Cette annexe est \emph{obligatoire}.
    \item{Préparation d'une présentation de solutions}
    \end{itemize}
    \item{Diagrammes de séquence pour s'assurer de la marche à suivre pour le développement}
-   \item{Etude des noeuds M3}
+   \item{Etude des n\oe uds M3}
    \item{Début de développement d'une démonstration simple de script de collecte de bases de données}
    \end{itemize}
    \end{travaileffectue}
@@ -1065,7 +1067,7 @@ Cette annexe est \emph{obligatoire}.
 => Le développement sur le frontend SSH a abouti en utilisant la librarie os, subprocess pour lancer les commandes
  
  
-   	\item Librairie manquante pour l'exploitation du capteur de température des noeuds m3 en contiki
+   	\item Librairie manquante pour l'exploitation du capteur de température des n\oe uds m3 en contiki
 \begin{itemize}
 \item Librairie manquante pour l'exploitation du capteur de \item Possibilité que cela existe en contiki-ng
 \item Besoin potentiel de créer ce code
@@ -1339,10 +1341,6 @@ Cette annexe est \emph{obligatoire}.
    \end{planification}
 \end{fichesuivi}
 
-Le tableau récapitulatif du temps consacré au projet est \emph{obligatoire}.
-Si vous n'utilisez pas strictement le modèle de fiche de suivi fourni, il vous faudra l'établir vous-même.
-Dans le cas contraire, une commande permet de le générer automatiquement avec le texte qui le référence et des hyper-liens vers chacune des fiches (paragraphe ci-dessous).
-
 \printweeksummary
 
 \chapter{Auto-contrôle et auto-évaluation}
@@ -1350,9 +1348,9 @@ Dans le cas contraire, une commande permet de le générer automatiquement avec le
 \begin{figure*}
    \centering
       \ifscreen
-         \rotatebox{90}{\includegraphics[width=0.9\textheight]{Images/Grille-Evaluation-PRD2}}
+         \rotatebox{90}{\includegraphics[width=0.9\textheight]{Images/Grille-Evaluation-PRDfinal.pdf}}
       \else
-         \includegraphics[width=0.9\textwidth]{Images/Grille-Evaluation-PRD2}
+         \includegraphics[width=0.9\textwidth]{Images/auto-eval2}
       \fi
    \caption{Points à contrôler à l'issue de la phase II}
    \label{fig:AutoEvaluationTravailFinal}
