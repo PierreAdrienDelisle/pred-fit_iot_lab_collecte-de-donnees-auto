@@ -2,7 +2,7 @@
 
 ## Collaboration
 
-This work was the result of a collaboration between 3 entities:
+This work was the result of a collaboration between four entities:
 
  - Inria Lille 
  - FIT IoT Lab
