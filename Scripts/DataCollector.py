@@ -18,13 +18,16 @@ parser=argparse.ArgumentParser(
     epilog="""----""")
 parser.add_argument('ratio', type=int, nargs='?',const=1, default=30, help='The ratio of node you will take on 1 site.For example if 200 M3 nodes are avalaible on Lille, you will put 30 and get 60 nodes on Lille')
 parser.add_argument('site', type=str, nargs='?',const=1, default="lille", help='The site where you are running the experiment')
+parser.add_argument('monitorProfile', type=str, nargs='?',const=1, default="TestMonitor", help='The name of the monitor profile you are using')
 args=parser.parse_args()
 
 ## Beginning of the script
 print(" ****************** \n * Data Collector *\n ****************** \n")
 site = args.site
 ratio = args.ratio
-repo = "/senslab/users/delisle/pred-fit_iot_lab_collecte-de-donnees-auto/Scripts/"
+monitorProfile = args.monitorProfile
+user = "delisle"
+repo = "/senslab/users/"+user+"/pred-fit_iot_lab_collecte-de-donnees-auto/Scripts/"
 print("Site: "+str(site)+", Ratio: "+str(ratio)+"%")
 
 ## Open a ghost terminal to make serial_aggregator working (need for raw_input func)
@@ -43,7 +46,7 @@ if(nbSubmit < 10):
     print("Only "+nbSubmit+" nodes")
 else:
     print("Launching an experiment with : "+str(nbSubmit)+" nodes")
-    rSubmit = subprocess.check_output('iotlab-experiment submit -n AutoCollect -d 1 -l '+str(nbSubmit)+',archi=m3:at86rf231+site="'+site+'"+mobile=0,'+repo+'firmwares/firmware-5donnees-iotlab-m3,TestMonitor', shell=True)
+    rSubmit = subprocess.check_output('iotlab-experiment submit -n AutoCollect -d 1 -l '+str(nbSubmit)+',archi=m3:at86rf231+site="'+site+'"+mobile=0,'+repo+'firmwares/firmware-5donnees-iotlab-m3,'+monitorProfile, shell=True)
     experimentId = str(json.loads(rSubmit.decode('utf-8'))["id"])
 
     ## Wait for the experiment to run and launch serial_aggregator
@@ -82,7 +85,7 @@ else:
 
     ## Radio output
     print("Radio output")
-    directory = "/senslab/users/delisle/.iot-lab/"+experimentId+"/radio/"
+    directory = "/senslab/users/"+user+"/.iot-lab/"+experimentId+"/radio/"
     time.sleep(5) #Wait for radio output to be ready
     regex = re.compile(r"[0-9]+[.][0-9]+[\s][0-9]+[\s][0-9]+[\s][0-9]+[\s][0-9]+[\s][0-9]+[\s][-+\s][0-9]+") #Regex to find radio output lines
     rssiOutput = []
