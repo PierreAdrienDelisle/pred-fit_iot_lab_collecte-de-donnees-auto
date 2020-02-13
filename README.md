@@ -1,5 +1,14 @@
 # PRED 2019/2020 - Automatic sensor data collection over a smart building
 
+## Collaboration
+
+This work was the result of a collaboration between four entities:
+
+ - Inria Lille 
+ - FIT IoT Lab
+ - LS2N
+ - Polytech Nantes
+
 ## Group
 - DA SILVA Samuele
 - DELISLE Pierre-Adrien
@@ -14,24 +23,32 @@ In order to collect the data, several developments were necessary, and every par
 
 These parts accomplish several actions, which are be quickly presented in this document. For more information, you can check the Wiki.
 
-- Firmware
+### Firmware:
+
 In order to collect the data from the M3 cards, we need a firmware to run on them. You can find two examples of firmwares here that pretty much accomplish the same things:
--- Start the cards, initiate the sensor drivers
--- Begin data collection: Gather 5 light values / 5 pressure values
--- Send the values over the serial link.
+- Start the cards, initiate the sensor drivers
+- Begin data collection: Gather 5 light values / 5 pressure values
+- Send the values over the serial link.
 
-- Python script
+
+### Python script - Data Collector:
+
 The central part of the project, which pretty much controls the whole data collection. This python script accomplishes several tasks, which are presented thouroughly in the sequence diagram. As a quick presentation, here is what is does:
--- Gather info about the testbed status, especially: How many m3 cards are available in Lille
--- Submit an experience with a certain percentage of the available nodes, the needed firmware / monitoring profile.
--- Start the serial aggregator
--- Gather all the data from the nodes
--- Compute them and push them in the TSDB
+- Gather info about the testbed status, especially: How many m3 cards are available in Lille   
+- Submit an experience with a certain percentage of the available nodes, the needed firmware / monitoring profile.
+- Start the serial aggregator
+- Gather all the data from the nodes
+- Compute them and push them in the TSDB
 
-- CRON
+You can also run this script at any time you want using the following options:
+- ratio: Reserve a certain percentage of the testbed nodes - Ex: If 100 nodes are available, A value of 70 will reserve 70 nodes for your data collection
+- site: Specify on which site you want to gather the data - Example: lille
+
+### CRON:
+
 In order to make this gathering automatic, we use Crontab. You can find the scripts necessary to the automatic execution in the GitHub.
+### TSDB:
 
-- TSDB
 The Time Series database in which is stored the data. You can find a database scheme that we advice in the GitHub.
 
 In any case, you can find more information about the project of the different parts in the Wiki.
