@@ -1,18 +1,37 @@
-# PRED 2019/2020 - Collecte automatique de données de capteurs
+# PRED 2019/2020 - Automatic sensor data collection over a smart building
 
-## Groupe
+## Group
 - DA SILVA Samuele
 - DELISLE Pierre-Adrien
 
-## Résumé du projet
+## Project explanation
 
-1. Utiliser les noeuds capteurs déployés dans le bâtiment Inria et récolter les
-données de leurs capteurs
- Dans un bâtiment intelligent, des solutions logicielles viennent traiter et réagir
-à ces données pour produire des rapports ou réaliser des actions. Ici le but est de
-fournir une base de données réelles à disposition des chercheurs de plusieurs
-domaines, qui pourront l’utiliser par exemple pour leurs algos de Machine Learning.
+The aim of this project is an automatic data collection, in the range of a smart building. The smart building here, being the Lille FIT IoT lab site. The cards we use are M3 cards, which represent a majority of the hardware available
+on this site.
+The collected data is to be stored in a Time Series Database, which is designed for researchers to use.
 
-2. Effectuer des relevés de connectivité entre les noeuds M3 du bâtiment à
-différents moments de la journée et de la semaine pour fournir un outil de choix de
-topologie physique à nos utilisateurs.
+In order to collect the data, several developments were necessary, and every part of the project is available here, on this GitHub.
+
+These parts accomplish several actions, which are be quickly presented in this document. For more information, you can check the Wiki.
+
+- Firmware
+In order to collect the data from the M3 cards, we need a firmware to run on them. You can find two examples of firmwares here that pretty much accomplish the same things:
+-- Start the cards, initiate the sensor drivers
+-- Begin data collection: Gather 5 light values / 5 pressure values
+-- Send the values over the serial link.
+
+- Python script
+The central part of the project, which pretty much controls the whole data collection. This python script accomplishes several tasks, which are presented thouroughly in the sequence diagram. As a quick presentation, here is what is does:
+-- Gather info about the testbed status, especially: How many m3 cards are available in Lille
+-- Submit an experience with a certain percentage of the available nodes, the needed firmware / monitoring profile.
+-- Start the serial aggregator
+-- Gather all the data from the nodes
+-- Compute them and push them in the TSDB
+
+- CRON
+In order to make this gathering automatic, we use Crontab. You can find the scripts necessary to the automatic execution in the GitHub.
+
+- TSDB
+The Time Series database in which is stored the data. You can find a database scheme that we advice in the GitHub.
+
+In any case, you can find more information about the project of the different parts in the Wiki.
