@@ -100,7 +100,7 @@ else:
                     rssiTimestamp = datetime.fromtimestamp(float(rssiTab[3]+"."+rssiTab[4]), timezone.utc).strftime("%m/%d/%Y-%H:%M:%S.%f")
                     rssiChannel = rssiTab[5]
                     rssiData = {"node":node,"value":rssiVal,"time":rssiTimestamp,"channel":rssiChannel}
-                    if(lastRssiValue != rssiVal or rssiVal != "-91"): #Drop data if many -91 db on rssi
+                    if(lastRssiValue != rssiVal or rssiVal != "-91"): #Drop data if many -91 db values on rssi are following each other
                         if(lastRssiValue !="0"): #not first value
                             rssiOutput.append(lastRssiData)
                         rssiOutput.append(rssiData)
@@ -109,7 +109,7 @@ else:
                         lastRssiData = rssiData
                     lastRssiValue = rssiVal
     print("Dropped value at -91 dbm: "+str(nbDrop)+ " values")
-
+    ## Construct the dict to save with all the data in it
     dataDict = {"capturedData":capturedData,"rssi":rssiOutput}
     ## Write in a log file the captured data
     print("Writing in log file...")
@@ -119,3 +119,7 @@ else:
     with open(filename, 'w') as outfile:
          json.dump(dataDict, outfile)
     print("Done !")
+
+    ## To save it directly to InfluxDB switch_database
+    # subprocess.check_output("python.exe ./ConnectorDB.py -i "+filename,shell=True)
+    # print ("Pushed json into DB")
