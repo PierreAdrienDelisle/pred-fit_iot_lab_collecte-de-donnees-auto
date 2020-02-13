@@ -1,5 +1,14 @@
 # PRED 2019/2020 - Automatic sensor data collection over a smart building
 
+## Collaboration
+
+This work was the result of a collaboration between 3 entities:
+
+ - Inria Lille 
+ - FIT IoT Lab
+ - LS2N
+ - Polytech Nantes
+
 ## Group
 - DA SILVA Samuele
 - DELISLE Pierre-Adrien
